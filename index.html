@@ -491,6 +491,23 @@
             <button class="btn secondary" id="btnDemoQ">Run a Demo Question</button>
             <button class="btn secondary" id="btnClear">Clear Chat</button>
           </div>
+  <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+  <button id="btnMicStart">🎙️ Hold / Start</button>
+  <button id="btnMicStop" disabled>⏹️ Stop</button>
+  <button id="btnSendText" disabled>➡️ Send Transcript</button>
+</div>
+
+<div style="margin-top:12px;">
+  <div><b>Transcript</b></div>
+  <textarea id="sttText" rows="3" style="width:100%;"></textarea>
+</div>
+
+<div style="margin-top:12px;">
+  <div><b>Answer</b></div>
+  <div id="answerText" style="white-space:pre-wrap;"></div>
+</div>
+
+<audio id="ttsAudio" controls style="width:100%; margin-top:12px;"></audio>
 
           <div class="smallrow" style="margin-top:12px;">
             <span class="pill"><span class="dot ok" id="dotStatus"></span> <span id="txtStatus">Ready</span></span>
@@ -797,6 +814,159 @@
     $("btnDownload").addEventListener("click", () => {
       addMsg("Download is currently locked (placeholder). When you’re ready, we’ll connect membership + a signed download link.", "bot");
     });
+<script>
+  // ✅ CHANGE THIS
+  const MAAT_BASE_URL = "https://YOUR-MAAT-BRAIN.onrender.com";
+
+  const STT_URL = `${MAAT_BASE_URL}/voice/stt`;
+  const ASK_URL = `${MAAT_BASE_URL}/ask`;
+  const TTS_URL = `${MAAT_BASE_URL}/voice/tts`;
+
+  const btnStart = document.getElementById("btnMicStart");
+  const btnStop = document.getElementById("btnMicStop");
+  const btnSendText = document.getElementById("btnSendText");
+  const sttText = document.getElementById("sttText");
+  const answerText = document.getElementById("answerText");
+  const ttsAudio = document.getElementById("ttsAudio");
+
+  let mediaRecorder = null;
+  let chunks = [];
+  let stream = null;
+
+  function pickMimeType() {
+    // iOS Safari is picky. We'll try a few.
+    const candidates = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4",   // sometimes supported on iOS
+      "audio/aac",
+    ];
+    for (const t of candidates) {
+      if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) {
+        return t;
+      }
+    }
+    return ""; // let browser decide
+  }
+
+  async function initMic() {
+    // Must be called from a user gesture (button click) on iOS
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true
+      }
+    });
+  }
+
+  btnStart.addEventListener("click", async () => {
+    try {
+      sttText.value = "";
+      answerText.textContent = "";
+
+      if (!stream) await initMic();
+
+      chunks = [];
+      const mimeType = pickMimeType();
+
+      mediaRecorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: mediaRecorder.mimeType || "audio/webm" });
+        await sendToSTT(blob);
+      };
+
+      mediaRecorder.start();
+      btnStart.disabled = true;
+      btnStop.disabled = false;
+      btnSendText.disabled = true;
+
+    } catch (err) {
+      console.error(err);
+      alert("Mic error: " + (err?.message || err));
+    }
+  });
+
+  btnStop.addEventListener("click", () => {
+    try {
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+      }
+      btnStop.disabled = true;
+      btnStart.disabled = false;
+    } catch (err) {
+      console.error(err);
+      alert("Stop error: " + (err?.message || err));
+    }
+  });
+
+  async function sendToSTT(audioBlob) {
+    // Upload file to /voice/stt
+    const form = new FormData();
+    const filename = (audioBlob.type.includes("mp4") ? "clip.mp4" : "clip.webm");
+    form.append("file", audioBlob, filename);
+
+    const r = await fetch(STT_URL, { method: "POST", body: form });
+    if (!r.ok) throw new Error("STT failed: " + await r.text());
+
+    const data = await r.json();
+
+    // Expecting { text: "..." } OR similar. Adapt if your STT service returns different key.
+    const text = data.text || data.transcript || data.result || "";
+    sttText.value = text;
+    btnSendText.disabled = !text.trim();
+  }
+
+  btnSendText.addEventListener("click", async () => {
+    const question = sttText.value.trim();
+    if (!question) return;
+
+    // 1) Ask Ma’at
+    const askPayload = {
+      question,
+      user_id: "rashad",          // you can wire this to your auth later
+      session_id: "web_session",
+      mode: "chat"
+    };
+
+    const r = await fetch(ASK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(askPayload)
+    });
+
+    if (!r.ok) throw new Error("ASK failed: " + await r.text());
+
+    const rec = await r.json();
+    const answer = rec.answer || rec.response || "(no answer)";
+    answerText.textContent = answer;
+
+    // 2) Request TTS audio (must be played from a user gesture on iOS → we’re in a click, perfect)
+    await playTTS(answer);
+  });
+
+  async function playTTS(text) {
+    const form = new FormData();
+    form.append("text", text);
+
+    const r = await fetch(TTS_URL, { method: "POST", body: form });
+    if (!r.ok) throw new Error("TTS failed: " + await r.text());
+
+    const audioBlob = await r.blob();
+    const url = URL.createObjectURL(audioBlob);
+
+    ttsAudio.src = url;
+    // iOS requires play() from a user gesture; we called this from click, so it should work.
+    await ttsAudio.play();
+  }
+</script>
 
     // auto check on load
     checkBrain();
