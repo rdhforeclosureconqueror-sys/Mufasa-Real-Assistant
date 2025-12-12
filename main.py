@@ -2,25 +2,26 @@ import os
 import io
 import json
 import time
+import uuid
 import statistics
 from typing import List, Dict, Any, Optional
 from datetime import date, timedelta
 
 import httpx
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Request
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import StreamingResponse, JSONResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
 from api.auth import mint_jwt, require_role
-from api.rate_limit import allow  # (not used yet, but kept for future)
+from api.rate_limit import allow  # kept for future
 from api.api_metrics import metrics, log_middleware
 from openai import OpenAI
 
-# ───────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
 # Optional local Phi-3 integration
-# ───────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
 try:
     from phi.model import Phi3Mini
     phi3 = Phi3Mini()
@@ -43,32 +44,36 @@ KNOWLEDGE_DIR = os.path.join(DATA_DIR, "knowledge")
 USER_DIR = os.path.join(DATA_DIR, "users")
 PROGRAM_DIR = os.path.join(DATA_DIR, "programs")
 STORYBOARD_DIR = os.path.join(DATA_DIR, "storyboards")
+VIDEO_DIR = os.path.join(DATA_DIR, "video_jobs")
 
-for d in [TELEMETRY_DIR, RULES_DIR, EXPER_DIR, TESTS_DIR, KNOWLEDGE_DIR, USER_DIR, PROGRAM_DIR, STORYBOARD_DIR]:
+for d in [
+    TELEMETRY_DIR, RULES_DIR, EXPER_DIR, TESTS_DIR,
+    KNOWLEDGE_DIR, USER_DIR, PROGRAM_DIR, STORYBOARD_DIR, VIDEO_DIR
+]:
     os.makedirs(d, exist_ok=True)
 
-# Helper service URLs (optional sidecars)
+# Optional helper service URLs
 STT_URL = os.getenv("STT_URL", "http://localhost:8765")
 TTS_URL = os.getenv("TTS_URL", "http://localhost:8766")
 ADVISOR_URL = os.getenv("ADVISOR_URL", "http://localhost:8764")
 ADVISOR_MODE = os.getenv("ADVISOR_MODE", "off")
 
-# OpenAI client
+# OpenAI
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai_client: Optional[OpenAI] = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
-
-# ───────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
 # Helpers
-# ───────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
+
 def write_json(path: str, obj: Any):
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(obj, f, indent=2, ensure_ascii=False)
+    with open(path, "w") as f:
+        json.dump(obj, f, indent=2)
 
 def read_json(path: str) -> Any:
-    with open(path, encoding="utf-8") as f:
+    with open(path) as f:
         return json.load(f)
 
 def user_profile_path(user_id: str) -> str:
@@ -148,25 +153,31 @@ def attach_calendar_to_program(program: Dict[str, Any], start_date: Optional[str
 
     program["calendar"] = calendar
 
-def save_storyboard(story: Dict[str, Any]) -> str:
-    ts = int(time.time())
-    sid = story.get("id") or f"sb_{ts}"
-    story["id"] = sid
-    story["created_at"] = ts
-    path = os.path.join(STORYBOARD_DIR, f"{sid}.json")
-    write_json(path, story)
-    return sid
+def llm_chat(system_prompt: str, user_prompt: str, temperature: float = 0.6) -> str:
+    if openai_client is not None:
+        resp = openai_client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=temperature,
+        )
+        return resp.choices[0].message.content
 
-def load_storyboard(sb_id: str) -> Dict[str, Any]:
-    path = os.path.join(STORYBOARD_DIR, f"{sb_id}.json")
-    if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail="Storyboard not found")
-    return read_json(path)
+    if HAS_LOCAL_PHI3 and phi3 is not None:
+        # Phi3Mini example: generate from concatenated prompt
+        return phi3.generate(system_prompt + "\n\n" + user_prompt)
 
+    raise HTTPException(
+        status_code=503,
+        detail="No LLM configured (OPENAI_API_KEY missing and Phi-3 not available).",
+    )
 
-# ───────────────────────────────────────────────────────────────────────────────
-# Pydantic models
-# ───────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
+# Models
+# ─────────────────────────────────────────────────────────────
+
 class Telemetry(BaseModel):
     source: str
     session_id: str
@@ -201,9 +212,9 @@ class AskPayload(BaseModel):
     question: str
     user_id: Optional[str] = None
     session_id: Optional[str] = None
-    context: Optional[str] = None
+    context: Optional[str] = None  # JSON string from front-end
     telemetry: Optional[Dict[str, Any]] = None
-    mode: Optional[str] = "chat"  # "chat", "briefing_update", "program_help"
+    mode: Optional[str] = "chat"   # "chat" | "briefing_update" | "program_help"
 
 class ProfileUpsert(BaseModel):
     user_id: str
@@ -227,15 +238,23 @@ class ProgramRequest(BaseModel):
     created_by: Optional[str] = None
 
 class StoryboardReq(BaseModel):
-    question: str
+    prompt: str
     user_id: Optional[str] = None
     max_slides: int = 8
+    style: Optional[str] = "cinematic"  # or "museum", "minimal"
+    voiceover: bool = True
 
+class VideoJobReq(BaseModel):
+    storyboard_id: str
+    fps: int = 30
+    seconds_per_slide: int = 5
+    # Later you can add: music_url, voice_id, etc.
 
-# ───────────────────────────────────────────────────────────────────────────────
-# FastAPI app
-# ───────────────────────────────────────────────────────────────────────────────
-app = FastAPI(title="Maat 2.0 Brain", version="2.2.0")
+# ─────────────────────────────────────────────────────────────
+# App
+# ─────────────────────────────────────────────────────────────
+
+app = FastAPI(title="Maat / Mufasa API", version="2.2.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -248,39 +267,37 @@ app.add_middleware(
 app.middleware("http")(log_middleware)
 app.add_api_route("/metrics", metrics, methods=["GET"])
 
-
-@app.get("/")
-def root():
-    # fixes the 405 HEAD/GET confusion when you open the API in browser
-    return {"ok": True, "service": "Maat2.0 API", "hint": "Use /health or POST /ask"}
-
-
 @app.get("/health")
 def health():
     return {
         "ok": True,
-        "label": "Maat2.0",
-        "phase": 7,
+        "label": "Maat/Mufasa API",
+        "has_openai": bool(openai_client),
+        "openai_model": OPENAI_MODEL,
+        "has_local_phi3": HAS_LOCAL_PHI3,
         "stt_url": STT_URL,
         "tts_url": TTS_URL,
         "advisor_mode": ADVISOR_MODE,
-        "has_local_phi3": HAS_LOCAL_PHI3,
-        "has_openai": bool(openai_client),
-        "openai_model": OPENAI_MODEL,
+        "time": int(time.time()),
     }
 
+# IMPORTANT: API root should NOT serve index.html
+@app.get("/")
+def root():
+    return {"ok": True, "service": "mufasa-api", "hint": "Use /health, /ask, /storyboard, /slideshow.html"}
 
-# ───────────────────────────────────────────────────────────────────────────────
-# Telemetry, tuning, experiments, regression tests (unchanged)
-# ───────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
+# Telemetry / tuning / tests (kept)
+# ─────────────────────────────────────────────────────────────
+
 @app.post("/telemetry/ingest")
 def telemetry_ingest(t: Telemetry):
     rec = t.model_dump() | {"ts": int(time.time())}
     path = os.path.join(TELEMETRY_DIR, f"t_{rec['ts']}_{t.session_id}.json")
     write_json(path, rec)
     agg_path = os.path.join(TELEMETRY_DIR, "rolling.jsonl")
-    with open(agg_path, "a", encoding="utf-8") as f:
-        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    with open(agg_path, "a") as f:
+        f.write(json.dumps(rec) + "\n")
     return {"ok": True}
 
 def list_recent_telemetry(n: int = 200) -> List[Dict[str, Any]]:
@@ -324,91 +341,14 @@ def tuning_auto(req: AutoTuneReq):
     write_json(path, proposal)
     return {"ok": True, "proposal": proposal}
 
-@app.post("/rules/version/promote")
-def rules_version_promote(ver: RuleVersion):
-    snapshots = []
-    for fname in os.listdir(RULES_DIR):
-        if fname.startswith("tune_") and fname.endswith(".json"):
-            snapshots.append(read_json(os.path.join(RULES_DIR, fname)))
-    if not snapshots:
-        raise HTTPException(status_code=400, detail="No tuning proposals to version")
-    path = os.path.join(RULES_DIR, f"version_{int(time.time())}_{ver.label}.json")
-    write_json(path, {"label": ver.label, "proposals": snapshots})
-    return {"ok": True, "version_file": path}
+# ─────────────────────────────────────────────────────────────
+# Voice passthrough (optional)
+# ─────────────────────────────────────────────────────────────
 
-@app.post("/rules/version/rollback")
-def rules_version_rollback(ver: RuleVersion):
-    with open(os.path.join(RULES_DIR, "rollback.log"), "a", encoding="utf-8") as f:
-        f.write(f"{int(time.time())}\tROLLBACK\t{ver.label}\n")
-    return {"ok": True}
-
-@app.post("/experiments/ab/start")
-def experiments_ab_start(cfg: ABStart):
-    exp_id = f"exp_{int(time.time())}_{cfg.name}"
-    state = {
-        "id": exp_id,
-        "cfg": cfg.model_dump(),
-        "a": {"n": 0, "sum": 0.0},
-        "b": {"n": 0, "sum": 0.0},
-    }
-    path = os.path.join(EXPER_DIR, f"{exp_id}.json")
-    write_json(path, state)
-    return {"ok": True, "exp_id": exp_id}
-
-@app.get("/experiments/ab/status")
-def experiments_ab_status(exp_id: str):
-    path = os.path.join(EXPER_DIR, f"{exp_id}.json")
-    if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail="Experiment not found")
-    state = read_json(path)
-    a = state["a"]
-    b = state["b"]
-    winner = None
-    if a["n"] > 0 and b["n"] > 0:
-        mean_a = a["sum"] / a["n"]
-        mean_b = b["sum"] / b["n"]
-        if abs(mean_a - mean_b) > 0.05:
-            winner = "A" if mean_a > mean_b else "B"
-        state["means"] = {"A": mean_a, "B": mean_b}
-        state["winner"] = winner
-    return state
-
-@app.post("/tests/regress/run")
-def tests_regress_run(req: RegressReq):
-    data = list_recent_telemetry(100)
-    depths = [d["metrics"].get("depth", 0.0) for d in data if "depth" in d["metrics"]]
-    wobbles = [d["metrics"].get("knee_wobble_deg", 0.0) for d in data if "knee_wobble_deg" in d["metrics"]]
-
-    results = []
-    for g in req.gates:
-        gate_res = {"name": g.name, "pass": True, "notes": []}
-        if g.min_depth is not None:
-            avg_depth = (sum(depths) / len(depths)) if depths else 0.0
-            if avg_depth < g.min_depth:
-                gate_res["pass"] = False
-                gate_res["notes"].append(f"avg_depth {avg_depth:.2f} < {g.min_depth}")
-        if g.max_wobble is not None:
-            avg_wobble = (sum(wobbles) / len(wobbles)) if wobbles else 999.0
-            if avg_wobble > g.max_wobble:
-                gate_res["pass"] = False
-                gate_res["notes"].append(f"avg_wobble {avg_wobble:.2f} > {g.max_wobble}")
-        results.append(gate_res)
-
-    overall = all(r["pass"] for r in results)
-    path = os.path.join(TESTS_DIR, f"regress_{int(time.time())}.json")
-    write_json(path, {"overall": overall, "results": results})
-    return {"overall": overall, "results": results}
-
-
-# ───────────────────────────────────────────────────────────────────────────────
-# Voice: STT / TTS passthrough
-# ───────────────────────────────────────────────────────────────────────────────
 @app.post("/voice/stt")
 async def voice_stt(file: UploadFile = File(...)):
     async with httpx.AsyncClient(timeout=120) as client:
-        files = {
-            "file": (file.filename, await file.read(), file.content_type or "application/octet-stream")
-        }
+        files = {"file": (file.filename, await file.read(), file.content_type or "application/octet-stream")}
         r = await client.post(f"{STT_URL}/stt", files=files)
         if r.status_code != 200:
             raise HTTPException(status_code=r.status_code, detail=r.text)
@@ -422,27 +362,22 @@ async def voice_tts(text: str = Form(...)):
             raise HTTPException(status_code=r.status_code, detail=r.text)
         return StreamingResponse(io.BytesIO(r.content), media_type="audio/wav")
 
+# ─────────────────────────────────────────────────────────────
+# Profiles
+# ─────────────────────────────────────────────────────────────
 
-# ───────────────────────────────────────────────────────────────────────────────
-# User Profile APIs
-# ───────────────────────────────────────────────────────────────────────────────
 @app.post("/users/profile/upsert")
 def profile_upsert(p: ProfileUpsert):
     profile = load_user_profile(p.user_id)
 
     demo = profile.get("demographics", {})
-    if p.age is not None:
-        demo["age"] = p.age
-    if p.height_cm is not None:
-        demo["height_cm"] = p.height_cm
-    if p.weight_kg is not None:
-        demo["weight_kg"] = p.weight_kg
+    if p.age is not None: demo["age"] = p.age
+    if p.height_cm is not None: demo["height_cm"] = p.height_cm
+    if p.weight_kg is not None: demo["weight_kg"] = p.weight_kg
     profile["demographics"] = demo
 
-    if p.goals is not None:
-        profile["goals"] = p.goals
-    if p.injuries is not None:
-        profile["injuries"] = p.injuries
+    if p.goals is not None: profile["goals"] = p.goals
+    if p.injuries is not None: profile["injuries"] = p.injuries
 
     if p.notes:
         prev = profile.get("last_briefing", "")
@@ -455,62 +390,53 @@ def profile_upsert(p: ProfileUpsert):
 def profile_get(user_id: str):
     return {"ok": True, "profile": load_user_profile(user_id)}
 
+# ─────────────────────────────────────────────────────────────
+# Program generation (kept)
+# ─────────────────────────────────────────────────────────────
 
-# ───────────────────────────────────────────────────────────────────────────────
-# Program generation APIs (unchanged)
-# ───────────────────────────────────────────────────────────────────────────────
 @app.post("/coach/program/generate")
 async def coach_program_generate(req: ProgramRequest):
-    if openai_client is None and not HAS_LOCAL_PHI3:
-        raise HTTPException(status_code=503, detail="No LLM is configured for program generation.")
-
     profile = load_user_profile(req.user_id)
 
     system_prompt = (
         "You are Ma'at 2.0, a NASM-informed Pan-African virtual coach.\n"
-        "Return ONLY valid JSON.\n"
+        "Return ONLY valid JSON in the specified schema.\n"
     )
 
     user_prompt = (
         f"User profile:\n{json.dumps(profile, indent=2)}\n\n"
-        f"Goal: {req.goal}\nWeeks: {req.weeks}\nDays per week: {req.days_per_week}\n"
+        f"Goal: {req.goal}\nWeeks: {req.weeks}\nDays/week: {req.days_per_week}\n"
         f"Home only: {req.home_only}\nYoga heavy: {req.yoga_heavy}\n\n"
-        f"Assessment:\n{req.assessment_summary or 'None'}\n\n"
-        f"Extra:\n{req.extra_context or ''}\n\n"
-        "Output JSON with keys: title, goal, weeks, days_per_week, notes, plan[].\n"
+        f"Assessment summary:\n{req.assessment_summary or 'None'}\n\n"
+        f"Extra context:\n{req.extra_context or ''}\n\n"
+        "Output JSON schema:\n"
+        "{"
+        "\"title\":str,\"goal\":str,\"weeks\":int,\"days_per_week\":int,"
+        "\"notes\":str,"
+        "\"plan\":[{\"week\":int,\"days\":[{\"day_index\":int,\"label\":str,\"focus\":str,"
+        "\"blocks\":[{\"type\":\"warmup\"|\"activation\"|\"strength\"|\"yoga\"|\"core\"|\"recovery\","
+        "\"description\":str,\"items\":[str]}]}]}]"
+        "}"
     )
 
-    raw = None
-    if openai_client is not None:
-        resp = openai_client.chat.completions.create(
-            model=OPENAI_MODEL,
-            messages=[{"role": "system", "content": system_prompt},
-                      {"role": "user", "content": user_prompt}],
-            temperature=0.6,
-        )
-        raw = resp.choices[0].message.content
-    else:
-        raw = phi3.generate(user_prompt)
-
+    raw = llm_chat(system_prompt, user_prompt, temperature=0.6)
     try:
         program = json.loads(raw)
     except Exception:
-        program = {"title": "Program (unparsed)", "goal": req.goal, "weeks": req.weeks,
-                   "days_per_week": req.days_per_week, "notes": "Non-JSON output.", "plan": [], "raw": raw}
+        program = {"title":"Program (unparsed)","goal":req.goal,"weeks":req.weeks,"days_per_week":req.days_per_week,"notes":"Model returned non-JSON.","plan":[],"raw":raw}
 
     attach_calendar_to_program(program, req.start_date)
     if req.created_by:
         program["created_by"] = req.created_by
 
-    pid = save_program(req.user_id, program)
-    return {"ok": True, "program_id": pid, "program": program}
+    program_id = save_program(req.user_id, program)
+    return {"ok": True, "program_id": program_id, "program": program}
 
 @app.get("/coach/program/list")
 def coach_program_list(user_id: str):
     programs = list_programs_for_user(user_id)
-    return {"ok": True, "programs": [{
-        "id": p.get("id"), "title": p.get("title"), "goal": p.get("goal"), "created_at": p.get("created_at")
-    } for p in programs]}
+    items = [{"id":p.get("id"),"title":p.get("title"),"goal":p.get("goal"),"created_at":p.get("created_at")} for p in programs]
+    return {"ok": True, "programs": items}
 
 @app.get("/coach/program/get")
 def coach_program_get(program_id: str):
@@ -528,15 +454,16 @@ def coach_calendar(user_id: str, program_id: Optional[str] = None):
     chosen = None
     if program_id:
         chosen = next((p for p in programs if p.get("id") == program_id), None)
+
     if chosen is None:
         chosen = next((p for p in programs if "calendar" in p), programs[0])
 
     return {"ok": True, "events": chosen.get("calendar") or [], "program_id": chosen.get("id")}
 
-
-# ───────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
 # ASK
-# ───────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
+
 @app.post("/ask")
 async def ask(payload: AskPayload):
     question = payload.question
@@ -565,33 +492,21 @@ async def ask(payload: AskPayload):
         context_text = "\n\nFront-end context:\n" + json.dumps(ctx_obj, indent=2)
 
     system_prompt = (
-        "You are Ma'at 2.0, Rashad's Pan-African AI assistant.\n"
-        "Be clear, safe, and helpful.\n"
-        "Default to 2–8 sentences unless asked to go long.\n\n"
+        "You are Ma'at 2.0, Rashad's Pan-African AI coach.\n"
+        "Be short, direct, and safe.\n"
+        "Use telemetry if present.\n"
         "User profile:\n"
-        f"{json.dumps(profile, indent=2)}\n"
+        f"{json.dumps(profile, indent=2)}"
         f"{telemetry_text}"
-        f"{context_text}\n"
+        f"{context_text}"
     )
 
     if mode == "briefing_update":
         system_prompt += (
-            "\nUpdate your internal briefing about this user in 3–6 sentences, second person.\n"
+            "\nUpdate the user briefing in 3–6 sentences, second-person.\n"
         )
 
-    if openai_client is None and not HAS_LOCAL_PHI3:
-        raise HTTPException(status_code=503, detail="No LLM configured (missing OPENAI_API_KEY).")
-
-    if openai_client is not None:
-        resp = openai_client.chat.completions.create(
-            model=OPENAI_MODEL,
-            messages=[{"role": "system", "content": system_prompt},
-                      {"role": "user", "content": question}],
-            temperature=0.6,
-        )
-        answer = resp.choices[0].message.content
-    else:
-        answer = phi3.generate(question)
+    answer = llm_chat(system_prompt, question, temperature=0.6)
 
     if mode == "briefing_update":
         profile["last_briefing"] = answer
@@ -610,87 +525,210 @@ async def ask(payload: AskPayload):
     write_json(os.path.join(KNOWLEDGE_DIR, f"qa_{ts}.json"), record)
     return record
 
+# ─────────────────────────────────────────────────────────────
+# STORYBOARD + SLIDESHOW
+# ─────────────────────────────────────────────────────────────
 
-# ───────────────────────────────────────────────────────────────────────────────
-# SLIDESHOW / STORYBOARD (NEW)
-# ───────────────────────────────────────────────────────────────────────────────
-@app.post("/storyboard/generate")
-async def storyboard_generate(req: StoryboardReq):
+@app.post("/storyboard")
+def storyboard(req: StoryboardReq):
     """
-    Generates a slide deck outline (JSON) from a user question.
-    This is "the slideshow brain" step.
+    Returns a slide plan you can render into HTML / video later.
     """
-    if openai_client is None and not HAS_LOCAL_PHI3:
-        raise HTTPException(status_code=503, detail="No LLM configured for storyboard generation.")
-
-    user_id = req.user_id or "public"
-    profile = load_user_profile(user_id)
+    sb_id = f"sb_{int(time.time())}_{uuid.uuid4().hex[:8]}"
 
     system_prompt = (
-        "You are Mufasa's Slideshow Director.\n"
-        "Return ONLY valid JSON.\n"
-        "Goal: Convert the user's question into an 6-10 slide micro-lesson.\n"
-        "Each slide must have:\n"
-        "- title (short)\n"
-        "- bullets (3-6 bullets)\n"
-        "- narration (1 short paragraph)\n"
-        "No markdown.\n"
+        "You create storyboards for short educational videos.\n"
+        "Return ONLY valid JSON:\n"
+        "{"
+        "\"title\":str,"
+        "\"slides\":[{\"title\":str,\"bullets\":[str],\"narration\":str,\"on_screen\":str}],"
+        "\"cta\":str"
+        "}"
     )
 
     user_prompt = (
-        f"User: {user_id}\nProfile:\n{json.dumps(profile, indent=2)}\n\n"
-        f"Question: {req.question}\n"
-        f"Max slides: {req.max_slides}\n\n"
-        "Output JSON shape:\n"
-        "{\n"
-        '  "deck_title": string,\n'
-        '  "topic": string,\n'
-        '  "audience": "general",\n'
-        '  "slides": [\n'
-        '     {"title": string, "bullets": [string], "narration": string}\n'
-        "  ]\n"
-        "}\n"
+        f"Topic/prompt: {req.prompt}\n"
+        f"Max slides: {req.max_slides}\n"
+        f"Style: {req.style}\n"
+        "Make it clear, punchy, and suitable for a slideshow video."
     )
 
-    if openai_client is not None:
-        resp = openai_client.chat.completions.create(
-            model=OPENAI_MODEL,
-            messages=[{"role": "system", "content": system_prompt},
-                      {"role": "user", "content": user_prompt}],
-            temperature=0.5,
-        )
-        raw = resp.choices[0].message.content
-    else:
-        raw = phi3.generate(user_prompt)
-
+    raw = llm_chat(system_prompt, user_prompt, temperature=0.7)
     try:
-        deck = json.loads(raw)
+        sb = json.loads(raw)
     except Exception:
-        deck = {
-            "deck_title": "Slideshow (unparsed)",
-            "topic": req.question[:80],
-            "audience": "general",
-            "slides": [{"title": "Error", "bullets": ["Model returned non-JSON"], "narration": raw}],
-        }
+        sb = {"title":"Storyboard (unparsed)","slides":[],"cta":"","raw":raw}
 
-    story = {
-        "user_id": user_id,
-        "question": req.question,
-        "deck": deck,
+    payload = {
+        "id": sb_id,
+        "user_id": req.user_id,
+        "created_at": int(time.time()),
+        "request": req.model_dump(),
+        "storyboard": sb,
     }
-    sb_id = save_storyboard(story)
-    return {"ok": True, "id": sb_id, "storyboard": story}
-
+    write_json(os.path.join(STORYBOARD_DIR, f"{sb_id}.json"), payload)
+    return {"ok": True, "storyboard_id": sb_id, "data": payload}
 
 @app.get("/storyboard/get")
-def storyboard_get(id: str):
-    story = load_storyboard(id)
-    return {"ok": True, "storyboard": story}
+def storyboard_get(storyboard_id: str):
+    path = os.path.join(STORYBOARD_DIR, f"{storyboard_id}.json")
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Storyboard not found")
+    return {"ok": True, "data": read_json(path)}
 
+@app.get("/slideshow.html")
+def slideshow_html(storyboard_id: str):
+    """
+    Lightweight HTML slideshow renderer for a storyboard.
+    Your STATIC SITE should link to this endpoint (API domain) in a new tab
+    OR you can copy this HTML into your static site if you want it local.
+    """
+    path = os.path.join(STORYBOARD_DIR, f"{storyboard_id}.json")
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Storyboard not found")
 
-# ───────────────────────────────────────────────────────────────────────────────
-# Auth helpers (unchanged)
-# ───────────────────────────────────────────────────────────────────────────────
+    data = read_json(path)
+    sb = data.get("storyboard", {})
+    slides = sb.get("slides", [])
+    title = sb.get("title", "Slideshow")
+
+    # Simple no-framework slideshow
+    html = f"""
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{title}</title>
+  <style>
+    body {{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#0b0b0b; color:#f5f5f5; }}
+    .wrap {{ max-width: 980px; margin: 0 auto; padding: 20px; }}
+    .card {{ border: 1px solid #2a2a2a; border-radius: 16px; padding: 18px; background: rgba(255,255,255,0.03); }}
+    .row {{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin: 12px 0; }}
+    button {{ padding: 10px 14px; border-radius: 12px; border: 1px solid #444; background:#141414; color:#fff; }}
+    button:active {{ transform: scale(0.99); }}
+    .muted {{ color:#bdbdbd; font-size: 13px; }}
+    ul {{ line-height: 1.45; }}
+    .big {{ font-size: 28px; font-weight: 800; margin: 4px 0 10px; }}
+    .small {{ font-size: 14px; color:#d6d6d6; }}
+    .progress {{ height: 6px; background:#1a1a1a; border-radius: 999px; overflow:hidden; }}
+    .bar {{ height: 100%; width: 0%; background: #caa24a; }}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="muted">Storyboard</div>
+        <div class="big">{title}</div>
+      </div>
+      <div class="row">
+        <button id="prevBtn">Prev</button>
+        <button id="speakBtn">Speak</button>
+        <button id="nextBtn">Next</button>
+      </div>
+    </div>
+
+    <div class="progress"><div class="bar" id="bar"></div></div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="muted" id="slideCount"></div>
+      <div class="big" id="slideTitle"></div>
+      <div class="small" id="slideOnScreen"></div>
+      <ul id="slideBullets"></ul>
+      <div class="muted" style="margin-top:10px;">Narration</div>
+      <div id="slideNarration" class="small"></div>
+    </div>
+
+    <div class="muted" style="margin-top:14px;">Tip: Use “Speak” to hear narration (browser TTS).</div>
+  </div>
+
+<script>
+  const slides = {json.dumps(slides)};
+  let i = 0;
+
+  const titleEl = document.getElementById("slideTitle");
+  const onScreenEl = document.getElementById("slideOnScreen");
+  const bulletsEl = document.getElementById("slideBullets");
+  const narrationEl = document.getElementById("slideNarration");
+  const countEl = document.getElementById("slideCount");
+  const barEl = document.getElementById("bar");
+
+  function render() {{
+    const s = slides[i] || {{}};
+    titleEl.textContent = s.title || ("Slide " + (i+1));
+    onScreenEl.textContent = s.on_screen || "";
+    narrationEl.textContent = s.narration || "";
+    bulletsEl.innerHTML = "";
+    (s.bullets || []).forEach(b => {{
+      const li = document.createElement("li");
+      li.textContent = b;
+      bulletsEl.appendChild(li);
+    }});
+    countEl.textContent = `Slide ${'{'}i+1{'}'} / ${'{'}slides.length{'}'}`;
+    const pct = slides.length ? ((i+1)/slides.length)*100 : 0;
+    barEl.style.width = pct + "%";
+  }}
+
+  function speakCurrent() {{
+    const s = slides[i] || {{}};
+    const text = (s.narration || s.on_screen || s.title || "");
+    if (!text) return;
+    if (!("speechSynthesis" in window)) return alert("TTS not supported in this browser.");
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(u);
+  }}
+
+  document.getElementById("prevBtn").onclick = () => {{ i = Math.max(0, i-1); render(); }};
+  document.getElementById("nextBtn").onclick = () => {{ i = Math.min(slides.length-1, i+1); render(); }};
+  document.getElementById("speakBtn").onclick = () => speakCurrent();
+
+  render();
+</script>
+</body>
+</html>
+"""
+    return HTMLResponse(html)
+
+# ─────────────────────────────────────────────────────────────
+# VIDEO JOB REQUEST (stub)
+# ─────────────────────────────────────────────────────────────
+
+@app.post("/video/request")
+def video_request(req: VideoJobReq):
+    """
+    This creates a 'job' record. Actual MP4 generation should be done by a worker
+    (or a separate service) because Render free instances + ffmpeg setup can be tricky.
+    """
+    sb_path = os.path.join(STORYBOARD_DIR, f"{req.storyboard_id}.json")
+    if not os.path.exists(sb_path):
+        raise HTTPException(status_code=404, detail="Storyboard not found")
+
+    job_id = f"vid_{int(time.time())}_{uuid.uuid4().hex[:8]}"
+    job = {
+        "id": job_id,
+        "created_at": int(time.time()),
+        "status": "queued",
+        "request": req.model_dump(),
+        "storyboard_path": sb_path,
+        "output": None,
+        "notes": "Video rendering not implemented in this API yet. Connect a worker (ffmpeg) or external renderer."
+    }
+    write_json(os.path.join(VIDEO_DIR, f"{job_id}.json"), job)
+    return {"ok": True, "job": job}
+
+@app.get("/video/job")
+def video_job(job_id: str):
+    path = os.path.join(VIDEO_DIR, f"{job_id}.json")
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Job not found")
+    return {"ok": True, "job": read_json(path)}
+
+# ─────────────────────────────────────────────────────────────
+# Auth helpers
+# ─────────────────────────────────────────────────────────────
+
 @app.post("/auth/login")
 def login(role: str = "coach", tenant: str = "default", user_id: str = "u1"):
     token = mint_jwt({"role": role, "tenant": tenant, "sub": user_id})
