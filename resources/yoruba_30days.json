@@ -1,0 +1,1147 @@
+{
+  "language": "Yoruba",
+  "duration_days": 30,
+  "format": "3 words per day + 1 language fact + short practice routine",
+  "days": [
+    {
+      "day": 1,
+      "fact": "Yorùbá is a tonal language: high (ọ́), mid (o), and low (ò) tones can change meaning.",
+      "words": [
+        {
+          "yoruba": "Báwo",
+          "english": "How",
+          "pronunciation_hint": "BAH-woh",
+          "example_yoruba": "Báwo ni?",
+          "example_english": "How are you?",
+          "say_it_3x_prompt": "Say: \"Báwo\" three times, clearly."
+        },
+        {
+          "yoruba": "Ẹ káàárọ̀",
+          "english": "Good morning",
+          "pronunciation_hint": "EH kah-ah-roh",
+          "example_yoruba": "Ẹ káàárọ̀ o!",
+          "example_english": "Good morning!",
+          "say_it_3x_prompt": "Say: \"Ẹ káàárọ̀\" three times, clearly."
+        },
+        {
+          "yoruba": "Dáadáa",
+          "english": "Fine/Well",
+          "pronunciation_hint": "DAH-ah-dah",
+          "example_yoruba": "Mo wà dáadáa.",
+          "example_english": "I am fine.",
+          "say_it_3x_prompt": "Say: \"Dáadáa\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 2,
+      "fact": "Ọ/ẹ are distinct vowels in Yorùbá; they are different from o/e and matter for meaning.",
+      "words": [
+        {
+          "yoruba": "Ẹ káàsán",
+          "english": "Good afternoon",
+          "pronunciation_hint": "EH kah-ah-sahn",
+          "example_yoruba": "Ẹ káàsán o!",
+          "example_english": "Good afternoon!",
+          "say_it_3x_prompt": "Say: \"Ẹ káàsán\" three times, clearly."
+        },
+        {
+          "yoruba": "Ẹ káalẹ́",
+          "english": "Good evening",
+          "pronunciation_hint": "EH kah-ah-leh",
+          "example_yoruba": "Ẹ káalẹ́ o!",
+          "example_english": "Good evening!",
+          "say_it_3x_prompt": "Say: \"Ẹ káalẹ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Ọ̀pẹ́",
+          "english": "Thanks/Gratitude",
+          "pronunciation_hint": "oh-peh",
+          "example_yoruba": "Ọ̀pẹ́ pupọ̀.",
+          "example_english": "Thank you very much.",
+          "say_it_3x_prompt": "Say: \"Ọ̀pẹ́\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 3,
+      "fact": "Nouns don’t change much for plural; plural meaning often comes from context or words like àwọn (plural marker).",
+      "words": [
+        {
+          "yoruba": "Jọ̀wọ́",
+          "english": "Please",
+          "pronunciation_hint": "jaw-woh",
+          "example_yoruba": "Jọ̀wọ́, ràn mí lọ́wọ́.",
+          "example_english": "Please, help me.",
+          "say_it_3x_prompt": "Say: \"Jọ̀wọ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Bẹ́ẹ̀ni",
+          "english": "Yes",
+          "pronunciation_hint": "beh-eh-nee",
+          "example_yoruba": "Bẹ́ẹ̀ni, mo yóò wá.",
+          "example_english": "Yes, I will come.",
+          "say_it_3x_prompt": "Say: \"Bẹ́ẹ̀ni\" three times, clearly."
+        },
+        {
+          "yoruba": "Rárá",
+          "english": "No",
+          "pronunciation_hint": "rah-rah",
+          "example_yoruba": "Rárá, kò sí.",
+          "example_english": "No, there isn’t.",
+          "say_it_3x_prompt": "Say: \"Rárá\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 4,
+      "fact": "Yorùbá uses many greetings by time of day: Ẹ káàárọ̀ (morning), Ẹ káàsán (afternoon), Ẹ káalẹ́ (evening).",
+      "words": [
+        {
+          "yoruba": "Mo",
+          "english": "I",
+          "pronunciation_hint": "moh",
+          "example_yoruba": "Mo fẹ́ omi.",
+          "example_english": "I want water.",
+          "say_it_3x_prompt": "Say: \"Mo\" three times, clearly."
+        },
+        {
+          "yoruba": "O",
+          "english": "You (singular)",
+          "pronunciation_hint": "oh",
+          "example_yoruba": "O wà dáadáa?",
+          "example_english": "Are you fine?",
+          "say_it_3x_prompt": "Say: \"O\" three times, clearly."
+        },
+        {
+          "yoruba": "Ó",
+          "english": "He/She/It",
+          "pronunciation_hint": "aw",
+          "example_yoruba": "Ó wà níbí.",
+          "example_english": "He/She is here.",
+          "say_it_3x_prompt": "Say: \"Ó\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 5,
+      "fact": "“Ẹ” at the start of a greeting is a respectful ‘you’ for elders/groups.",
+      "words": [
+        {
+          "yoruba": "A",
+          "english": "We",
+          "pronunciation_hint": "ah",
+          "example_yoruba": "A ń lọ.",
+          "example_english": "We are going.",
+          "say_it_3x_prompt": "Say: \"A\" three times, clearly."
+        },
+        {
+          "yoruba": "Ẹ",
+          "english": "You (plural/respect)",
+          "pronunciation_hint": "eh",
+          "example_yoruba": "Ẹ wà dáadáa?",
+          "example_english": "Are you (respect) fine?",
+          "say_it_3x_prompt": "Say: \"Ẹ\" three times, clearly."
+        },
+        {
+          "yoruba": "Wọ́n",
+          "english": "They",
+          "pronunciation_hint": "won",
+          "example_yoruba": "Wọ́n ń ṣiṣẹ́.",
+          "example_english": "They are working.",
+          "say_it_3x_prompt": "Say: \"Wọ́n\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 6,
+      "fact": "To ask yes/no questions, Yorùbá can use intonation or particles like ‘Ṣé …?’",
+      "words": [
+        {
+          "yoruba": "Ilé",
+          "english": "House/Home",
+          "pronunciation_hint": "ee-leh",
+          "example_yoruba": "Mo wà ní ilé.",
+          "example_english": "I am at home.",
+          "say_it_3x_prompt": "Say: \"Ilé\" three times, clearly."
+        },
+        {
+          "yoruba": "Omi",
+          "english": "Water",
+          "pronunciation_hint": "oh-mee",
+          "example_yoruba": "Jọ̀wọ́, fún mi ní omi.",
+          "example_english": "Please, give me water.",
+          "say_it_3x_prompt": "Say: \"Omi\" three times, clearly."
+        },
+        {
+          "yoruba": "Oúnjẹ",
+          "english": "Food",
+          "pronunciation_hint": "oh-oon-jeh",
+          "example_yoruba": "Mo fẹ́ oúnjẹ.",
+          "example_english": "I want food.",
+          "say_it_3x_prompt": "Say: \"Oúnjẹ\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 7,
+      "fact": "Negation commonly uses ‘kò’ (e.g., Mo kò mọ̀ = I don’t know).",
+      "words": [
+        {
+          "yoruba": "Ọrẹ́",
+          "english": "Friend",
+          "pronunciation_hint": "oh-reh",
+          "example_yoruba": "Ọrẹ́ mi ni.",
+          "example_english": "It is my friend.",
+          "say_it_3x_prompt": "Say: \"Ọrẹ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Ẹbí",
+          "english": "Family",
+          "pronunciation_hint": "eh-bee",
+          "example_yoruba": "Ẹbí mi pọ̀.",
+          "example_english": "My family is many.",
+          "say_it_3x_prompt": "Say: \"Ẹbí\" three times, clearly."
+        },
+        {
+          "yoruba": "Orúkọ",
+          "english": "Name",
+          "pronunciation_hint": "oh-roo-koh",
+          "example_yoruba": "Kí ni orúkọ rẹ?",
+          "example_english": "What is your name?",
+          "say_it_3x_prompt": "Say: \"Orúkọ\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 8,
+      "fact": "Yorùbá spelling uses diacritics for tone marks; leaving them off can confuse meanings.",
+      "words": [
+        {
+          "yoruba": "Kí ni",
+          "english": "What is...?",
+          "pronunciation_hint": "kee nee",
+          "example_yoruba": "Kí ni èyí?",
+          "example_english": "What is this?",
+          "say_it_3x_prompt": "Say: \"Kí ni\" three times, clearly."
+        },
+        {
+          "yoruba": "Nibo",
+          "english": "Where",
+          "pronunciation_hint": "nee-baw",
+          "example_yoruba": "Nibo ni ilé rẹ?",
+          "example_english": "Where is your house?",
+          "say_it_3x_prompt": "Say: \"Nibo\" three times, clearly."
+        },
+        {
+          "yoruba": "Nigbawo",
+          "english": "When",
+          "pronunciation_hint": "neeg-baw",
+          "example_yoruba": "Nigbawo ni o dé?",
+          "example_english": "When did you arrive?",
+          "say_it_3x_prompt": "Say: \"Nigbawo\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 9,
+      "fact": "‘Ṣ’ is a distinct letter/sound (like ‘sh’).",
+      "words": [
+        {
+          "yoruba": "Tani",
+          "english": "Who",
+          "pronunciation_hint": "tah-nee",
+          "example_yoruba": "Tani ẹni náà?",
+          "example_english": "Who is that person?",
+          "say_it_3x_prompt": "Say: \"Tani\" three times, clearly."
+        },
+        {
+          "yoruba": "Kí ló dé",
+          "english": "Why",
+          "pronunciation_hint": "kee law deh",
+          "example_yoruba": "Kí ló dé?",
+          "example_english": "Why?",
+          "say_it_3x_prompt": "Say: \"Kí ló dé\" three times, clearly."
+        },
+        {
+          "yoruba": "Báwo ni",
+          "english": "How (in a sentence)",
+          "pronunciation_hint": "bah-woh nee",
+          "example_yoruba": "Báwo ni iṣẹ́?",
+          "example_english": "How is work?",
+          "say_it_3x_prompt": "Say: \"Báwo ni\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 10,
+      "fact": "Pronouns are short and common: Mo (I), O (you), Ó (he/she), A (we), Ẹ (you plural/respect), Wọ́n (they).",
+      "words": [
+        {
+          "yoruba": "Mo fẹ́",
+          "english": "I want",
+          "pronunciation_hint": "moh feh",
+          "example_yoruba": "Mo fẹ́ rìn.",
+          "example_english": "I want to walk.",
+          "say_it_3x_prompt": "Say: \"Mo fẹ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Mo ní",
+          "english": "I have",
+          "pronunciation_hint": "moh nee",
+          "example_yoruba": "Mo ní ìwé.",
+          "example_english": "I have a book.",
+          "say_it_3x_prompt": "Say: \"Mo ní\" three times, clearly."
+        },
+        {
+          "yoruba": "Mo mọ̀",
+          "english": "I know",
+          "pronunciation_hint": "moh maw",
+          "example_yoruba": "Mo mọ̀ ọ.",
+          "example_english": "I know him/her.",
+          "say_it_3x_prompt": "Say: \"Mo mọ̀\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 11,
+      "fact": "Yorùbá is a tonal language: high (ọ́), mid (o), and low (ò) tones can change meaning.",
+      "words": [
+        {
+          "yoruba": "Mo kò",
+          "english": "I don’t (negation)",
+          "pronunciation_hint": "moh kaw",
+          "example_yoruba": "Mo kò mọ̀.",
+          "example_english": "I don’t know.",
+          "say_it_3x_prompt": "Say: \"Mo kò\" three times, clearly."
+        },
+        {
+          "yoruba": "Kò sí",
+          "english": "There isn’t/aren’t",
+          "pronunciation_hint": "kaw see",
+          "example_yoruba": "Kò sí iṣòro.",
+          "example_english": "There is no problem.",
+          "say_it_3x_prompt": "Say: \"Kò sí\" three times, clearly."
+        },
+        {
+          "yoruba": "Ṣé",
+          "english": "Question marker",
+          "pronunciation_hint": "sheh",
+          "example_yoruba": "Ṣé o wà dáadáa?",
+          "example_english": "Are you fine?",
+          "say_it_3x_prompt": "Say: \"Ṣé\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 12,
+      "fact": "Ọ/ẹ are distinct vowels in Yorùbá; they are different from o/e and matter for meaning.",
+      "words": [
+        {
+          "yoruba": "Ràn mí lọ́wọ́",
+          "english": "Help me",
+          "pronunciation_hint": "rahn mee law-woh",
+          "example_yoruba": "Jọ̀wọ́, ràn mí lọ́wọ́.",
+          "example_english": "Please help me.",
+          "say_it_3x_prompt": "Say: \"Ràn mí lọ́wọ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Wá",
+          "english": "Come",
+          "pronunciation_hint": "wah",
+          "example_yoruba": "Wá síbí.",
+          "example_english": "Come here.",
+          "say_it_3x_prompt": "Say: \"Wá\" three times, clearly."
+        },
+        {
+          "yoruba": "Lọ",
+          "english": "Go",
+          "pronunciation_hint": "law",
+          "example_yoruba": "Lọ ní báyìí.",
+          "example_english": "Go now.",
+          "say_it_3x_prompt": "Say: \"Lọ\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 13,
+      "fact": "Nouns don’t change much for plural; plural meaning often comes from context or words like àwọn (plural marker).",
+      "words": [
+        {
+          "yoruba": "Jẹ́",
+          "english": "Eat",
+          "pronunciation_hint": "jeh",
+          "example_yoruba": "Jẹ́ oúnjẹ.",
+          "example_english": "Eat food.",
+          "say_it_3x_prompt": "Say: \"Jẹ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Mú",
+          "english": "Drink",
+          "pronunciation_hint": "moo",
+          "example_yoruba": "Mú omi.",
+          "example_english": "Drink water.",
+          "say_it_3x_prompt": "Say: \"Mú\" three times, clearly."
+        },
+        {
+          "yoruba": "Sùn",
+          "english": "Sleep",
+          "pronunciation_hint": "soon",
+          "example_yoruba": "Mo fẹ́ sùn.",
+          "example_english": "I want to sleep.",
+          "say_it_3x_prompt": "Say: \"Sùn\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 14,
+      "fact": "Yorùbá uses many greetings by time of day: Ẹ káàárọ̀ (morning), Ẹ káàsán (afternoon), Ẹ káalẹ́ (evening).",
+      "words": [
+        {
+          "yoruba": "Ṣiṣẹ́",
+          "english": "Work",
+          "pronunciation_hint": "shee-sheh",
+          "example_yoruba": "Mo ń ṣiṣẹ́.",
+          "example_english": "I am working.",
+          "say_it_3x_prompt": "Say: \"Ṣiṣẹ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Kọ́",
+          "english": "Learn/Study",
+          "pronunciation_hint": "koh",
+          "example_yoruba": "Mo ń kọ́ Yorùbá.",
+          "example_english": "I am learning Yoruba.",
+          "say_it_3x_prompt": "Say: \"Kọ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Kà",
+          "english": "Read",
+          "pronunciation_hint": "kah",
+          "example_yoruba": "Mo ń kà ìwé.",
+          "example_english": "I am reading a book.",
+          "say_it_3x_prompt": "Say: \"Kà\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 15,
+      "fact": "“Ẹ” at the start of a greeting is a respectful ‘you’ for elders/groups.",
+      "words": [
+        {
+          "yoruba": "Ọjọ́",
+          "english": "Day",
+          "pronunciation_hint": "oh-jaw",
+          "example_yoruba": "Ọjọ́ yìí dára.",
+          "example_english": "Today is good.",
+          "say_it_3x_prompt": "Say: \"Ọjọ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Ọ̀sẹ̀",
+          "english": "Week",
+          "pronunciation_hint": "oh-seh",
+          "example_yoruba": "Ọ̀sẹ̀ tó ń bọ̀.",
+          "example_english": "Next week.",
+          "say_it_3x_prompt": "Say: \"Ọ̀sẹ̀\" three times, clearly."
+        },
+        {
+          "yoruba": "Oṣù",
+          "english": "Month",
+          "pronunciation_hint": "oh-shoo",
+          "example_yoruba": "Oṣù yìí.",
+          "example_english": "This month.",
+          "say_it_3x_prompt": "Say: \"Oṣù\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 16,
+      "fact": "To ask yes/no questions, Yorùbá can use intonation or particles like ‘Ṣé …?’",
+      "words": [
+        {
+          "yoruba": "Lónìí",
+          "english": "Today",
+          "pronunciation_hint": "law-nee",
+          "example_yoruba": "Lónìí, mo wà dáadáa.",
+          "example_english": "Today, I am fine.",
+          "say_it_3x_prompt": "Say: \"Lónìí\" three times, clearly."
+        },
+        {
+          "yoruba": "Ọ̀la",
+          "english": "Tomorrow",
+          "pronunciation_hint": "oh-lah",
+          "example_yoruba": "Ọ̀la ni.",
+          "example_english": "It’s tomorrow.",
+          "say_it_3x_prompt": "Say: \"Ọ̀la\" three times, clearly."
+        },
+        {
+          "yoruba": "Àná",
+          "english": "Yesterday",
+          "pronunciation_hint": "ah-nah",
+          "example_yoruba": "Àná, mo ṣiṣẹ́.",
+          "example_english": "Yesterday, I worked.",
+          "say_it_3x_prompt": "Say: \"Àná\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 17,
+      "fact": "Negation commonly uses ‘kò’ (e.g., Mo kò mọ̀ = I don’t know).",
+      "words": [
+        {
+          "yoruba": "Ọjà",
+          "english": "Market",
+          "pronunciation_hint": "oh-jah",
+          "example_yoruba": "Mo ń lọ sí ọjà.",
+          "example_english": "I’m going to the market.",
+          "say_it_3x_prompt": "Say: \"Ọjà\" three times, clearly."
+        },
+        {
+          "yoruba": "Ilé iṣẹ́",
+          "english": "Office/Workplace",
+          "pronunciation_hint": "ee-leh ee-sheh",
+          "example_yoruba": "Mo wà ní ilé iṣẹ́.",
+          "example_english": "I’m at the office.",
+          "say_it_3x_prompt": "Say: \"Ilé iṣẹ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Ilé-ẹ̀kọ́",
+          "english": "School",
+          "pronunciation_hint": "ee-leh eh-koh",
+          "example_yoruba": "Mo ń lọ sí ilé-ẹ̀kọ́.",
+          "example_english": "I’m going to school.",
+          "say_it_3x_prompt": "Say: \"Ilé-ẹ̀kọ́\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 18,
+      "fact": "Yorùbá spelling uses diacritics for tone marks; leaving them off can confuse meanings.",
+      "words": [
+        {
+          "yoruba": "Owó",
+          "english": "Money",
+          "pronunciation_hint": "oh-woh",
+          "example_yoruba": "Owó mi wà níbí.",
+          "example_english": "My money is here.",
+          "say_it_3x_prompt": "Say: \"Owó\" three times, clearly."
+        },
+        {
+          "yoruba": "Fóònù",
+          "english": "Phone",
+          "pronunciation_hint": "foh-noo",
+          "example_yoruba": "Fóònù mi sọnù.",
+          "example_english": "My phone is lost.",
+          "say_it_3x_prompt": "Say: \"Fóònù\" three times, clearly."
+        },
+        {
+          "yoruba": "Ọkọ̀",
+          "english": "Car/Vehicle",
+          "pronunciation_hint": "aw-kaw",
+          "example_yoruba": "Ọkọ̀ mi ń bọ̀.",
+          "example_english": "My car is coming.",
+          "say_it_3x_prompt": "Say: \"Ọkọ̀\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 19,
+      "fact": "‘Ṣ’ is a distinct letter/sound (like ‘sh’).",
+      "words": [
+        {
+          "yoruba": "Ẹ ṣé",
+          "english": "Thank you (respect)",
+          "pronunciation_hint": "eh sheh",
+          "example_yoruba": "Ẹ ṣé pupọ̀.",
+          "example_english": "Thank you very much.",
+          "say_it_3x_prompt": "Say: \"Ẹ ṣé\" three times, clearly."
+        },
+        {
+          "yoruba": "Dára",
+          "english": "Good",
+          "pronunciation_hint": "dah-rah",
+          "example_yoruba": "Ó dára.",
+          "example_english": "It is good.",
+          "say_it_3x_prompt": "Say: \"Dára\" three times, clearly."
+        },
+        {
+          "yoruba": "Burú",
+          "english": "Bad",
+          "pronunciation_hint": "boo-roo",
+          "example_yoruba": "Ó burú.",
+          "example_english": "It is bad.",
+          "say_it_3x_prompt": "Say: \"Burú\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 20,
+      "fact": "Pronouns are short and common: Mo (I), O (you), Ó (he/she), A (we), Ẹ (you plural/respect), Wọ́n (they).",
+      "words": [
+        {
+          "yoruba": "Síbí",
+          "english": "Here",
+          "pronunciation_hint": "see-bee",
+          "example_yoruba": "Wá síbí.",
+          "example_english": "Come here.",
+          "say_it_3x_prompt": "Say: \"Síbí\" three times, clearly."
+        },
+        {
+          "yoruba": "Níbẹ̀",
+          "english": "There",
+          "pronunciation_hint": "nee-beh",
+          "example_yoruba": "Ó wà níbẹ̀.",
+          "example_english": "He/She is there.",
+          "say_it_3x_prompt": "Say: \"Níbẹ̀\" three times, clearly."
+        },
+        {
+          "yoruba": "Báyìí",
+          "english": "Now",
+          "pronunciation_hint": "bah-yee",
+          "example_yoruba": "Báyìí ni.",
+          "example_english": "It is now.",
+          "say_it_3x_prompt": "Say: \"Báyìí\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 21,
+      "fact": "Yorùbá is a tonal language: high (ọ́), mid (o), and low (ò) tones can change meaning.",
+      "words": [
+        {
+          "yoruba": "Ṣí",
+          "english": "Open",
+          "pronunciation_hint": "shee",
+          "example_yoruba": "Ṣí ilẹ̀kùn.",
+          "example_english": "Open the door.",
+          "say_it_3x_prompt": "Say: \"Ṣí\" three times, clearly."
+        },
+        {
+          "yoruba": "Tì",
+          "english": "Close",
+          "pronunciation_hint": "tee",
+          "example_yoruba": "Tì ilẹ̀kùn.",
+          "example_english": "Close the door.",
+          "say_it_3x_prompt": "Say: \"Tì\" three times, clearly."
+        },
+        {
+          "yoruba": "Jóko",
+          "english": "Sit",
+          "pronunciation_hint": "jaw-koh",
+          "example_yoruba": "Jóko síbí.",
+          "example_english": "Sit here.",
+          "say_it_3x_prompt": "Say: \"Jóko\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 22,
+      "fact": "Ọ/ẹ are distinct vowels in Yorùbá; they are different from o/e and matter for meaning.",
+      "words": [
+        {
+          "yoruba": "Dúró",
+          "english": "Wait/Stand",
+          "pronunciation_hint": "doo-roh",
+          "example_yoruba": "Dúró díẹ̀.",
+          "example_english": "Wait a bit.",
+          "say_it_3x_prompt": "Say: \"Dúró\" three times, clearly."
+        },
+        {
+          "yoruba": "Rìn",
+          "english": "Walk",
+          "pronunciation_hint": "reen",
+          "example_yoruba": "Jẹ́ ká rìn.",
+          "example_english": "Let’s walk.",
+          "say_it_3x_prompt": "Say: \"Rìn\" three times, clearly."
+        },
+        {
+          "yoruba": "Sáré",
+          "english": "Run",
+          "pronunciation_hint": "shah-reh",
+          "example_yoruba": "Mo ń sáré.",
+          "example_english": "I am running.",
+          "say_it_3x_prompt": "Say: \"Sáré\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 23,
+      "fact": "Nouns don’t change much for plural; plural meaning often comes from context or words like àwọn (plural marker).",
+      "words": [
+        {
+          "yoruba": "Ìbéèrè",
+          "english": "Question",
+          "pronunciation_hint": "ee-beh-reh",
+          "example_yoruba": "Mo ní ìbéèrè.",
+          "example_english": "I have a question.",
+          "say_it_3x_prompt": "Say: \"Ìbéèrè\" three times, clearly."
+        },
+        {
+          "yoruba": "Ìdáhùn",
+          "english": "Answer",
+          "pronunciation_hint": "ee-dah-hoon",
+          "example_yoruba": "Ìdáhùn rẹ dára.",
+          "example_english": "Your answer is good.",
+          "say_it_3x_prompt": "Say: \"Ìdáhùn\" three times, clearly."
+        },
+        {
+          "yoruba": "Ṣàlàyé",
+          "english": "Explain",
+          "pronunciation_hint": "shah-lah-yeh",
+          "example_yoruba": "Ṣàlàyé fún mi.",
+          "example_english": "Explain to me.",
+          "say_it_3x_prompt": "Say: \"Ṣàlàyé\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 24,
+      "fact": "Yorùbá uses many greetings by time of day: Ẹ káàárọ̀ (morning), Ẹ káàsán (afternoon), Ẹ káalẹ́ (evening).",
+      "words": [
+        {
+          "yoruba": "Ìtàn",
+          "english": "History/story",
+          "pronunciation_hint": "ee-tahn",
+          "example_yoruba": "Ìtàn wa pọ̀.",
+          "example_english": "Our history is vast.",
+          "say_it_3x_prompt": "Say: \"Ìtàn\" three times, clearly."
+        },
+        {
+          "yoruba": "Àṣà",
+          "english": "Culture",
+          "pronunciation_hint": "ah-shah",
+          "example_yoruba": "Àṣà Yorùbá.",
+          "example_english": "Yoruba culture.",
+          "say_it_3x_prompt": "Say: \"Àṣà\" three times, clearly."
+        },
+        {
+          "yoruba": "Àjọṣe",
+          "english": "Community/relationship",
+          "pronunciation_hint": "ah-jaw-sheh",
+          "example_yoruba": "Àjọṣe wa lágbára.",
+          "example_english": "Our community bond is strong.",
+          "say_it_3x_prompt": "Say: \"Àjọṣe\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 25,
+      "fact": "“Ẹ” at the start of a greeting is a respectful ‘you’ for elders/groups.",
+      "words": [
+        {
+          "yoruba": "Bí",
+          "english": "If",
+          "pronunciation_hint": "bee",
+          "example_yoruba": "Bí o bá wá, a yóò lọ.",
+          "example_english": "If you come, we will go.",
+          "say_it_3x_prompt": "Say: \"Bí\" three times, clearly."
+        },
+        {
+          "yoruba": "Kò",
+          "english": "Not/No (negation particle)",
+          "pronunciation_hint": "kaw",
+          "example_yoruba": "Mo kò fẹ́.",
+          "example_english": "I don’t want.",
+          "say_it_3x_prompt": "Say: \"Kò\" three times, clearly."
+        },
+        {
+          "yoruba": "Yóò",
+          "english": "Will (future)",
+          "pronunciation_hint": "yaw",
+          "example_yoruba": "Mo yóò wá.",
+          "example_english": "I will come.",
+          "say_it_3x_prompt": "Say: \"Yóò\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 26,
+      "fact": "To ask yes/no questions, Yorùbá can use intonation or particles like ‘Ṣé …?’",
+      "words": [
+        {
+          "yoruba": "Fún",
+          "english": "Give/for",
+          "pronunciation_hint": "foon",
+          "example_yoruba": "Fún mi ní omi.",
+          "example_english": "Give me water.",
+          "say_it_3x_prompt": "Say: \"Fún\" three times, clearly."
+        },
+        {
+          "yoruba": "Gbé",
+          "english": "Carry/Lift",
+          "pronunciation_hint": "gbeh",
+          "example_yoruba": "Gbé e wá.",
+          "example_english": "Bring/carry it here.",
+          "say_it_3x_prompt": "Say: \"Gbé\" three times, clearly."
+        },
+        {
+          "yoruba": "Ṣe",
+          "english": "Do/Make",
+          "pronunciation_hint": "sheh",
+          "example_yoruba": "Ṣe e báyìí.",
+          "example_english": "Do it like this.",
+          "say_it_3x_prompt": "Say: \"Ṣe\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 27,
+      "fact": "Negation commonly uses ‘kò’ (e.g., Mo kò mọ̀ = I don’t know).",
+      "words": [
+        {
+          "yoruba": "Wo",
+          "english": "Look",
+          "pronunciation_hint": "woh",
+          "example_yoruba": "Wo ìwọ̀n yìí.",
+          "example_english": "Look at this size.",
+          "say_it_3x_prompt": "Say: \"Wo\" three times, clearly."
+        },
+        {
+          "yoruba": "Gbọ́",
+          "english": "Listen/Hear",
+          "pronunciation_hint": "gbaw",
+          "example_yoruba": "Gbọ́ mi.",
+          "example_english": "Listen to me.",
+          "say_it_3x_prompt": "Say: \"Gbọ́\" three times, clearly."
+        },
+        {
+          "yoruba": "Sọ",
+          "english": "Say/Tell",
+          "pronunciation_hint": "shaw",
+          "example_yoruba": "Sọ fún mi.",
+          "example_english": "Tell me.",
+          "say_it_3x_prompt": "Say: \"Sọ\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 28,
+      "fact": "Yorùbá spelling uses diacritics for tone marks; leaving them off can confuse meanings.",
+      "words": [
+        {
+          "yoruba": "Àwọn",
+          "english": "Plural marker (those/the)",
+          "pronunciation_hint": "ah-won",
+          "example_yoruba": "Àwọn ọ̀rẹ́ mi.",
+          "example_english": "My friends.",
+          "say_it_3x_prompt": "Say: \"Àwọn\" three times, clearly."
+        },
+        {
+          "yoruba": "Púpọ̀",
+          "english": "Many/Very much",
+          "pronunciation_hint": "poo-paw",
+          "example_yoruba": "Ọ̀pẹ́ púpọ̀.",
+          "example_english": "Thanks a lot.",
+          "say_it_3x_prompt": "Say: \"Púpọ̀\" three times, clearly."
+        },
+        {
+          "yoruba": "Díẹ̀",
+          "english": "A little",
+          "pronunciation_hint": "dee-eh",
+          "example_yoruba": "Dúró díẹ̀.",
+          "example_english": "Wait a little.",
+          "say_it_3x_prompt": "Say: \"Díẹ̀\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 29,
+      "fact": "‘Ṣ’ is a distinct letter/sound (like ‘sh’).",
+      "words": [
+        {
+          "yoruba": "Kí",
+          "english": "What (in patterns)",
+          "pronunciation_hint": "kee",
+          "example_yoruba": "Kí ni èyí?",
+          "example_english": "What is this?",
+          "say_it_3x_prompt": "Say: \"Kí\" three times, clearly."
+        },
+        {
+          "yoruba": "Nìkan",
+          "english": "Only/just",
+          "pronunciation_hint": "nee-kahn",
+          "example_yoruba": "Mo wà ní ilé nìkan.",
+          "example_english": "I’m at home only.",
+          "say_it_3x_prompt": "Say: \"Nìkan\" three times, clearly."
+        },
+        {
+          "yoruba": "Pẹ̀lú",
+          "english": "With",
+          "pronunciation_hint": "peh-loo",
+          "example_yoruba": "Pẹ̀lú ọ̀rẹ́ mi.",
+          "example_english": "With my friend.",
+          "say_it_3x_prompt": "Say: \"Pẹ̀lú\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    },
+    {
+      "day": 30,
+      "fact": "Pronouns are short and common: Mo (I), O (you), Ó (he/she), A (we), Ẹ (you plural/respect), Wọ́n (they).",
+      "words": [
+        {
+          "yoruba": "Ìbílẹ̀",
+          "english": "Tradition/indigenous",
+          "pronunciation_hint": "ee-bee-leh",
+          "example_yoruba": "Ọ̀nà ìbílẹ̀.",
+          "example_english": "Traditional way.",
+          "say_it_3x_prompt": "Say: \"Ìbílẹ̀\" three times, clearly."
+        },
+        {
+          "yoruba": "Ọlà",
+          "english": "Wealth/Honor",
+          "pronunciation_hint": "aw-lah",
+          "example_yoruba": "Ọlà ni.",
+          "example_english": "It is honor/wealth.",
+          "say_it_3x_prompt": "Say: \"Ọlà\" three times, clearly."
+        },
+        {
+          "yoruba": "Àlàáfíà",
+          "english": "Peace/Well-being",
+          "pronunciation_hint": "ah-lah-fee-ah",
+          "example_yoruba": "Àlàáfíà ni.",
+          "example_english": "Peace be upon you.",
+          "say_it_3x_prompt": "Say: \"Àlàáfíà\" three times, clearly."
+        }
+      ],
+      "practice": {
+        "repeat_rule": "Say each new word 3 times. Then say the example sentence 2 times.",
+        "call_and_response": [
+          "AI says the word → you repeat 3x",
+          "AI says the sentence → you repeat 2x",
+          "AI asks a quick question using the word → you answer"
+        ]
+      }
+    }
+  ]
+}
