@@ -3,791 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Prince of Pan-Africa — Black History + Languages</title>
+  <title>Mufasa Slideshow</title>
   <link rel="icon" href="data:,">
-
   <style>
     :root{
-      --bg:#050505;
-      --panel:#0c0c0c;
-      --panel2:#0a0a0a;
-      --gold:#d4af37;
-      --red:#c1121f;
-      --green:#1b7f3a;
-      --text:#f4f4f4;
-      --muted:#bdbdbd;
-      --line: rgba(212,175,55,.55);
-      --shadow: 0 18px 55px rgba(0,0,0,.40);
+      --bg:#050505; --gold:#d4af37; --text:#f2f2f2; --muted:#bdbdbd;
+      --card: rgba(0,0,0,.30);
+      --line: rgba(212,175,55,.35);
     }
-    *{ box-sizing:border-box; }
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
       background:
-        radial-gradient(1200px 700px at 15% 5%, rgba(193,18,31,.18), transparent 55%),
-        radial-gradient(1200px 700px at 85% 15%, rgba(27,127,58,.18), transparent 55%),
-        radial-gradient(1000px 600px at 50% 95%, rgba(212,175,55,.10), transparent 55%),
+        radial-gradient(1100px 650px at 20% 10%, rgba(193,18,31,.16), transparent 55%),
+        radial-gradient(1100px 650px at 80% 15%, rgba(27,127,58,.16), transparent 55%),
+        radial-gradient(900px 550px at 50% 95%, rgba(212,175,55,.12), transparent 55%),
         var(--bg);
-      color: var(--text);
     }
-
-    .wrap{ max-width:1180px; margin:0 auto; padding:18px; }
-
-    .topbar{
-      display:flex; gap:14px; align-items:center; justify-content:space-between;
-      padding:16px 16px;
-      background: linear-gradient(180deg, rgba(12,12,12,.92), rgba(12,12,12,.70));
+    .wrap{ max-width:1100px; margin:0 auto; padding:18px; }
+    .top{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      padding:14px 16px;
       border:1px solid var(--line);
-      border-radius:18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      border-radius:16px;
+      background: rgba(0,0,0,.25);
     }
-
-    .brand{
-      display:flex; gap:14px; align-items:center;
-      min-width: 280px;
-    }
-    .logo{
-      width:54px; height:54px; border-radius:16px;
-      display:flex; align-items:center; justify-content:center;
-      border:1px solid rgba(212,175,55,.60);
-      background: radial-gradient(circle at 30% 25%, rgba(212,175,55,.25), rgba(0,0,0,.20));
-      font-weight:900;
-      letter-spacing:1px;
-    }
-    .brandText h1{
-      margin:0;
-      font-size:14px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      color: rgba(244,244,244,.95);
-    }
-    .brandText .sub{
-      margin-top:4px;
-      font-size:12px;
-      color: var(--muted);
-      line-height:1.2;
-    }
-
-    .nav{
-      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
-    }
-
+    .title{ font-weight:900; letter-spacing:.4px; }
+    .sub{ color:var(--muted); font-size:12px; margin-top:4px; }
     .btn{
       appearance:none;
       border:1px solid rgba(212,175,55,.55);
       background: rgba(0,0,0,.22);
-      color: var(--text);
-      padding:10px 14px;
+      color:var(--text);
+      padding:10px 12px;
       border-radius:999px;
       cursor:pointer;
-      font-weight:700;
-      letter-spacing:1px;
-      text-transform:uppercase;
-      transition: transform .08s ease, background .15s ease, border-color .15s ease;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      user-select:none;
-      white-space:nowrap;
-      font-size:12px;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      background: rgba(212,175,55,.10);
-      border-color: rgba(212,175,55,.90);
-    }
-    .btn:disabled{
-      opacity:.55; cursor:not-allowed; transform:none;
-    }
-    .btn.red{ border-color: rgba(193,18,31,.65); }
-    .btn.red:hover{ background: rgba(193,18,31,.12); border-color: rgba(193,18,31,.95); }
-    .btn.green{ border-color: rgba(27,127,58,.65); }
-    .btn.green:hover{ background: rgba(27,127,58,.12); border-color: rgba(27,127,58,.95); }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap:14px;
-      margin-top:14px;
-    }
-    @media (max-width: 980px){
-      .grid{ grid-template-columns:1fr; }
-      .nav{ justify-content:flex-start; }
-      .brand{ min-width: unset; }
-    }
-
-    .card{
-      background: linear-gradient(180deg, rgba(12,12,12,.92), rgba(12,12,12,.66));
-      border:1px solid rgba(212,175,55,.40);
-      border-radius:18px;
-      padding:16px;
-      box-shadow: var(--shadow);
-    }
-
-    .tabs{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-
-    .title{
-      margin:0;
-      font-size:34px;
-      letter-spacing:.5px;
-      line-height:1.05;
-    }
-    .hint{
-      margin:10px 0 14px 0;
-      color: var(--muted);
-      font-size:13.5px;
-      line-height:1.45;
-      max-width: 52ch;
-    }
-
-    .actionRow{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin: 10px 0 10px 0;
-    }
-
-    .metaRow{
-      display:flex; gap:10px; flex-wrap:wrap;
-      align-items:center;
-      margin: 8px 0 12px 0;
-      color: var(--muted);
-      font-size:12px;
-    }
-    .chip{
+      font-weight:800;
       display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(212,175,55,.30);
-      background: rgba(0,0,0,.18);
     }
-    .dot{ width:8px; height:8px; border-radius:50%; background:#2bd46f; box-shadow:0 0 10px rgba(43,212,111,.35); }
-
-    .chatBox{
-      min-height: 260px;
-      max-height: 320px;
-      overflow:auto;
-      padding:12px;
-      border-radius:16px;
-      border:1px solid rgba(212,175,55,.28);
-      background: rgba(0,0,0,.20);
-    }
-    .msg{
-      margin:0 0 10px 0;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.07);
-      background: rgba(255,255,255,.04);
-      white-space:pre-wrap;
-      line-height:1.35;
-      font-size:14px;
-    }
-    .msg.user{ border-color: rgba(27,127,58,.30); background: rgba(27,127,58,.07); }
-    .msg.ai{ border-color: rgba(212,175,55,.24); background: rgba(212,175,55,.05); }
-
-    .inputRow{
-      display:flex; gap:10px; align-items:stretch; flex-wrap:wrap;
-      margin-top:12px;
-    }
-    textarea{
-      width:100%;
-      min-height:58px;
-      resize:vertical;
-      padding:12px 12px;
-      border-radius:16px;
-      border:1px solid rgba(212,175,55,.40);
-      background: rgba(0,0,0,.24);
-      color: var(--text);
-      outline:none;
-      font-size:14px;
-    }
-    textarea:focus{
-      border-color: rgba(212,175,55,.95);
-      box-shadow: 0 0 0 4px rgba(212,175,55,.12);
-    }
-
-    .rightBlockTitle{
-      margin:0 0 10px 0;
-      font-size:13px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      color: rgba(244,244,244,.90);
-    }
-
-    .box{
-      border:1px solid rgba(212,175,55,.25);
-      background: rgba(0,0,0,.18);
-      border-radius:16px;
-      padding:14px;
-      margin-top:12px;
-    }
-    .box h3{
-      margin:0 0 8px 0;
-      font-size:12px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      color: rgba(244,244,244,.88);
-    }
-    .box p{
-      margin:0;
-      color: var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
-
-    .quick{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top:12px;
-    }
-
-    audio, video{ width:100%; margin-top:10px; }
-
-    .small{ font-size:12px; color: var(--muted); }
-
-    .row2{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
-
-    a.link{
-      color: rgba(212,175,55,.95);
-      text-decoration:none;
-      border-bottom: 1px dashed rgba(212,175,55,.55);
-    }
-    a.link:hover{ opacity:.9; }
-
-    /* Modal */
-    .modalBackdrop{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.65);
-      display:none;
-      align-items:center; justify-content:center;
-      padding:18px;
-      z-index:9999;
-    }
-    .modal{
-      width:min(980px, 100%);
-      background: linear-gradient(180deg, rgba(12,12,12,.98), rgba(12,12,12,.78));
-      border:1px solid rgba(212,175,55,.45);
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+    .deck{
+      margin-top:14px;
+      border:1px solid var(--line);
       border-radius:18px;
-      box-shadow: 0 30px 90px rgba(0,0,0,.65);
+      background: rgba(0,0,0,.18);
+      padding:14px;
+    }
+    .slide{
+      border:1px solid rgba(212,175,55,.22);
+      border-radius:18px;
+      background: var(--card);
       padding:16px;
+      min-height:320px;
     }
-    .modalTop{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      margin-bottom:10px;
-    }
-    .modalTop h2{
-      margin:0;
-      font-size:14px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-    }
+    .slide h2{ margin:0 0 10px; color: rgba(212,175,55,.95); }
+    ul{ margin:0; padding-left:18px; }
+    li{ margin:6px 0; line-height:1.35; }
+    .narr{ margin-top:12px; color:var(--muted); line-height:1.4; }
+    .controls{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; align-items:center; }
+    .counter{ color:var(--muted); font-weight:700; }
+    audio{ width:100%; margin-top:10px; }
   </style>
 </head>
-
 <body>
   <div class="wrap">
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo">PPA</div>
-        <div class="brandText">
-          <h1>Prince of Pan-Africa</h1>
-          <div class="sub">Black History • Year-Round • Powered by MufasaBrain</div>
-        </div>
+    <div class="top">
+      <div>
+        <div class="title">🎞️ Mufasa Slideshow</div>
+        <div class="sub" id="meta">Loading…</div>
       </div>
-
-      <div class="nav">
-        <button class="btn" id="btnAskJump">ASK</button>
-        <button class="btn" id="btnTimelineJump">TIMELINE</button>
-        <button class="btn" id="btnLibraryJump">LIBRARY</button>
-        <button class="btn" id="btnCheckBrain">CHECK BRAIN</button>
-
-        <!-- ✅ Languages -->
-        <a class="btn green" href="swahili.html">SWAHILI</a>
-        <a class="btn green" href="yoruba.html">YORUBA</a>
-
-        <!-- ✅ Slideshow -->
-        <button class="btn" id="btnOpenSlides">SLIDESHOW</button>
-
-        <button class="btn" id="btnMembership">MEMBERSHIP</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" id="prev">⬅️ Prev</button>
+        <button class="btn" id="next">Next ➡️</button>
+        <button class="btn" id="speak">🔊 Speak Slide</button>
       </div>
     </div>
 
-    <div class="grid">
-      <!-- LEFT MAIN -->
-      <div class="card" id="askSection">
-        <div class="tabs">
-          <button class="btn red" type="button">RED</button>
-          <button class="btn" type="button" style="border-color:rgba(212,175,55,.7);">GOLD</button>
-          <button class="btn green" type="button">GREEN</button>
-          <button class="btn" type="button">YEAR-ROUND</button>
+    <div class="deck">
+      <div class="slide">
+        <h2 id="stitle">…</h2>
+        <ul id="bullets"></ul>
+        <div class="narr" id="narr"></div>
+        <div class="controls">
+          <span class="counter" id="counter"></span>
         </div>
-
-        <h2 class="title">Black History —<br>Every Month Is Black History.</h2>
-        <p class="hint">
-          Ask anything: empires, revolutions, inventors, movements, leaders, migrations, and hidden histories.
-          This page is built to feel like a museum lobby — elegant, focused, and alive.
-        </p>
-
-        <div class="actionRow">
-          <button class="btn" id="btnAskMain">Ask a Black History Question</button>
-          <button class="btn" id="btnDemo">Run a Demo Question</button>
-          <button class="btn" id="btnClearChat">Clear Chat</button>
-        </div>
-
-        <div class="metaRow">
-          <span class="chip"><span class="dot"></span> Brain online</span>
-          <span class="chip">Theme: Pan-African</span>
-          <span class="chip">Tip: Press <b>Ctrl/⌘</b> + <b>Enter</b> to send</span>
-        </div>
-
-        <div class="box">
-          <h3>ASK THE BLACK HISTORY BOT</h3>
-          <div class="row2">
-            <span class="chip">Mode: <b>Black History</b></span>
-            <span class="chip">User: <b>public black history user</b></span>
-          </div>
-
-          <div id="chatBox" class="chatBox" style="margin-top:12px;"></div>
-
-          <div class="inputRow">
-            <textarea id="question" placeholder="Type your question... (e.g., 'Explain the Mali Empire' or 'Give me a 3-part lesson')"></textarea>
-          </div>
-
-          <div class="row2">
-            <button class="btn" id="btnSend">Send</button>
-
-            <!-- ✅ TTS -->
-            <button class="btn" id="btnRead" disabled>🔊 Read Answer</button>
-
-            <!-- ✅ Slideshow -->
-            <button class="btn" id="btnSlidesFromAnswer" disabled>🎬 Make Slideshow</button>
-          </div>
-
-          <audio id="ttsAudio" controls></audio>
-
-          <!-- slideshow result -->
-          <div id="slidesResult" class="box" style="display:none;">
-            <h3>SLIDESHOW OUTPUT</h3>
-            <p class="small" id="slidesStatus">Generating…</p>
-            <video id="slidesVideo" controls style="display:none;"></video>
-            <div class="row2">
-              <a id="slidesDownload" class="btn" href="#" download style="display:none;">Download MP4</a>
-              <button class="btn" id="btnCloseSlidesInline" style="display:none;">Close</button>
-            </div>
-          </div>
-
-          <p class="small" style="margin-top:10px;">
-            Membership is not wired yet. Next step: connect payments + issue a token, then gate downloads.
-          </p>
-        </div>
+        <audio id="ttsAudio" controls></audio>
       </div>
-
-      <!-- RIGHT SIDE -->
-      <div class="card">
-        <div class="row2" style="justify-content:space-between;">
-          <div class="rightBlockTitle">YEAR-ROUND FOCUS</div>
-          <div class="chip"><span class="dot"></span> Online • Maat2.0 • model: gpt-4.1-mini</div>
-        </div>
-
-        <div class="box">
-          <h3>TODAY’S SPOTLIGHT</h3>
-          <p><b>“From Timbuktu to Harlem — knowledge moves, adapts, and returns stronger.”</b></p>
-          <p class="small" style="margin-top:8px;">Ask for: “a 5-minute lesson” + any topic</p>
-        </div>
-
-        <div class="box">
-          <h3>MEMBERSHIP GATE (OPTIONAL)</h3>
-          <p>
-            Use this section to lock downloads + premium features.
-            For now it’s a placeholder button you can wire to Stripe/Patreon/Discord roles later.
-          </p>
-          <div class="row2" style="margin-top:10px;">
-            <button class="btn" id="btnDownloadMembers">Download Mufasa (Members)</button>
-          </div>
-        </div>
-
-        <div class="box" id="librarySection">
-          <h3>YEAR-ROUND LIBRARY</h3>
-
-          <div class="box" style="margin-top:10px;">
-            <h3>EMPIRES & KINGDOMS</h3>
-            <p>Ghana • Mali • Songhai • Kongo • Kush • Axum • Benin • Great Zimbabwe</p>
-            <p class="small" style="margin-top:8px;">Ask: “Compare Mali and Songhai.”</p>
-          </div>
-
-          <div class="box">
-            <h3>RESISTANCE & REVOLT</h3>
-            <p>Maroon societies • Haiti • Nat Turner • Tulsa • Civil Rights • Anti-colonial movements</p>
-            <p class="small" style="margin-top:8px;">Ask: “Give me a timeline.”</p>
-          </div>
-
-          <div class="box">
-            <h3>IDEAS & CULTURE</h3>
-            <p>Pan-Africanism • Garveyism • Harlem Renaissance • Afrofuturism • Music lineages</p>
-            <p class="small" style="margin-top:8px;">Ask: “Connect the dots.”</p>
-          </div>
-
-          <div class="box">
-            <h3>BUILDERS & INVENTORS</h3>
-            <p>Science • medicine • engineering • agriculture • entrepreneurship • education</p>
-            <p class="small" style="margin-top:8px;">Ask: “Top 10 breakthroughs.”</p>
-          </div>
-        </div>
-
-        <div class="box" id="timelineSection">
-          <h3>TIMELINE (YEAR-ROUND)</h3>
-          <p class="small">Use as navigation prompts</p>
-
-          <div class="box" style="margin-top:10px;">
-            <h3>ANCIENT</h3>
-            <p>Nilotic civilizations • Nubia/Kush • Axum • Carthage • early trade networks</p>
-            <p class="small" style="margin-top:8px;">Ask: “Teach me Ancient Africa.”</p>
-          </div>
-
-          <div class="box">
-            <h3>MEDIEVAL</h3>
-            <p>Trans-Saharan trade • universities • manuscripts • empires & diplomacy</p>
-            <p class="small" style="margin-top:8px;">Ask: “Timbuktu deep dive.”</p>
-          </div>
-
-          <div class="box">
-            <h3>COLONIAL & RESISTANCE</h3>
-            <p>Partition • extraction • uprisings • liberation movements • diaspora survival</p>
-            <p class="small" style="margin-top:8px;">Ask: “Resistance leaders by region.”</p>
-          </div>
-
-          <div class="box">
-            <h3>MODERN</h3>
-            <p>Civil Rights • global Black politics • cultural revolutions • present-day movements</p>
-            <p class="small" style="margin-top:8px;">Ask: “Connect past to today.”</p>
-          </div>
-        </div>
-
-        <p class="small" style="margin-top:12px;">
-          Prince of Pan-Africa • Black History Year-Round<br>
-          Backend: <span id="backendLabel">mufasabrain.onrender.com</span>
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Slideshow Modal -->
-  <div class="modalBackdrop" id="slidesModal">
-    <div class="modal">
-      <div class="modalTop">
-        <h2>Slideshow Generator</h2>
-        <button class="btn" id="btnCloseSlides">Close</button>
-      </div>
-
-      <div class="box">
-        <h3>WHAT THIS DOES</h3>
-        <p>
-          Takes the <b>last Mufasa answer</b> and requests a <b>slide video</b> (MP4) from the backend.
-          First we wire the frontend; next we add the MAAT endpoint that returns a video file or a video URL.
-        </p>
-      </div>
-
-      <div class="box">
-        <h3>INPUT</h3>
-        <p class="small">We’ll use the last answer automatically. You can also paste custom text below.</p>
-        <textarea id="slidesText" placeholder="Optional: paste text to turn into a slideshow…"></textarea>
-
-        <div class="row2">
-          <button class="btn" id="btnGenerateSlides">🎬 Generate Slideshow</button>
-          <span class="small" id="slidesModalStatus"></span>
-        </div>
-
-        <video id="slidesModalVideo" controls style="display:none;"></video>
-        <div class="row2">
-          <a id="slidesModalDownload" class="btn" href="#" download style="display:none;">Download MP4</a>
-        </div>
-      </div>
-
-      <p class="small">
-        Endpoint expected: <code>/media/slideshow</code> (POST). If it’s not ready yet, the button will show a clear error.
-      </p>
     </div>
   </div>
 
   <script>
-    // ✅ Your Ma’at brain base URL
-    const MAAT_BASE_URL = "https://mufasabrain.onrender.com";
+    const qs = new URLSearchParams(location.search);
+    const id = qs.get("id") || "";
+    const api = qs.get("api") || "";
+    const meta = document.getElementById("meta");
+    const stitle = document.getElementById("stitle");
+    const bullets = document.getElementById("bullets");
+    const narr = document.getElementById("narr");
+    const counter = document.getElementById("counter");
 
-    // Existing endpoints
-    const ASK_URL = `${MAAT_BASE_URL}/ask`;
-    const TTS_URL = `${MAAT_BASE_URL}/voice/tts`;
-
-    // ✅ New slideshow endpoint (we’ll add in MAAT next)
-    // Expected behavior:
-    // - POST JSON: { text, title?, mode? }
-    // - Return either:
-    //   A) video/mp4 binary
-    //   OR
-    //   B) JSON: { video_url: "https://..." }
-    const SLIDES_URL = `${MAAT_BASE_URL}/media/slideshow`;
-
-    document.getElementById("backendLabel").textContent = MAAT_BASE_URL.replace("https://","");
-
-    const chatBox = document.getElementById("chatBox");
-    const questionEl = document.getElementById("question");
-    const btnSend = document.getElementById("btnSend");
-    const btnRead = document.getElementById("btnRead");
-    const btnSlidesFromAnswer = document.getElementById("btnSlidesFromAnswer");
-    const btnClearChat = document.getElementById("btnClearChat");
+    const btnPrev = document.getElementById("prev");
+    const btnNext = document.getElementById("next");
+    const btnSpeak = document.getElementById("speak");
     const ttsAudio = document.getElementById("ttsAudio");
 
-    const btnAskMain = document.getElementById("btnAskMain");
-    const btnDemo = document.getElementById("btnDemo");
+    let deck = null;
+    let idx = 0;
 
-    const btnAskJump = document.getElementById("btnAskJump");
-    const btnTimelineJump = document.getElementById("btnTimelineJump");
-    const btnLibraryJump = document.getElementById("btnLibraryJump");
-    const btnCheckBrain = document.getElementById("btnCheckBrain");
-
-    const btnOpenSlides = document.getElementById("btnOpenSlides");
-    const slidesModal = document.getElementById("slidesModal");
-    const btnCloseSlides = document.getElementById("btnCloseSlides");
-    const btnGenerateSlides = document.getElementById("btnGenerateSlides");
-    const slidesText = document.getElementById("slidesText");
-    const slidesModalStatus = document.getElementById("slidesModalStatus");
-    const slidesModalVideo = document.getElementById("slidesModalVideo");
-    const slidesModalDownload = document.getElementById("slidesModalDownload");
-
-    const slidesResult = document.getElementById("slidesResult");
-    const slidesStatus = document.getElementById("slidesStatus");
-    const slidesVideo = document.getElementById("slidesVideo");
-    const slidesDownload = document.getElementById("slidesDownload");
-    const btnCloseSlidesInline = document.getElementById("btnCloseSlidesInline");
-
-    let lastAnswerText = "";
-
-    function addMsg(text, who){
-      const div = document.createElement("div");
-      div.className = `msg ${who}`;
-      div.textContent = text;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function setSlidesInlineVisible(on){
-      slidesResult.style.display = on ? "block" : "none";
-      btnCloseSlidesInline.style.display = on ? "inline-flex" : "none";
-    }
-
-    async function askMufasa(q){
-      const question = (q ?? questionEl.value ?? "").trim();
-      if(!question) return;
-
-      addMsg(question, "user");
-      questionEl.value = "";
-
-      btnSend.disabled = true;
-      btnRead.disabled = true;
-      btnSlidesFromAnswer.disabled = true;
-
-      try{
-        const payload = {
-          question,
-          user_id: "public_black_history_user",
-          session_id: "web_session",
-          mode: "black_history"
-        };
-
-        const r = await fetch(ASK_URL, {
-          method: "POST",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify(payload)
-        });
-
-        if(!r.ok){
-          const t = await r.text();
-          throw new Error(t || "Ask failed");
-        }
-
-        const rec = await r.json();
-        const answer = rec.answer || rec.response || "(no answer returned)";
-        lastAnswerText = answer;
-
-        addMsg(answer, "ai");
-
-        btnRead.disabled = !lastAnswerText.trim();
-        btnSlidesFromAnswer.disabled = !lastAnswerText.trim();
-      }catch(err){
-        console.error(err);
-        addMsg("Error: " + (err?.message || err), "ai");
-      }finally{
-        btnSend.disabled = false;
-      }
-    }
-
-    async function readAnswer(){
-      if(!lastAnswerText.trim()) return;
-      btnRead.disabled = true;
-      try{
-        const form = new FormData();
-        form.append("text", lastAnswerText);
-
-        const r = await fetch(TTS_URL, { method:"POST", body: form });
-        if(!r.ok){
-          const t = await r.text();
-          throw new Error(t || "TTS failed");
-        }
-
-        const audioBlob = await r.blob();
-        const url = URL.createObjectURL(audioBlob);
-        ttsAudio.src = url;
-
-        await ttsAudio.play();
-      }catch(err){
-        console.error(err);
-        alert("TTS Error: " + (err?.message || err));
-      }finally{
-        btnRead.disabled = !lastAnswerText.trim();
-      }
-    }
-
-    async function generateSlideshow(text){
-      const clean = (text || "").trim();
-      if(!clean) throw new Error("No text to turn into slides.");
-
-      // Try two formats:
-      // 1) JSON -> expects binary mp4
-      // 2) JSON -> expects {video_url}
-      const payload = {
-        text: clean,
-        title: "Prince of Pan-Africa",
-        mode: "slides"
-      };
-
-      const r = await fetch(SLIDES_URL, {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify(payload)
+    function render(){
+      const slides = deck?.deck?.slides || [];
+      const s = slides[idx] || {title:"(missing)", bullets:[], narration:""};
+      stitle.textContent = s.title || "";
+      bullets.innerHTML = "";
+      (s.bullets || []).forEach(b=>{
+        const li = document.createElement("li");
+        li.textContent = b;
+        bullets.appendChild(li);
       });
+      narr.textContent = s.narration || "";
+      counter.textContent = `Slide ${idx+1} / ${slides.length}`;
+      btnPrev.disabled = idx <= 0;
+      btnNext.disabled = idx >= slides.length - 1;
+    }
 
+    async function loadDeck(){
+      // first try API fetch
+      if(api && id){
+        try{
+          const r = await fetch(`${api}/storyboard/get?id=${encodeURIComponent(id)}`);
+          if(r.ok){
+            const j = await r.json();
+            deck = j.storyboard;
+          }
+        }catch(e){}
+      }
+
+      // fallback: localStorage
+      if(!deck){
+        try{
+          const raw = localStorage.getItem("lastStoryboard");
+          if(raw) deck = JSON.parse(raw).storyboard || JSON.parse(raw);
+        }catch(e){}
+      }
+
+      if(!deck){
+        meta.textContent = "Could not load slideshow. Go back and Create Slideshow again.";
+        return;
+      }
+
+      meta.textContent = `${deck.deck?.deck_title || "Deck"} • id: ${deck.id || id || "n/a"}`;
+      render();
+    }
+
+    async function speakSlide(){
+      const text = `${stitle.textContent}\n\n${narr.textContent}`;
+      if(!api){
+        alert("Missing api=... parameter.");
+        return;
+      }
+      const form = new FormData();
+      form.append("text", text);
+      const r = await fetch(`${api}/voice/tts`, { method:"POST", body: form });
       if(!r.ok){
-        const t = await r.text();
-        throw new Error(t || "Slideshow endpoint failed.");
+        alert("TTS failed");
+        return;
       }
-
-      const contentType = (r.headers.get("content-type") || "").toLowerCase();
-
-      if(contentType.includes("application/json")){
-        const data = await r.json();
-        if(!data.video_url) throw new Error("JSON returned but missing video_url.");
-        return { kind:"url", url: data.video_url };
-      }
-
-      // assume video/mp4 (or similar)
       const blob = await r.blob();
-      const url = URL.createObjectURL(blob);
-      return { kind:"blob", url };
+      ttsAudio.src = URL.createObjectURL(blob);
+      await ttsAudio.play();
     }
 
-    async function makeSlidesInlineFromLastAnswer(){
-      if(!lastAnswerText.trim()) return;
+    btnPrev.onclick = ()=>{ idx = Math.max(0, idx-1); render(); };
+    btnNext.onclick = ()=>{ idx = idx+1; render(); };
+    btnSpeak.onclick = speakSlide;
 
-      setSlidesInlineVisible(true);
-      slidesStatus.textContent = "Generating slideshow…";
-      slidesVideo.style.display = "none";
-      slidesDownload.style.display = "none";
-
-      btnSlidesFromAnswer.disabled = true;
-
-      try{
-        const out = await generateSlideshow(lastAnswerText);
-        slidesStatus.textContent = "Done.";
-
-        slidesVideo.src = out.url;
-        slidesVideo.style.display = "block";
-
-        slidesDownload.href = out.url;
-        slidesDownload.style.display = "inline-flex";
-      }catch(err){
-        slidesStatus.textContent =
-          "Slideshow not ready yet (backend endpoint missing). Next step: add /media/slideshow in MAAT. Error: " + (err?.message || err);
-      }finally{
-        btnSlidesFromAnswer.disabled = !lastAnswerText.trim();
-      }
-    }
-
-    // NAV jumps
-    btnAskJump.addEventListener("click", () => document.getElementById("askSection").scrollIntoView({behavior:"smooth"}));
-    btnTimelineJump.addEventListener("click", () => document.getElementById("timelineSection").scrollIntoView({behavior:"smooth"}));
-    btnLibraryJump.addEventListener("click", () => document.getElementById("librarySection").scrollIntoView({behavior:"smooth"}));
-
-    btnCheckBrain.addEventListener("click", () => {
-      alert("Brain: " + MAAT_BASE_URL + "\\n\\nIf chat fails, check Render logs for the brain + CORS.");
-    });
-
-    // Buttons
-    btnAskMain.addEventListener("click", () => questionEl.focus());
-    btnDemo.addEventListener("click", () => askMufasa("Give me a 3-part lesson on Timbuktu: context, key figures, why it matters today."));
-
-    btnSend.addEventListener("click", () => askMufasa());
-    btnRead.addEventListener("click", readAnswer);
-    btnSlidesFromAnswer.addEventListener("click", makeSlidesInlineFromLastAnswer);
-
-    btnClearChat.addEventListener("click", () => {
-      chatBox.innerHTML = "";
-      lastAnswerText = "";
-      btnRead.disabled = true;
-      btnSlidesFromAnswer.disabled = true;
-      ttsAudio.removeAttribute("src");
-      ttsAudio.load();
-      setSlidesInlineVisible(false);
-    });
-
-    questionEl.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" && (e.ctrlKey || e.metaKey)){
-        askMufasa();
-      }
-    });
-
-    // Modal slideshow controls
-    btnOpenSlides.addEventListener("click", () => {
-      slidesModal.style.display = "flex";
-      slidesModalStatus.textContent = "";
-      slidesText.value = lastAnswerText || "";
-      slidesModalVideo.style.display = "none";
-      slidesModalDownload.style.display = "none";
-    });
-
-    btnCloseSlides.addEventListener("click", () => {
-      slidesModal.style.display = "none";
-    });
-
-    slidesModal.addEventListener("click", (e) => {
-      if(e.target === slidesModal) slidesModal.style.display = "none";
-    });
-
-    btnGenerateSlides.addEventListener("click", async () => {
-      slidesModalStatus.textContent = "Generating…";
-      slidesModalVideo.style.display = "none";
-      slidesModalDownload.style.display = "none";
-
-      try{
-        const out = await generateSlideshow(slidesText.value || lastAnswerText);
-        slidesModalStatus.textContent = "Done.";
-
-        slidesModalVideo.src = out.url;
-        slidesModalVideo.style.display = "block";
-
-        slidesModalDownload.href = out.url;
-        slidesModalDownload.style.display = "inline-flex";
-      }catch(err){
-        slidesModalStatus.textContent =
-          "Backend slideshow endpoint not ready yet. Add /media/slideshow in MAAT. Error: " + (err?.message || err);
-      }
-    });
-
-    btnCloseSlidesInline.addEventListener("click", () => setSlidesInlineVisible(false));
-
-    // Welcome message
-    addMsg("Prince of Pan-Africa: Ask me a Black History question. If you want it structured, say: “Give me a 3-part lesson: context, key figures, why it matters today.”", "ai");
+    loadDeck();
   </script>
 </body>
 </html>
