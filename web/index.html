@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prince of Pan-Africa — Black History Bot + Mufasa Assistant</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;max-width:1000px;margin:44px auto;padding:0 18px;line-height:1.4}
+    header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+    .brand h1{margin:0;font-size:28px}
+    .brand p{margin:6px 0 0;color:#555}
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+    .card{border:1px solid #ddd;border-radius:14px;padding:16px;background:#fff}
+    textarea{width:100%;min-height:90px;border:1px solid #ddd;border-radius:12px;padding:12px;font:inherit}
+    button,.btn{display:inline-block;padding:11px 14px;border-radius:12px;border:0;background:#111;color:#fff;cursor:pointer;text-decoration:none}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .row{display:flex;gap:10px;align-items:center;margin-top:10px}
+    .muted{color:#666}
+    .answer{white-space:pre-wrap;background:#f7f7f7;border:1px solid #eee;border-radius:12px;padding:12px;margin-top:12px}
+    .tag{display:inline-block;font-size:12px;border:1px solid #ddd;border-radius:999px;padding:4px 8px;margin-right:6px;color:#444}
+    .ok{color:#0a7b2b}
+    .warn{color:#a15b00}
+    footer{margin-top:20px;color:#777;font-size:12px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Prince of Pan-Africa</h1>
+      <p>Black History Bot (Free) • Mufasa Real Assistant (Members)</p>
+      <div style="margin-top:10px">
+        <span class="tag">City of the Month</span>
+        <span class="tag">Daily Facts</span>
+        <span class="tag">Community Threads</span>
+      </div>
+    </div>
+    <div class="card" style="min-width:280px">
+      <div><b>Member Access</b></div>
+      <p class="muted" style="margin:6px 0 10px">Unlock Mufasa downloads + premium features.</p>
+
+      <!-- Simple “soft gate” for now -->
+      <div class="row">
+        <input id="memberCode" placeholder="Enter member code" style="flex:1;border:1px solid #ddd;border-radius:12px;padding:10px">
+        <button id="unlockBtn">Unlock</button>
+      </div>
+
+      <div id="memberStatus" class="muted" style="margin-top:10px">Status: <span class="warn">Not a member</span></div>
+
+      <div id="downloadBox" style="display:none;margin-top:12px">
+        <a class="btn" href="#" onclick="alert('APK link coming next step.');return false;">Download Mufasa (Coming Soon)</a>
+        <p class="muted" style="margin:10px 0 0">
+          Members get: phone assistant, fitness/yoga coach, automation tools.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2 style="margin:0 0 8px">Ask a Black History Question</h2>
+      <p class="muted" style="margin:0 0 10px">Examples: “Tell me about the Black Wall Street massacre.” “Who were the founders of the Nation of Islam?” “What is a Black megacity?”</p>
+
+      <textarea id="q" placeholder="Type your question here..."></textarea>
+      <div class="row">
+        <button id="askBtn">Ask</button>
+        <span id="apiStatus" class="muted">API: checking…</span>
+      </div>
+
+      <div id="a" class="answer" style="display:none"></div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 8px">What is Mufasa?</h2>
+      <p class="muted" style="margin:0 0 10px">
+        Mufasa is the “Real Assistant” — a voice-first AI that will connect to your coaching + tools and later help automate tasks.
+      </p>
+
+      <ul style="margin:0;padding-left:18px">
+        <li>Black History Q&A on the web</li>
+        <li>Fitness / Yoga coaching</li>
+        <li>Member-only downloads</li>
+        <li>Future: phone agent automation</li>
+      </ul>
+
+      <hr style="border:none;border-top:1px solid #eee;margin:14px 0">
+      <p class="muted" style="margin:0">
+        Want membership? (Add your Stripe/Discord join link here)
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    © <span id="yr"></span> Prince of Pan-Africa • Built on Render • Powered by Mufasa Brain
+  </footer>
+
+<script>
+  document.getElementById("yr").textContent = new Date().getFullYear();
+
+  // ---- MEMBER “SOFT GATE” (temporary) ----
+  // Replace this later with Stripe + Firebase Auth.
+  const VALID_CODES = new Set(["PRINCE", "PANAFRICA", "MUFAFA", "MU_FASA"]); // change later
+  const memberStatus = document.getElementById("memberStatus");
+  const downloadBox = document.getElementById("downloadBox");
+
+  document.getElementById("unlockBtn").onclick = () => {
+    const code = (document.getElementById("memberCode").value || "").trim().toUpperCase();
+    if (VALID_CODES.has(code)) {
+      memberStatus.innerHTML = 'Status: <span class="ok">Member unlocked</span>';
+      downloadBox.style.display = "block";
+      localStorage.setItem("member", "1");
+    } else {
+      memberStatus.innerHTML = 'Status: <span class="warn">Not a member</span>';
+      downloadBox.style.display = "none";
+      localStorage.removeItem("member");
+      alert("Invalid code. Join membership to unlock.");
+    }
+  };
+
+  if (localStorage.getItem("member") === "1") {
+    memberStatus.innerHTML = 'Status: <span class="ok">Member unlocked</span>';
+    downloadBox.style.display = "block";
+  }
+
+  // ---- API CHECK + ASK ----
+  const API_BASE = ""; // same domain if you proxy later; otherwise set to your web service URL
+  const askBtn = document.getElementById("askBtn");
+  const apiStatus = document.getElementById("apiStatus");
+  const a = document.getElementById("a");
+
+  async function checkApi() {
+    try {
+      const res = await fetch(API_BASE + "/api/health");
+      apiStatus.textContent = res.ok ? "API: online" : "API: offline";
+    } catch (e) {
+      apiStatus.textContent = "API: offline";
+    }
+  }
+
+  askBtn.onclick = async () => {
+    const question = document.getElementById("q").value.trim();
+    if (!question) return;
+
+    askBtn.disabled = true;
+    a.style.display = "block";
+    a.textContent = "Thinking…";
+
+    try {
+      const res = await fetch(API_BASE + "/api/ask", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ question })
+      });
+      const data = await res.json();
+      a.textContent = data.answer || "No answer returned.";
+    } catch (e) {
+      a.textContent = "API not connected yet. Next step: deploy the web service.";
+    } finally {
+      askBtn.disabled = false;
+    }
+  };
+
+  checkApi();
+</script>
+</body>
+</html>
