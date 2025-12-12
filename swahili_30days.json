@@ -1,0 +1,787 @@
+{
+  "version": "1.0",
+  "language": "Swahili",
+  "description": "30 days of Swahili micro-lessons: 3 words + 1 sentence + 1 tip + 1 culture note per day.",
+  "days": [
+    {
+      "day": 1,
+      "theme": "Greetings",
+      "words": [
+        {
+          "swahili": "Habari",
+          "english": "How are you?/News",
+          "pronunciation": "hah-BAH-ree",
+          "sentence": "Habari za leo? — How are you today?"
+        },
+        {
+          "swahili": "Nzuri",
+          "english": "Good/Fine",
+          "pronunciation": "n-ZOO-ree",
+          "sentence": "Nzuri sana. — Very good."
+        },
+        {
+          "swahili": "Asante",
+          "english": "Thank you",
+          "pronunciation": "ah-SAHN-teh",
+          "sentence": "Asante kwa msaada. — Thank you for the help."
+        }
+      ],
+      "tip": "Swahili vowels are consistent: a=ah, e=eh, i=ee, o=oh, u=oo. Say them clean and steady.",
+      "culture": "Greetings matter. Taking time to ask “Habari?” shows respect and warmth in many East African communities."
+    },
+    {
+      "day": 2,
+      "theme": "Polite Basics",
+      "words": [
+        {
+          "swahili": "Tafadhali",
+          "english": "Please",
+          "pronunciation": "tah-fah-DHAH-lee",
+          "sentence": "Tafadhali nisaidie. — Please help me."
+        },
+        {
+          "swahili": "Samahani",
+          "english": "Sorry/Excuse me",
+          "pronunciation": "sah-mah-HAH-nee",
+          "sentence": "Samahani, naweza kupita? — Excuse me, may I pass?"
+        },
+        {
+          "swahili": "Karibu",
+          "english": "Welcome/Near",
+          "pronunciation": "kah-REE-boo",
+          "sentence": "Karibu nyumbani. — Welcome home."
+        }
+      ],
+      "tip": "The “dh” sound (as in tafadhali) is like “th” in “this.” Don’t turn it into a hard “d.”",
+      "culture": "“Karibu” is used constantly: welcoming guests, inviting someone closer, or responding to thanks (“you’re welcome”)."
+    },
+    {
+      "day": 3,
+      "theme": "People",
+      "words": [
+        {
+          "swahili": "Rafiki",
+          "english": "Friend",
+          "pronunciation": "rah-FEE-kee",
+          "sentence": "Huyu ni rafiki yangu. — This is my friend."
+        },
+        {
+          "swahili": "Familia",
+          "english": "Family",
+          "pronunciation": "fah-MEE-lee-ah",
+          "sentence": "Ninaipenda familia yangu. — I love my family."
+        },
+        {
+          "swahili": "Mwalimu",
+          "english": "Teacher",
+          "pronunciation": "mwah-LEE-moo",
+          "sentence": "Mwalimu anafundisha darasani. — The teacher teaches in class."
+        }
+      ],
+      "tip": "Swahili often uses “ni” = I am, “huyu” = this person, “yangu” = my. You’ll see these a lot.",
+      "culture": "Community identity is strong—words like “rafiki” and “familia” reflect social bonds and shared responsibility."
+    },
+    {
+      "day": 4,
+      "theme": "Numbers 1–3",
+      "words": [
+        {
+          "swahili": "Moja",
+          "english": "One",
+          "pronunciation": "MOH-jah",
+          "sentence": "Nina kitabu kimoja. — I have one book."
+        },
+        {
+          "swahili": "Mbili",
+          "english": "Two",
+          "pronunciation": "m-BEE-lee",
+          "sentence": "Tuna watu wawili. — We have two people."
+        },
+        {
+          "swahili": "Tatu",
+          "english": "Three",
+          "pronunciation": "TAH-too",
+          "sentence": "Nataka matunda matatu. — I want three fruits."
+        }
+      ],
+      "tip": "“mb” starts together as one sound, like in “ambition” but stronger at the start: mbili.",
+      "culture": "Counting and bargaining in markets is common—numbers become practical fast."
+    },
+    {
+      "day": 5,
+      "theme": "Time",
+      "words": [
+        {
+          "swahili": "Leo",
+          "english": "Today",
+          "pronunciation": "LEH-oh",
+          "sentence": "Leo nina kazi. — Today I have work."
+        },
+        {
+          "swahili": "Kesho",
+          "english": "Tomorrow",
+          "pronunciation": "KEH-shoh",
+          "sentence": "Kesho tutakutana. — Tomorrow we will meet."
+        },
+        {
+          "swahili": "Jana",
+          "english": "Yesterday",
+          "pronunciation": "JAH-nah",
+          "sentence": "Jana nilisafiri. — Yesterday I traveled."
+        }
+      ],
+      "tip": "Keep the vowels open and pure—don’t swallow the ending vowel.",
+      "culture": "Swahili has its own time-telling system in many regions; for now, these day-words are universal and super useful."
+    },
+    {
+      "day": 6,
+      "theme": "Food",
+      "words": [
+        {
+          "swahili": "Chakula",
+          "english": "Food",
+          "pronunciation": "chah-KOO-lah",
+          "sentence": "Chakula hiki ni kitamu. — This food is delicious."
+        },
+        {
+          "swahili": "Maji",
+          "english": "Water",
+          "pronunciation": "MAH-jee",
+          "sentence": "Nahitaji maji. — I need water."
+        },
+        {
+          "swahili": "Matunda",
+          "english": "Fruits",
+          "pronunciation": "mah-TOON-dah",
+          "sentence": "Ninakula matunda. — I eat fruits."
+        }
+      ],
+      "tip": "“ch” is like “church.” Swahili consonants are generally crisp, not breathy.",
+      "culture": "Sharing meals is social—offering food/water is a common sign of hospitality."
+    },
+    {
+      "day": 7,
+      "theme": "Places",
+      "words": [
+        {
+          "swahili": "Nyumbani",
+          "english": "At home/Home",
+          "pronunciation": "nyohm-BAH-nee",
+          "sentence": "Niko nyumbani. — I am at home."
+        },
+        {
+          "swahili": "Sokoni",
+          "english": "At the market",
+          "pronunciation": "soh-KOH-nee",
+          "sentence": "Tunaenda sokoni. — We are going to the market."
+        },
+        {
+          "swahili": "Shule",
+          "english": "School",
+          "pronunciation": "SHOO-leh",
+          "sentence": "Watoto wako shule. — The children are at school."
+        }
+      ],
+      "tip": "The “ny” sound is like Spanish “ñ” (canyon): nyumbani.",
+      "culture": "Markets (soko) are central community hubs—food, news, and relationships all flow through them."
+    },
+    {
+      "day": 8,
+      "theme": "Simple Verbs",
+      "words": [
+        {
+          "swahili": "Nataka",
+          "english": "I want",
+          "pronunciation": "nah-TAH-kah",
+          "sentence": "Nataka chai. — I want tea."
+        },
+        {
+          "swahili": "Nina",
+          "english": "I have",
+          "pronunciation": "NEE-nah",
+          "sentence": "Nina pesa kidogo. — I have a little money."
+        },
+        {
+          "swahili": "Ninaenda",
+          "english": "I am going",
+          "pronunciation": "nee-nah-EHN-dah",
+          "sentence": "Ninaenda nyumbani. — I am going home."
+        }
+      ],
+      "tip": "Swahili packs meaning into prefixes. “Ni-” (I) is a powerful building block.",
+      "culture": "Learning a few verb patterns lets you speak quickly even with a small vocabulary."
+    },
+    {
+      "day": 9,
+      "theme": "Directions",
+      "words": [
+        {
+          "swahili": "Kushoto",
+          "english": "Left",
+          "pronunciation": "koo-SHOH-toh",
+          "sentence": "Geuka kushoto. — Turn left."
+        },
+        {
+          "swahili": "Kulia",
+          "english": "Right",
+          "pronunciation": "koo-LEE-ah",
+          "sentence": "Nenda kulia. — Go right."
+        },
+        {
+          "swahili": "Mbele",
+          "english": "Front/Forward",
+          "pronunciation": "m-BEH-leh",
+          "sentence": "Enda mbele. — Go forward."
+        }
+      ],
+      "tip": "“ku-” often marks an infinitive/directional form—here it’s part of fixed direction words.",
+      "culture": "Giving directions is often relational (“near the big tree / by the shop”). These basics still help a lot."
+    },
+    {
+      "day": 10,
+      "theme": "Colors",
+      "words": [
+        {
+          "swahili": "Nyeusi",
+          "english": "Black",
+          "pronunciation": "nyeh-OO-see",
+          "sentence": "Ninapenda rangi nyeusi. — I like the color black."
+        },
+        {
+          "swahili": "Nyekundu",
+          "english": "Red",
+          "pronunciation": "nyeh-KOON-doo",
+          "sentence": "Bendera ina nyekundu. — The flag has red."
+        },
+        {
+          "swahili": "Kijani",
+          "english": "Green",
+          "pronunciation": "kee-JAH-nee",
+          "sentence": "Kijani ni rangi ya mimea. — Green is the color of plants."
+        }
+      ],
+      "tip": "Notice the repeated “nye-” in black/red. Don’t rush it—make it smooth.",
+      "culture": "These colors connect to Pan-African symbolism; learning them in Swahili reinforces the cultural bridge."
+    },
+    {
+      "day": 11,
+      "theme": "Community",
+      "words": [
+        {
+          "swahili": "Jamii",
+          "english": "Community",
+          "pronunciation": "jah-MEE",
+          "sentence": "Jamii yetu ni imara. — Our community is strong."
+        },
+        {
+          "swahili": "Umoja",
+          "english": "Unity",
+          "pronunciation": "oo-MOH-jah",
+          "sentence": "Umoja ni nguvu. — Unity is strength."
+        },
+        {
+          "swahili": "Nguvu",
+          "english": "Strength/Power",
+          "pronunciation": "n-GOO-voo",
+          "sentence": "Tuna nguvu pamoja. — We have strength together."
+        }
+      ],
+      "tip": "The “ng” at the start (nguvu) is like the ending of “song” but moved to the front.",
+      "culture": "“Umoja” is a key principle in Kwanzaa and a cornerstone concept across African liberation movements."
+    },
+    {
+      "day": 12,
+      "theme": "Work",
+      "words": [
+        {
+          "swahili": "Kazi",
+          "english": "Work/Job",
+          "pronunciation": "KAH-zee",
+          "sentence": "Nina kazi leo. — I have work today."
+        },
+        {
+          "swahili": "Biashara",
+          "english": "Business",
+          "pronunciation": "bee-ah-SHAH-rah",
+          "sentence": "Biashara hii ni nzuri. — This business is good."
+        },
+        {
+          "swahili": "Pesa",
+          "english": "Money",
+          "pronunciation": "PEH-sah",
+          "sentence": "Nahitaji pesa. — I need money."
+        }
+      ],
+      "tip": "Stress is usually even in Swahili. Keep it rhythmic, not heavy like English stress patterns.",
+      "culture": "Small businesses (biashara) are a major economic engine—supporting them is community-building."
+    },
+    {
+      "day": 13,
+      "theme": "Respect",
+      "words": [
+        {
+          "swahili": "Heshima",
+          "english": "Respect",
+          "pronunciation": "heh-SHEE-mah",
+          "sentence": "Heshima ni muhimu. — Respect is important."
+        },
+        {
+          "swahili": "Tafakari",
+          "english": "Reflect/Meditate",
+          "pronunciation": "tah-fah-KAH-ree",
+          "sentence": "Tafakari kabla ya kuamua. — Reflect before you decide."
+        },
+        {
+          "swahili": "Amani",
+          "english": "Peace",
+          "pronunciation": "ah-MAH-nee",
+          "sentence": "Amani iwe kwako. — Peace be with you."
+        }
+      ],
+      "tip": "“kh/ k” sounds are clean. Don’t add extra breath—keep it crisp.",
+      "culture": "Many greetings and blessings center peace (amani) and goodwill—language carries values."
+    },
+    {
+      "day": 14,
+      "theme": "Health",
+      "words": [
+        {
+          "swahili": "Afya",
+          "english": "Health",
+          "pronunciation": "AH-fyah",
+          "sentence": "Afya yangu ni nzuri. — My health is good."
+        },
+        {
+          "swahili": "Dawa",
+          "english": "Medicine",
+          "pronunciation": "DAH-wah",
+          "sentence": "Nahitaji dawa. — I need medicine."
+        },
+        {
+          "swahili": "Mazoezi",
+          "english": "Exercise",
+          "pronunciation": "mah-ZOH-eh-zee",
+          "sentence": "Mazoezi ni muhimu. — Exercise is important."
+        }
+      ],
+      "tip": "“oe” is two vowel sounds: ma-zo-e-zi (not ‘mzoezi’ as one clump).",
+      "culture": "Wellness is holistic—movement, food, community, and spirit often connect in daily life."
+    },
+    {
+      "day": 15,
+      "theme": "Learning",
+      "words": [
+        {
+          "swahili": "Kusoma",
+          "english": "To read/Study",
+          "pronunciation": "koo-SOH-mah",
+          "sentence": "Napenda kusoma. — I like to study."
+        },
+        {
+          "swahili": "Kuelewa",
+          "english": "To understand",
+          "pronunciation": "koo-eh-LEH-wah",
+          "sentence": "Nataka kuelewa zaidi. — I want to understand more."
+        },
+        {
+          "swahili": "Lugha",
+          "english": "Language",
+          "pronunciation": "LOO-ghah",
+          "sentence": "Lugha ni daraja. — Language is a bridge."
+        }
+      ],
+      "tip": "“gh” in lugha is a soft throaty sound in some accents; many learners pronounce it like a light ‘g’—that’s okay.",
+      "culture": "Swahili is a bridge language across East Africa—learning it connects regions and histories."
+    },
+    {
+      "day": 16,
+      "theme": "Home",
+      "words": [
+        {
+          "swahili": "Chumba",
+          "english": "Room",
+          "pronunciation": "CHOOM-bah",
+          "sentence": "Chumba hiki ni kikubwa. — This room is big."
+        },
+        {
+          "swahili": "Mlango",
+          "english": "Door",
+          "pronunciation": "MLAHN-goh",
+          "sentence": "Funga mlango. — Close the door."
+        },
+        {
+          "swahili": "Dirisha",
+          "english": "Window",
+          "pronunciation": "dee-REE-shah",
+          "sentence": "Fungua dirisha. — Open the window."
+        }
+      ],
+      "tip": "Swahili allows consonant clusters like “ml-”. Say it smoothly: mlango.",
+      "culture": "Homes often include extended family and guests—hospitality shapes how spaces are used."
+    },
+    {
+      "day": 17,
+      "theme": "Travel",
+      "words": [
+        {
+          "swahili": "Safari",
+          "english": "Journey/Trip",
+          "pronunciation": "sah-FAH-ree",
+          "sentence": "Safari yangu ilikuwa nzuri. — My trip was good."
+        },
+        {
+          "swahili": "Gari",
+          "english": "Car",
+          "pronunciation": "GAH-ree",
+          "sentence": "Nina gari. — I have a car."
+        },
+        {
+          "swahili": "Njia",
+          "english": "Road/Way",
+          "pronunciation": "N-jee-ah",
+          "sentence": "Njia iko wapi? — Where is the way/road?"
+        }
+      ],
+      "tip": "“nj” is like ‘n’ + ‘j’ together (like ‘enjoy’ starting sound).",
+      "culture": "“Safari” became global, but in Swahili it simply means journey—physical or symbolic."
+    },
+    {
+      "day": 18,
+      "theme": "Feelings",
+      "words": [
+        {
+          "swahili": "Furaha",
+          "english": "Happiness/Joy",
+          "pronunciation": "foo-RAH-hah",
+          "sentence": "Nina furaha leo. — I am happy today."
+        },
+        {
+          "swahili": "Huzuni",
+          "english": "Sadness",
+          "pronunciation": "hoo-ZOO-nee",
+          "sentence": "Ninahisi huzuni. — I feel sad."
+        },
+        {
+          "swahili": "Hasira",
+          "english": "Anger",
+          "pronunciation": "hah-SEE-rah",
+          "sentence": "Usiwe na hasira. — Don’t be angry."
+        }
+      ],
+      "tip": "“h” is pronounced—don’t drop it like some English habits.",
+      "culture": "Naming emotions directly can be seen as honest and grounding—tone and respect still matter."
+    },
+    {
+      "day": 19,
+      "theme": "Nature",
+      "words": [
+        {
+          "swahili": "Mti",
+          "english": "Tree",
+          "pronunciation": "m-TEE",
+          "sentence": "Mti huu ni mrefu. — This tree is tall."
+        },
+        {
+          "swahili": "Bahari",
+          "english": "Ocean/Sea",
+          "pronunciation": "bah-HAH-ree",
+          "sentence": "Bahari ni kubwa. — The ocean is big."
+        },
+        {
+          "swahili": "Jua",
+          "english": "Sun",
+          "pronunciation": "JOO-ah",
+          "sentence": "Jua linaangaza. — The sun is shining."
+        }
+      ],
+      "tip": "Short words still keep clear vowels: jua = joo-ah (two beats).",
+      "culture": "Swahili coastal culture is deeply tied to the sea (bahari) through trade, fishing, and history."
+    },
+    {
+      "day": 20,
+      "theme": "Faith & Spirit",
+      "words": [
+        {
+          "swahili": "Roho",
+          "english": "Spirit/Soul",
+          "pronunciation": "ROH-hoh",
+          "sentence": "Roho yangu iko thabiti. — My spirit is strong."
+        },
+        {
+          "swahili": "Imani",
+          "english": "Faith/Belief",
+          "pronunciation": "ee-MAH-nee",
+          "sentence": "Imani inaleta nguvu. — Faith brings strength."
+        },
+        {
+          "swahili": "Baraka",
+          "english": "Blessing",
+          "pronunciation": "bah-RAH-kah",
+          "sentence": "Baraka kwako. — Blessings to you."
+        }
+      ],
+      "tip": "Swahili is spoken by diverse faith communities; words like imani/baraka appear across contexts.",
+      "culture": "Blessings and well-wishes are woven into everyday speech—language as spiritual care."
+    },
+    {
+      "day": 21,
+      "theme": "Unity & Purpose",
+      "words": [
+        {
+          "swahili": "Lengo",
+          "english": "Goal/Purpose",
+          "pronunciation": "LEHN-goh",
+          "sentence": "Lengo langu ni kujifunza. — My goal is to learn."
+        },
+        {
+          "swahili": "Pamoja",
+          "english": "Together",
+          "pronunciation": "pah-MOH-jah",
+          "sentence": "Tuko pamoja. — We are together."
+        },
+        {
+          "swahili": "Ushindi",
+          "english": "Victory",
+          "pronunciation": "oo-SHEEN-dee",
+          "sentence": "Ushindi ni wetu. — Victory is ours."
+        }
+      ],
+      "tip": "“sh” is like ‘shoe’. Keep the ‘u’ before it open: ushindi.",
+      "culture": "Collective language (“pamoja”) reflects cooperative survival and celebration."
+    },
+    {
+      "day": 22,
+      "theme": "Questions",
+      "words": [
+        {
+          "swahili": "Nani",
+          "english": "Who",
+          "pronunciation": "NAH-nee",
+          "sentence": "Nani huyo? — Who is that?"
+        },
+        {
+          "swahili": "Wapi",
+          "english": "Where",
+          "pronunciation": "WAH-pee",
+          "sentence": "Uko wapi? — Where are you?"
+        },
+        {
+          "swahili": "Kwa nini",
+          "english": "Why",
+          "pronunciation": "kwah NEE-nee",
+          "sentence": "Kwa nini umechelewa? — Why are you late?"
+        }
+      ],
+      "tip": "Kwa nini is two words. Don’t smash it into one sound—keep it clear.",
+      "culture": "Asking politely matters—tone + “tafadhali” can soften questions."
+    },
+    {
+      "day": 23,
+      "theme": "Daily Life",
+      "words": [
+        {
+          "swahili": "Asubuhi",
+          "english": "Morning",
+          "pronunciation": "ah-soo-BOO-hee",
+          "sentence": "Asubuhi njema. — Good morning."
+        },
+        {
+          "swahili": "Mchana",
+          "english": "Afternoon/Daytime",
+          "pronunciation": "m-CHAH-nah",
+          "sentence": "Mchana mwema. — Good afternoon."
+        },
+        {
+          "swahili": "Usiku",
+          "english": "Night",
+          "pronunciation": "oo-SEE-koo",
+          "sentence": "Usiku mwema. — Good night."
+        }
+      ],
+      "tip": "The “ch” again is like church. Mchana starts with m- + ch.",
+      "culture": "Greetings change by time of day; using the right one shows care and awareness."
+    },
+    {
+      "day": 24,
+      "theme": "Support",
+      "words": [
+        {
+          "swahili": "Msaada",
+          "english": "Help/Support",
+          "pronunciation": "m-sah-AH-dah",
+          "sentence": "Asante kwa msaada. — Thank you for the help."
+        },
+        {
+          "swahili": "Tunaweza",
+          "english": "We can",
+          "pronunciation": "too-nah-WEH-zah",
+          "sentence": "Tunaweza kufanya hivi. — We can do this."
+        },
+        {
+          "swahili": "Kushirikiana",
+          "english": "To cooperate",
+          "pronunciation": "koo-shee-ree-kee-AH-nah",
+          "sentence": "Tushirikiane. — Let’s cooperate."
+        }
+      ],
+      "tip": "Long words are just syllables in a row. Don’t panic—clap the rhythm if needed.",
+      "culture": "Cooperation is a core survival strategy—language reinforces group identity and mutual aid."
+    },
+    {
+      "day": 25,
+      "theme": "Values",
+      "words": [
+        {
+          "swahili": "Haki",
+          "english": "Justice/Right",
+          "pronunciation": "HAH-kee",
+          "sentence": "Tunataka haki. — We want justice."
+        },
+        {
+          "swahili": "Ukweli",
+          "english": "Truth",
+          "pronunciation": "oo-KWEH-lee",
+          "sentence": "Ukweli ni muhimu. — Truth is important."
+        },
+        {
+          "swahili": "Upendo",
+          "english": "Love",
+          "pronunciation": "oo-PEHN-doh",
+          "sentence": "Upendo ni nguvu. — Love is strength."
+        }
+      ],
+      "tip": "“kw” is a quick blend: uk-weli (not oo-koo-eli).",
+      "culture": "These words show up in speeches, songs, and daily encouragement—values spoken become values lived."
+    },
+    {
+      "day": 26,
+      "theme": "Tech & Communication",
+      "words": [
+        {
+          "swahili": "Simu",
+          "english": "Phone",
+          "pronunciation": "SEE-moo",
+          "sentence": "Nina simu. — I have a phone."
+        },
+        {
+          "swahili": "Ujumbe",
+          "english": "Message",
+          "pronunciation": "oo-JOOM-beh",
+          "sentence": "Nimetuma ujumbe. — I sent a message."
+        },
+        {
+          "swahili": "Mtandao",
+          "english": "Internet/Network",
+          "pronunciation": "m-tah-NDAH-oh",
+          "sentence": "Mtandao ni polepole. — The internet is slow."
+        }
+      ],
+      "tip": "“nd” is blended: mtandao has a strong “nd” in the middle.",
+      "culture": "Swahili adapts with technology—new words form while keeping the language’s rhythm."
+    },
+    {
+      "day": 27,
+      "theme": "Food & Ordering",
+      "words": [
+        {
+          "swahili": "Chai",
+          "english": "Tea",
+          "pronunciation": "CHAI (rhymes with 'eye')",
+          "sentence": "Nataka chai, tafadhali. — I want tea, please."
+        },
+        {
+          "swahili": "Kahawa",
+          "english": "Coffee",
+          "pronunciation": "kah-HAH-wah",
+          "sentence": "Unapenda kahawa? — Do you like coffee?"
+        },
+        {
+          "swahili": "Bei",
+          "english": "Price",
+          "pronunciation": "BEH-ee",
+          "sentence": "Bei ni gani? — What is the price?"
+        }
+      ],
+      "tip": "Bei is two vowels: beh-ee. Don’t make it one long ‘bay’.",
+      "culture": "Asking price politely is normal; bargaining can be part of friendly interaction in markets."
+    },
+    {
+      "day": 28,
+      "theme": "Movement",
+      "words": [
+        {
+          "swahili": "Kimbia",
+          "english": "Run",
+          "pronunciation": "keem-BEE-ah",
+          "sentence": "Ninakimbia asubuhi. — I run in the morning."
+        },
+        {
+          "swahili": "Tembea",
+          "english": "Walk",
+          "pronunciation": "tehm-BEH-ah",
+          "sentence": "Tutembee pamoja. — Let’s walk together."
+        },
+        {
+          "swahili": "Ruka",
+          "english": "Jump",
+          "pronunciation": "ROO-kah",
+          "sentence": "Ruka juu! — Jump up!"
+        }
+      ],
+      "tip": "Notice the pattern: -bea / -bia endings are syllables, not silent endings.",
+      "culture": "Movement words show up in sports, dance, and daily life—Swahili rhythm pairs well with music."
+    },
+    {
+      "day": 29,
+      "theme": "Identity",
+      "words": [
+        {
+          "swahili": "Mimi",
+          "english": "Me/I",
+          "pronunciation": "MEE-mee",
+          "sentence": "Mimi ni mwanafunzi. — I am a student."
+        },
+        {
+          "swahili": "Wewe",
+          "english": "You",
+          "pronunciation": "WEH-weh",
+          "sentence": "Wewe ni rafiki. — You are a friend."
+        },
+        {
+          "swahili": "Sisi",
+          "english": "We/Us",
+          "pronunciation": "SEE-see",
+          "sentence": "Sisi ni familia. — We are family."
+        }
+      ],
+      "tip": "These pronouns are clean and short—perfect for confidence-building practice.",
+      "culture": "Identity can be individual and collective; language makes room for both."
+    },
+    {
+      "day": 30,
+      "theme": "Celebration",
+      "words": [
+        {
+          "swahili": "Sherehe",
+          "english": "Celebration/Party",
+          "pronunciation": "sheh-REH-heh",
+          "sentence": "Leo tuna sherehe. — Today we have a celebration."
+        },
+        {
+          "swahili": "Hongera",
+          "english": "Congratulations",
+          "pronunciation": "hohn-GEH-rah",
+          "sentence": "Hongera kwa ushindi! — Congratulations on the victory!"
+        },
+        {
+          "swahili": "Kumbuka",
+          "english": "Remember",
+          "pronunciation": "koom-BOO-kah",
+          "sentence": "Kumbuka: umoja ni nguvu. — Remember: unity is strength."
+        }
+      ],
+      "tip": "If you can say day 30 smoothly, you’ve built real mouth-muscle memory. Keep going—repeat days in a loop.",
+      "culture": "Celebration is community energy—music, dance, food, and story. Language keeps memory alive."
+    }
+  ]
+}
