@@ -3,389 +3,190 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mufasa — Answer Slideshow</title>
+  <title>Mufasa Slideshow</title>
   <link rel="icon" href="data:,">
   <style>
-    :root{
-      --bg:#050505;
-      --panel:#0c0c0c;
-      --line:#d4af37;
-      --red:#c1121f;
-      --green:#1b7f3a;
-      --text:#f4f4f4;
-      --muted:#bdbdbd;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(1200px 700px at 15% 5%, rgba(193,18,31,.18), transparent 55%),
-        radial-gradient(1200px 700px at 85% 15%, rgba(27,127,58,.18), transparent 55%),
-        radial-gradient(1000px 600px at 50% 95%, rgba(212,175,55,.10), transparent 55%),
-        var(--bg);
-      color: var(--text);
-      overflow-x:hidden;
-    }
-    .wrap{max-width:1100px;margin:0 auto;padding:18px;}
-    .top{
-      display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;
-      padding:12px 14px;
-      border:1px solid rgba(212,175,55,.55);
-      border-radius:14px;
-      background: linear-gradient(180deg, rgba(12,12,12,.92), rgba(12,12,12,.68));
-      box-shadow:0 18px 50px rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
-    }
-    .title{display:flex;flex-direction:column;gap:2px}
-    .title h1{margin:0;font-size:16px;letter-spacing:.5px}
-    .title .sub{font-size:12px;color:var(--muted)}
-    .btn{
-      appearance:none;
-      border: 1px solid rgba(212,175,55,.65);
-      background: rgba(0,0,0,.25);
-      color: var(--text);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:700;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      text-decoration:none;
-    }
-    .btn:hover{background: rgba(212,175,55,.10); border-color: rgba(212,175,55,.95);}
-    .btn.red{ border-color: rgba(193,18,31,.75); }
-    .btn.red:hover{ background: rgba(193,18,31,.12); border-color: rgba(193,18,31,.95); }
-    .btn.green{ border-color: rgba(27,127,58,.75); }
-    .btn.green:hover{ background: rgba(27,127,58,.12); border-color: rgba(27,127,58,.95); }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 360px;
-      gap:14px;
-      margin-top:14px;
-    }
-    @media (max-width: 920px){ .grid{grid-template-columns:1fr;} }
-
-    .card{
-      background: linear-gradient(180deg, rgba(12,12,12,.9), rgba(12,12,12,.65));
-      border: 1px solid rgba(212,175,55,.45);
-      border-radius:14px;
-      padding:14px;
-      box-shadow: 0 18px 55px rgba(0,0,0,.35);
-    }
-
-    .stage{
-      position:relative;
-      min-height: 520px;
-      border-radius:14px;
-      border:1px solid rgba(212,175,55,.35);
-      background: rgba(0,0,0,.22);
-      overflow:hidden;
-    }
-
-    .progress{
-      position:absolute;left:0;top:0;height:6px;width:0%;
-      background: linear-gradient(90deg, var(--red), var(--line), var(--green));
-      transition: width .25s linear;
-    }
-
-    .slide{
-      position:absolute;inset:0;
-      padding:26px 22px;
-      display:flex;flex-direction:column;gap:14px;
-      opacity:0;
-      transform: translateX(14px);
-      transition: opacity .25s ease, transform .25s ease;
-    }
-    .slide.active{
-      opacity:1;
-      transform: translateX(0px);
-    }
-
-    .kicker{
-      display:inline-flex;align-items:center;gap:8px;
-      border:1px solid rgba(212,175,55,.35);
-      background: rgba(0,0,0,.20);
-      padding:7px 10px;border-radius:999px;
-      width:fit-content;
-      font-size:12px;color:var(--muted);
-    }
-
-    .slide h2{
-      margin:0;
-      font-size:24px;
-      line-height:1.1;
-      letter-spacing:.4px;
-      text-shadow: 0 10px 30px rgba(0,0,0,.55);
-    }
-
-    ul{margin:0;padding-left:20px;color:var(--text);line-height:1.4}
-    li{margin-bottom:8px}
-
-    .footerBar{
-      position:absolute;left:0;right:0;bottom:0;
-      padding:12px 14px;
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55));
-    }
-    .meta{font-size:12px;color:var(--muted)}
-    .controls{display:flex;gap:10px;flex-wrap:wrap}
-    audio{ width:100%; margin-top:10px; }
-    textarea{
-      width:100%;
-      min-height:84px;
-      resize:vertical;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid rgba(212,175,55,.45);
-      background: rgba(0,0,0,.25);
-      color: var(--text);
-      outline:none;
-    }
+    :root{--bg:#050505;--gold:#d4af37;--text:#f2f2f2;--muted:#bdbdbd;--card:rgba(0,0,0,.30);--line:rgba(212,175,55,.35)}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);
+      background:radial-gradient(1100px 650px at 20% 10%, rgba(193,18,31,.16), transparent 55%),
+               radial-gradient(1100px 650px at 80% 15%, rgba(27,127,58,.16), transparent 55%),
+               radial-gradient(900px 550px at 50% 95%, rgba(212,175,55,.12), transparent 55%), var(--bg);}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .top{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:14px 16px;border:1px solid var(--line);
+      border-radius:16px;background:rgba(0,0,0,.25)}
+    .title{font-weight:900;letter-spacing:.4px}
+    .sub{color:var(--muted);font-size:12px;margin-top:4px}
+    .btn{appearance:none;border:1px solid rgba(212,175,55,.55);background:rgba(0,0,0,.22);color:var(--text);
+      padding:10px 12px;border-radius:999px;cursor:pointer;font-weight:800;display:inline-flex;align-items:center;gap:8px}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .deck{margin-top:14px;border:1px solid var(--line);border-radius:18px;background:rgba(0,0,0,.18);padding:14px}
+    .slide{border:1px solid rgba(212,175,55,.22);border-radius:18px;background:var(--card);padding:16px;min-height:320px}
+    .slide h2{margin:0 0 10px;color:rgba(212,175,55,.95)}
+    ul{margin:0;padding-left:18px} li{margin:6px 0;line-height:1.35}
+    .narr{margin-top:12px;color:var(--muted);line-height:1.4}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+    .counter{color:var(--muted);font-weight:700}
+    audio{width:100%;margin-top:10px}
+    .err{margin-top:10px;color:#ffcccb;font-size:13px;white-space:pre-wrap}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div class="title">
-        <h1>🎞️ Mufasa Answer Slideshow</h1>
-        <div class="sub">Turns your question + answer into clean slides (browser “video style”).</div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn" href="index.html">⬅️ Back</a>
-        <button class="btn green" id="btnGenerate">Generate Slides</button>
-        <button class="btn red" id="btnAuto" disabled>▶️ Auto-Play</button>
-        <button class="btn" id="btnRead" disabled>🔊 Read Slides</button>
-      </div>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="title">🎞️ Mufasa Slideshow</div>
+      <div class="sub" id="meta">Loading…</div>
     </div>
-
-    <div class="grid">
-      <div class="card">
-        <div class="stage" id="stage">
-          <div class="progress" id="progress"></div>
-          <div class="slide active" id="placeholder">
-            <div class="kicker">Ready</div>
-            <h2>Load a question to generate slides.</h2>
-            <ul>
-              <li>Go back and ask Mufasa a question, then click “🎞️ Slideshow”.</li>
-              <li>Or paste a question in the box on the right and hit “Generate Slides”.</li>
-            </ul>
-          </div>
-
-          <div class="footerBar">
-            <div class="meta" id="meta">0 / 0</div>
-            <div class="controls">
-              <button class="btn" id="btnPrev" disabled>⟵ Prev</button>
-              <button class="btn" id="btnNext" disabled>Next ⟶</button>
-              <button class="btn" id="btnStop" disabled>⏹ Stop</button>
-            </div>
-          </div>
-        </div>
-
-        <audio id="ttsAudio" controls></audio>
-      </div>
-
-      <div class="card">
-        <div class="kicker">Input</div>
-        <h2 style="margin-top:10px;">Question</h2>
-        <textarea id="qBox" placeholder="Type a question here (or come from the main page)..."></textarea>
-
-        <div class="kicker" style="margin-top:12px;">Settings</div>
-        <p style="color:var(--muted);font-size:12.5px;line-height:1.35;margin-top:10px;">
-          Auto-play shows each slide for a few seconds. “Read Slides” uses Ma’at TTS.
-        </p>
-      </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn" id="prev">⬅️ Prev</button>
+      <button class="btn" id="next">Next ➡️</button>
+      <button class="btn" id="speak">🔊 Speak Slide</button>
     </div>
   </div>
 
-  <script>
-    // must match your main site
-    const MAAT_BASE_URL = "https://mufasabrain.onrender.com";
-    const STORYBOARD_URL = `${MAAT_BASE_URL}/storyboard`;
-    const TTS_URL = `${MAAT_BASE_URL}/voice/tts`;
+  <div class="deck">
+    <div class="slide">
+      <h2 id="stitle">…</h2>
+      <ul id="bullets"></ul>
+      <div class="narr" id="narr"></div>
+      <div class="controls">
+        <span class="counter" id="counter"></span>
+      </div>
+      <audio id="ttsAudio" controls></audio>
+      <div class="err" id="err"></div>
+    </div>
+  </div>
+</div>
 
-    const stage = document.getElementById("stage");
-    const progress = document.getElementById("progress");
-    const meta = document.getElementById("meta");
-    const qBox = document.getElementById("qBox");
+<script>
+  const qs = new URLSearchParams(location.search);
+  const api = (qs.get("api") || "").replace(/\/+$/,"");
+  const storyboardId = qs.get("storyboard_id") || qs.get("id") || "";
 
-    const btnGenerate = document.getElementById("btnGenerate");
-    const btnAuto = document.getElementById("btnAuto");
-    const btnRead = document.getElementById("btnRead");
-    const btnPrev = document.getElementById("btnPrev");
-    const btnNext = document.getElementById("btnNext");
-    const btnStop = document.getElementById("btnStop");
+  const meta = document.getElementById("meta");
+  const err = document.getElementById("err");
+  const stitle = document.getElementById("stitle");
+  const bullets = document.getElementById("bullets");
+  const narr = document.getElementById("narr");
+  const counter = document.getElementById("counter");
 
-    const ttsAudio = document.getElementById("ttsAudio");
+  const btnPrev = document.getElementById("prev");
+  const btnNext = document.getElementById("next");
+  const btnSpeak = document.getElementById("speak");
+  const ttsAudio = document.getElementById("ttsAudio");
 
-    let slides = [];
-    let idx = 0;
-    let timer = null;
-    let slideSeconds = 4;
+  let deck = null; // { title, slides:[] }
+  let idx = 0;
 
-    function clearSlidesFromStage(){
-      [...stage.querySelectorAll(".slide")].forEach(el=>{
-        if(el.id !== "placeholder") el.remove();
-      });
-      document.getElementById("placeholder").style.display = "block";
+  function setErr(msg){ err.textContent = msg || ""; }
+
+  function slides(){ return deck?.slides || []; }
+
+  function render(){
+    const slds = slides();
+    if(!slds.length){
+      stitle.textContent = "(no slides)";
+      bullets.innerHTML = "";
+      narr.textContent = "";
+      counter.textContent = "";
+      btnPrev.disabled = true;
+      btnNext.disabled = true;
+      return;
     }
 
-    function renderSlides(){
-      clearSlidesFromStage();
-      document.getElementById("placeholder").style.display = "none";
+    idx = Math.max(0, Math.min(idx, slds.length - 1));
+    const s = slds[idx];
 
-      slides.forEach((s, i)=>{
-        const el = document.createElement("div");
-        el.className = "slide" + (i === 0 ? " active" : "");
-        el.dataset.index = String(i);
+    stitle.textContent = s.title || "";
+    bullets.innerHTML = "";
+    (s.bullets || []).forEach(b => {
+      const li = document.createElement("li");
+      li.textContent = b;
+      bullets.appendChild(li);
+    });
+    narr.textContent = s.narration || "";
+    counter.textContent = `Slide ${idx+1} / ${slds.length}`;
 
-        const kicker = document.createElement("div");
-        kicker.className = "kicker";
-        kicker.textContent = `Slide ${i+1} of ${slides.length}`;
-        el.appendChild(kicker);
+    btnPrev.disabled = idx <= 0;
+    btnNext.disabled = idx >= slds.length - 1;
+  }
 
-        const h2 = document.createElement("h2");
-        h2.textContent = s.heading || `Slide ${i+1}`;
-        el.appendChild(h2);
+  async function loadDeck(){
+    setErr("");
 
-        const ul = document.createElement("ul");
-        (s.bullets || []).forEach(b=>{
-          const li = document.createElement("li");
-          li.textContent = b;
-          ul.appendChild(li);
-        });
-        el.appendChild(ul);
+    // 1) API fetch
+    if(api && storyboardId){
+      try{
+        const url = `${api}/storyboard/get?storyboard_id=${encodeURIComponent(storyboardId)}`;
+        const r = await fetch(url);
+        const j = await r.json().catch(()=>null);
 
-        stage.appendChild(el);
-      });
-
-      idx = 0;
-      updateUI();
-    }
-
-    function setActive(i){
-      idx = Math.max(0, Math.min(i, slides.length - 1));
-      [...stage.querySelectorAll(".slide")].forEach(el=>{
-        const n = Number(el.dataset.index || -1);
-        if(n === idx) el.classList.add("active");
-        else el.classList.remove("active");
-      });
-      updateUI();
-    }
-
-    function updateUI(){
-      meta.textContent = slides.length ? `${idx+1} / ${slides.length}` : `0 / 0`;
-      btnPrev.disabled = !(slides.length && idx > 0);
-      btnNext.disabled = !(slides.length && idx < slides.length - 1);
-      btnAuto.disabled = !slides.length;
-      btnRead.disabled = !slides.length;
-      btnStop.disabled = !timer;
-
-      const pct = slides.length ? ((idx+1)/slides.length)*100 : 0;
-      progress.style.width = `${pct}%`;
-    }
-
-    function stopAuto(){
-      if(timer){ clearInterval(timer); timer = null; }
-      updateUI();
-    }
-
-    function startAuto(){
-      stopAuto();
-      timer = setInterval(()=>{
-        if(idx >= slides.length - 1){
-          stopAuto();
+        if(r.ok && j?.ok && j?.data?.storyboard){
+          deck = j.data.storyboard;
+          meta.textContent = `${deck.title || "Deck"} • id: ${j.data.id || storyboardId}`;
+          render();
           return;
         }
-        setActive(idx + 1);
-      }, slideSeconds * 1000);
-      updateUI();
-    }
 
-    async function generate(){
-      stopAuto();
-      const q = (qBox.value || "").trim();
-      if(!q){
-        alert("Type a question first.");
-        return;
-      }
-
-      btnGenerate.disabled = true;
-      try{
-        const r = await fetch(STORYBOARD_URL, {
-          method: "POST",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({
-            question: q,
-            user_id: "rashad",
-            max_slides: 8
-          })
-        });
-        if(!r.ok){
-          const t = await r.text();
-          throw new Error(t || "Storyboard failed");
-        }
-        const data = await r.json();
-        slides = data.slides || [];
-        if(!slides.length){
-          throw new Error("No slides returned.");
-        }
-        renderSlides();
-      }catch(err){
-        console.error(err);
-        alert("Error: " + (err?.message || err));
-      }finally{
-        btnGenerate.disabled = false;
+        setErr(`API load failed\nGET ${url}\nHTTP ${r.status}\n${j ? JSON.stringify(j,null,2) : "(no json)"}`);
+      }catch(e){
+        setErr("API error: " + (e?.message || e));
       }
     }
 
-    async function readSlides(){
-      if(!slides.length) return;
-
-      // make one narration string
-      const narration =
-        slides.map((s,i)=>{
-          const head = s.heading ? `${s.heading}.` : `Slide ${i+1}.`;
-          const bullets = (s.bullets || []).join(" ");
-          return `${head} ${bullets}`;
-        }).join("\n\n");
-
-      btnRead.disabled = true;
-      try{
-        const form = new FormData();
-        form.append("text", narration);
-        const r = await fetch(TTS_URL, { method:"POST", body: form });
-        if(!r.ok){
-          const t = await r.text();
-          throw new Error(t || "TTS failed");
+    // 2) localStorage fallback
+    try{
+      const raw = localStorage.getItem("lastStoryboard");
+      if(raw){
+        const obj = JSON.parse(raw);
+        const sb = obj?.data?.storyboard || obj?.storyboard?.deck || obj?.storyboard || obj?.data;
+        // try to normalize
+        if(sb?.slides){
+          deck = sb;
+          meta.textContent = `${deck.title || "Deck"} • localStorage`;
+          render();
+          return;
         }
-        const audioBlob = await r.blob();
-        const url = URL.createObjectURL(audioBlob);
-        ttsAudio.src = url;
-        await ttsAudio.play();
-      }catch(err){
-        console.error(err);
-        alert("TTS Error: " + (err?.message || err));
-      }finally{
-        btnRead.disabled = !slides.length;
       }
-    }
+    }catch(e){}
 
-    btnGenerate.addEventListener("click", generate);
-    btnPrev.addEventListener("click", ()=> setActive(idx - 1));
-    btnNext.addEventListener("click", ()=> setActive(idx + 1));
-    btnStop.addEventListener("click", stopAuto);
-    btnAuto.addEventListener("click", startAuto);
-    btnRead.addEventListener("click", readSlides);
+    meta.textContent = "Could not load slideshow.";
+    if(!api) setErr("Missing api=... in URL");
+    else if(!storyboardId) setErr("Missing storyboard_id=... in URL");
+  }
 
-    // Pull question from query param
-    const params = new URLSearchParams(location.search);
-    const qParam = params.get("q");
-    if(qParam){
-      qBox.value = decodeURIComponent(qParam);
+  async function speakSlide(){
+    setErr("");
+    if(!api) return alert("Missing api=... parameter.");
+    const slds = slides();
+    if(!slds.length) return;
+
+    const s = slds[idx];
+    const text = `${s.title || ""}\n\n${s.narration || ""}`.trim();
+    if(!text) return alert("Nothing to speak.");
+
+    try{
+      const form = new FormData();
+      form.append("text", text);
+      const r = await fetch(`${api}/voice/tts`, { method:"POST", body: form });
+      if(!r.ok){
+        const t = await r.text().catch(()=>"(no text)");
+        setErr(`TTS failed HTTP ${r.status}\n${t}`);
+        return alert("TTS failed — see error on page.");
+      }
+      const blob = await r.blob();
+      ttsAudio.src = URL.createObjectURL(blob);
+      await ttsAudio.play();
+    }catch(e){
+      setErr("TTS error: " + (e?.message || e));
     }
-  </script>
+  }
+
+  btnPrev.onclick = () => { idx--; render(); };
+  btnNext.onclick = () => { idx++; render(); };
+  btnSpeak.onclick = speakSlide;
+
+  loadDeck();
+</script>
 </body>
 </html>
