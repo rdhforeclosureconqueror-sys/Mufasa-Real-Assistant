@@ -14,3 +14,9 @@ async def ask(payload: dict):
     async with httpx.AsyncClient() as client:
         r = await client.post(f"{MAAT_API}/ask", json=payload)
         return r.json()
+@app.get("/")
+def root():
+    return {
+        "service": "Mufasa Real Assistant API",
+        "status": "online"
+    }
