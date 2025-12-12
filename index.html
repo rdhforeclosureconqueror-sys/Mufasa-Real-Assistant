@@ -11,6 +11,7 @@
       --bg:#050505; --gold:#d4af37; --text:#f2f2f2; --muted:#bdbdbd;
       --card: rgba(0,0,0,.35);
       --line: rgba(212,175,55,.35);
+      --chip: rgba(212,175,55,.12);
     }
     body{
       margin:0;
@@ -24,12 +25,14 @@
     }
     .wrap{ max-width:1200px; margin:0 auto; padding:18px; }
     .top{
-      display:flex; justify-content:space-between; align-items:center;
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
       border:1px solid var(--line); border-radius:16px; padding:14px;
       background:rgba(0,0,0,.35);
+      flex-wrap:wrap;
     }
     .title{ font-weight:900; letter-spacing:.4px; }
-    .sub{ font-size:12px; color:var(--muted); }
+    .sub{ font-size:12px; color:var(--muted); margin-top:2px; }
+    .right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
     .btn{
       border:1px solid rgba(212,175,55,.6);
       background:rgba(0,0,0,.25);
@@ -40,18 +43,25 @@
       font-weight:800;
     }
     .btn:hover{ background:rgba(212,175,55,.12); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
     .grid{
       display:grid;
       grid-template-columns: 2fr 1fr;
       gap:14px;
       margin-top:14px;
     }
+    @media (max-width: 960px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
     .panel{
       border:1px solid var(--line);
       border-radius:16px;
       padding:14px;
       background:var(--card);
     }
+
     textarea{
       width:100%;
       min-height:120px;
@@ -61,25 +71,50 @@
       border-radius:12px;
       padding:12px;
       resize:vertical;
+      font-size:15px;
+      line-height:1.3;
     }
-    .prompts button{
-      display:block;
-      width:100%;
-      text-align:left;
-      margin:6px 0;
+
+    .row{ display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+    .chip{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:var(--chip);
+      font-size:12px;
+      color:var(--muted);
     }
+
     .chat{
       margin-top:10px;
       background:#000;
       border-radius:12px;
       padding:12px;
-      max-height:360px;
+      max-height:420px;
       overflow:auto;
       border:1px solid var(--line);
     }
-    .msg{ margin-bottom:10px; }
-    .user{ color:#9fd3ff; }
+    .msg{ margin-bottom:12px; white-space:pre-wrap; }
+    .user{ color:#9fd3ff; font-weight:700; }
     .ai{ color:#b7ffcc; }
+
+    .prompts button{
+      display:block;
+      width:100%;
+      text-align:left;
+      margin:8px 0;
+    }
+
+    .videoWrap{
+      margin-top:12px;
+      display:none;
+    }
+    video{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#000;
+    }
   </style>
 </head>
 
@@ -90,36 +125,49 @@
   <div class="top">
     <div>
       <div class="title">🦁 Mufasa Real Assistant</div>
-      <div class="sub">Static Site • Powered by Mufasa API</div>
+      <div class="sub">Static Site • Talks to Ma’at API</div>
+      <div class="sub" id="apiLabel"></div>
     </div>
-    <div>
+
+    <div class="right">
       <button class="btn" id="micBtn">🎤 Mic</button>
-      <button class="btn" id="slideshowBtn">🎞️ Create Slideshow</button>
+      <button class="btn" id="ttsBtn">🔊 Speak Reply</button>
+      <button class="btn" id="slideshowBtn">🎞️ Slideshow</button>
       <button class="btn" id="langBtn">🌍 English</button>
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="grid">
 
     <!-- LEFT -->
     <div class="panel">
-      <textarea id="input" placeholder="Ask Mufasa anything about Black history, culture, or timelines..."></textarea>
-      <div style="margin-top:10px;">
+      <textarea id="input" placeholder="Ask Mufasa / Ma’at anything… (Black history, culture, fitness coaching)"></textarea>
+
+      <div class="row">
         <button class="btn" id="sendBtn">Send</button>
+        <span class="chip" id="statusChip">Ready</span>
       </div>
 
       <div class="chat" id="chat"></div>
+
+      <!-- Slideshow video output -->
+      <div class="videoWrap" id="videoWrap">
+        <div class="row" style="margin-top:0;">
+          <span class="chip">Slideshow Output</span>
+          <button class="btn" id="closeVideoBtn">✖ Close</button>
+        </div>
+        <video id="slideVideo" controls playsinline></video>
+      </div>
     </div>
 
     <!-- RIGHT -->
     <div class="panel prompts">
-      <strong>Quick Prompts</strong>
-      <button class="btn">Explain the Mali Empire</button>
+      <strong>Quick Prompts (tap → auto-send)</strong>
+      <button class="btn">Explain the Mali Empire in 6 key facts</button>
       <button class="btn">Give me a Haitian Revolution timeline</button>
-      <button class="btn">Top Black inventors in history</button>
-      <button class="btn">Teach me Ancient Africa</button>
-      <button class="btn">From Timbuktu to Harlem</button>
+      <button class="btn">Top Black inventors and what they built</button>
+      <button class="btn">Teach me Ancient Africa: 5 civilizations</button>
+      <button class="btn">From Timbuktu to Harlem: the knowledge flow</button>
     </div>
 
   </div>
@@ -127,88 +175,199 @@
 
 <script>
 /* ================= CONFIG ================= */
+/* IMPORTANT: This MUST be your API service URL (the Web Service). */
 const API_BASE = "https://mufasa-real-assistant-api.onrender.com";
 
 /* ================= STATE ================= */
-let lang = "en";
+let lang = "en";           // UI language toggle (does not change Ma’at logic unless you add it server-side)
+let lastAnswerText = "";   // used for TTS speak
+let userId = localStorage.getItem("mufasa_user_id") || ("user_" + Math.random().toString(16).slice(2));
+localStorage.setItem("mufasa_user_id", userId);
 
-/* ================= HELPERS ================= */
+/* ================= ELEMENTS ================= */
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
+const statusChip = document.getElementById("statusChip");
+const apiLabel = document.getElementById("apiLabel");
+apiLabel.textContent = "API: " + API_BASE;
 
-function addMsg(text, cls){
+/* ================= HELPERS ================= */
+function setStatus(s){ statusChip.textContent = s; }
+
+function addMsg(label, text, cls){
   const div = document.createElement("div");
-  div.className = "msg " + cls;
-  div.textContent = text;
+  div.className = "msg";
+  const a = document.createElement("div");
+  a.className = cls;
+  a.textContent = label;
+  const b = document.createElement("div");
+  b.textContent = text;
+  div.appendChild(a);
+  div.appendChild(b);
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
 
-/* ================= ASK ================= */
-async function ask(question){
-  addMsg(question, "user");
-  const r = await fetch(API_BASE + "/ask", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ question, lang })
-  });
-  const j = await r.json();
-  addMsg(j.answer || "No response", "ai");
+async function safeJson(resp){
+  const ct = (resp.headers.get("content-type") || "").toLowerCase();
+  if(ct.includes("application/json")) return await resp.json();
+  const text = await resp.text();
+  return { raw: text };
 }
 
-/* ================= EVENTS ================= */
-document.getElementById("sendBtn").onclick = ()=>{
-  if(input.value.trim()) ask(input.value.trim());
-};
+/* ================= ASK (matches your /ask schema) ================= */
+async function ask(question){
+  addMsg("You:", question, "user");
+  setStatus("Thinking…");
 
+  const body = {
+    question,
+    user_id: userId,
+    mode: "chat",
+    context: JSON.stringify({ lang, source: "static_site" })
+  };
+
+  const r = await fetch(API_BASE + "/ask", {
+    method: "POST",
+    headers: { "Content-Type":"application/json" },
+    body: JSON.stringify(body)
+  });
+
+  if(!r.ok){
+    const j = await safeJson(r);
+    setStatus("Error");
+    addMsg("API Error:", (j.detail || j.raw || JSON.stringify(j)), "ai");
+    return;
+  }
+
+  const j = await r.json();
+  const answer = j.answer || "(No answer field returned)";
+  lastAnswerText = answer;
+
+  addMsg("Ma’at:", answer, "ai");
+  setStatus("Ready");
+}
+
+/* ================= QUICK PROMPTS (tap → auto-send) ================= */
 document.querySelectorAll(".prompts button").forEach(b=>{
   b.onclick = ()=>{
-    input.value = b.textContent;
-    ask(b.textContent);
+    const q = b.textContent.trim();
+    input.value = q;
+    ask(q);
   };
 });
 
-/* ================= MIC ================= */
+/* ================= SEND ================= */
+document.getElementById("sendBtn").onclick = ()=>{
+  const q = input.value.trim();
+  if(q) ask(q);
+};
+
+/* ================= MIC (speech-to-text) ================= */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec;
 if(SR){
   rec = new SR();
   rec.lang = "en-US";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
   rec.onresult = e=>{
-    input.value = e.results[0][0].transcript;
-    ask(input.value);
+    const text = e.results[0][0].transcript;
+    input.value = text;
+    ask(text);
   };
+  rec.onerror = () => setStatus("Mic error");
 }
+
 document.getElementById("micBtn").onclick = ()=>{
-  if(rec) rec.start();
-  else alert("Mic not supported");
+  if(!rec){ alert("Mic not supported on this browser"); return; }
+  setStatus("Listening…");
+  rec.start();
 };
 
-/* ================= SLIDESHOW ================= */
+/* ================= TTS (uses your /voice/tts) ================= */
+document.getElementById("ttsBtn").onclick = async ()=>{
+  if(!lastAnswerText){ alert("No assistant reply to speak yet."); return; }
+  setStatus("Speaking…");
+
+  const fd = new FormData();
+  fd.append("text", lastAnswerText);
+
+  const r = await fetch(API_BASE + "/voice/tts", { method:"POST", body: fd });
+  if(!r.ok){
+    setStatus("TTS error");
+    return;
+  }
+  const blob = await r.blob();
+  const url = URL.createObjectURL(blob);
+
+  const audio = new Audio(url);
+  // iOS requires user gesture (this button click counts)
+  await audio.play().catch(()=>{});
+  setStatus("Ready");
+};
+
+/* ================= SLIDESHOW (matches your /media/slideshow) ================= */
+const videoWrap = document.getElementById("videoWrap");
+const slideVideo = document.getElementById("slideVideo");
+document.getElementById("closeVideoBtn").onclick = ()=>{
+  slideVideo.pause();
+  slideVideo.removeAttribute("src");
+  videoWrap.style.display = "none";
+};
+
 document.getElementById("slideshowBtn").onclick = async ()=>{
   const text = input.value.trim();
-  if(!text){ alert("Ask a question first"); return; }
+  if(!text){ alert("Type a prompt first (this becomes the slideshow text)."); return; }
 
-  const r = await fetch(API_BASE + "/storyboard/create", {
+  setStatus("Rendering slideshow…");
+
+  const payload = { text, title: "Prince of Pan-Africa", max_slides: 8 };
+
+  const r = await fetch(API_BASE + "/media/slideshow", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ topic: text })
+    body: JSON.stringify(payload)
   });
+
+  if(!r.ok){
+    setStatus("Slideshow error");
+    const j = await safeJson(r);
+    addMsg("Slideshow Error:", (j.detail || j.raw || JSON.stringify(j)), "ai");
+    return;
+  }
+
+  const ct = (r.headers.get("content-type") || "").toLowerCase();
+
+  // If MP4 returned, play it
+  if(ct.includes("video/mp4")){
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    slideVideo.src = url;
+    videoWrap.style.display = "block";
+    slideVideo.play().catch(()=>{});
+    setStatus("Ready");
+    return;
+  }
+
+  // Otherwise JSON storyboard fallback
   const j = await r.json();
-  localStorage.setItem("lastStoryboard", JSON.stringify(j));
-  window.open(
-    "/slideshow.html?api=" + encodeURIComponent(API_BASE) +
-    "&id=" + encodeURIComponent(j.id),
-    "_blank"
-  );
+  setStatus("Storyboard mode");
+  addMsg("Slideshow:", j.message || "Storyboard returned (no MP4 renderer installed).", "ai");
+
+  if(Array.isArray(j.storyboard)){
+    const asText = j.storyboard.map(s => `Slide ${s.slide}: ${s.text}`).join("\n\n");
+    addMsg("Storyboard:", asText, "ai");
+  }
 };
 
-/* ================= LANGUAGE ================= */
-document.getElementById("langBtn").onclick = ()=>{
-  if(lang === "en"){ lang="sw"; event.target.textContent="Swahili"; }
-  else if(lang === "sw"){ lang="yo"; event.target.textContent="Yoruba"; }
-  else{ lang="en"; event.target.textContent="English"; }
+/* ================= LANGUAGE (UI only) ================= */
+document.getElementById("langBtn").onclick = (e)=>{
+  if(lang === "en"){ lang="sw"; e.target.textContent="Swahili"; }
+  else if(lang === "sw"){ lang="yo"; e.target.textContent="Yoruba"; }
+  else{ lang="en"; e.target.textContent="English"; }
 };
 </script>
+
 </body>
 </html>
