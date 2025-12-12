@@ -1,22 +1,33 @@
+import json
+from datetime import date
+from pathlib import Path
+
 from fastapi import FastAPI
-import httpx
+from fastapi.responses import FileResponse, JSONResponse
 
 app = FastAPI()
 
-MAAT_API = "https://mufasabrain.onrender.com"
+DATA_PATH = Path("resources") / "swahili_30days.json"
 
-@app.get("/health")
-def health():
-    return {"ok": True}
-
-@app.post("/ask")
-async def ask(payload: dict):
-    async with httpx.AsyncClient() as client:
-        r = await client.post(f"{MAAT_API}/ask", json=payload)
-        return r.json()
 @app.get("/")
-def root():
-    return {
-        "service": "Mufasa Real Assistant API",
-        "status": "online"
-    }
+def home():
+    return FileResponse("index.html")
+
+@app.get("/swahili")
+def swahili_page():
+    return FileResponse("swahili.html")
+
+@app.get("/api/swahili/today")
+def swahili_today():
+    if not DATA_PATH.exists():
+        return JSONResponse(
+            {"error": "Missing resources/swahili_30days.json"},
+            status_code=404
+        )
+
+    lessons = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+
+    # pick day-of-year mod 30 -> stable “lesson of the day”
+    idx = (date.today().timetuple().tm_yday - 1) % len(lessons)
+    lesson = lessons[idx]
+    return lesson
