@@ -1,545 +1,702 @@
-#!/usr/bin/env python3
-"""
-Phone Agent CLI - AI-powered phone automation.
-
-Usage:
-    python main.py [OPTIONS]
-
-Environment Variables:
-    PHONE_AGENT_BASE_URL: Model API base URL (default: http://localhost:8000/v1)
-    PHONE_AGENT_MODEL: Model name (default: autoglm-phone-9b)
-    PHONE_AGENT_API_KEY: API key for model authentication (default: EMPTY)
-    PHONE_AGENT_MAX_STEPS: Maximum steps per task (default: 100)
-    PHONE_AGENT_DEVICE_ID: ADB device ID for multi-device setups
-"""
-
-import argparse
 import os
-import shutil
-import subprocess
-import sys
-from urllib.parse import urlparse
+import io
+import json
+import time
+import statistics
+from typing import List, Dict, Any, Optional
+from datetime import date, timedelta
 
+import httpx
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Request
+from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from dotenv import load_dotenv
+
+from api.auth import mint_jwt, require_role
+from api.rate_limit import allow  # (not used yet, but kept for future)
+from api.api_metrics import metrics, log_middleware
 from openai import OpenAI
 
-from phone_agent import PhoneAgent
-from phone_agent.adb import ADBConnection, list_devices
-from phone_agent.agent import AgentConfig
-from phone_agent.config.apps import list_supported_apps
-from phone_agent.model import ModelConfig
+# ───────────────────────────────────────────────────────────────────────────────
+# Optional local Phi-3 integration
+# ───────────────────────────────────────────────────────────────────────────────
+try:
+    from phi.model import Phi3Mini
+    phi3 = Phi3Mini()
+    HAS_LOCAL_PHI3 = True
+except Exception:
+    phi3 = None
+    HAS_LOCAL_PHI3 = False
+
+load_dotenv()
+
+API_HOST = os.getenv("API_HOST", "0.0.0.0")
+API_PORT = int(os.getenv("API_PORT", "7720"))
+DATA_DIR = os.getenv("DATA_DIR", "/data")
+
+TELEMETRY_DIR = os.path.join(DATA_DIR, "telemetry")
+RULES_DIR = os.path.join(DATA_DIR, "rules")
+EXPER_DIR = os.path.join(DATA_DIR, "experiments")
+TESTS_DIR = os.path.join(DATA_DIR, "tests")
+KNOWLEDGE_DIR = os.path.join(DATA_DIR, "knowledge")
+USER_DIR = os.path.join(DATA_DIR, "users")
+PROGRAM_DIR = os.path.join(DATA_DIR, "programs")
+STORYBOARD_DIR = os.path.join(DATA_DIR, "storyboards")
+
+for d in [TELEMETRY_DIR, RULES_DIR, EXPER_DIR, TESTS_DIR, KNOWLEDGE_DIR, USER_DIR, PROGRAM_DIR, STORYBOARD_DIR]:
+    os.makedirs(d, exist_ok=True)
+
+# Helper service URLs (optional sidecars)
+STT_URL = os.getenv("STT_URL", "http://localhost:8765")
+TTS_URL = os.getenv("TTS_URL", "http://localhost:8766")
+ADVISOR_URL = os.getenv("ADVISOR_URL", "http://localhost:8764")
+ADVISOR_MODE = os.getenv("ADVISOR_MODE", "off")
+
+# OpenAI client
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+openai_client: Optional[OpenAI] = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 
-def check_system_requirements() -> bool:
-    """
-    Check system requirements before running the agent.
+# ───────────────────────────────────────────────────────────────────────────────
+# Helpers
+# ───────────────────────────────────────────────────────────────────────────────
+def write_json(path: str, obj: Any):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(obj, f, indent=2, ensure_ascii=False)
 
-    Checks:
-    1. ADB tools installed
-    2. At least one device connected
-    3. ADB Keyboard installed on the device
+def read_json(path: str) -> Any:
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
 
-    Returns:
-        True if all checks pass, False otherwise.
-    """
-    print("🔍 Checking system requirements...")
-    print("-" * 50)
+def user_profile_path(user_id: str) -> str:
+    return os.path.join(USER_DIR, f"{user_id}.json")
 
-    all_passed = True
+def load_user_profile(user_id: Optional[str]) -> Dict[str, Any]:
+    if not user_id:
+        return {}
+    path = user_profile_path(user_id)
+    if not os.path.exists(path):
+        profile = {
+            "user_id": user_id,
+            "created_at": int(time.time()),
+            "last_updated": int(time.time()),
+            "demographics": {},
+            "goals": [],
+            "injuries": [],
+            "training_history": [],
+            "last_briefing": "",
+        }
+        write_json(path, profile)
+        return profile
+    return read_json(path)
 
-    # Check 1: ADB installed
-    print("1. Checking ADB installation...", end=" ")
-    if shutil.which("adb") is None:
-        print("❌ FAILED")
-        print("   Error: ADB is not installed or not in PATH.")
-        print("   Solution: Install Android SDK Platform Tools:")
-        print("     - macOS: brew install android-platform-tools")
-        print("     - Linux: sudo apt install android-tools-adb")
-        print(
-            "     - Windows: Download from https://developer.android.com/studio/releases/platform-tools"
-        )
-        all_passed = False
-    else:
-        # Double check by running adb version
+def save_user_profile(profile: Dict[str, Any]):
+    user_id = profile.get("user_id")
+    if not user_id:
+        return
+    profile["last_updated"] = int(time.time())
+    write_json(user_profile_path(user_id), profile)
+
+def save_program(user_id: str, program: Dict[str, Any]) -> str:
+    ts = int(time.time())
+    program_id = program.get("id") or f"prog_{user_id}_{ts}"
+    program["id"] = program_id
+    program["user_id"] = user_id
+    program["created_at"] = ts
+    path = os.path.join(PROGRAM_DIR, f"{program_id}.json")
+    write_json(path, program)
+    return program_id
+
+def list_programs_for_user(user_id: str) -> List[Dict[str, Any]]:
+    programs = []
+    for fname in os.listdir(PROGRAM_DIR):
+        if not fname.endswith(".json"):
+            continue
+        path = os.path.join(PROGRAM_DIR, fname)
         try:
-            result = subprocess.run(
-                ["adb", "version"], capture_output=True, text=True, timeout=10
-            )
-            if result.returncode == 0:
-                version_line = result.stdout.strip().split("\n")[0]
-                print(f"✅ OK ({version_line})")
-            else:
-                print("❌ FAILED")
-                print("   Error: ADB command failed to run.")
-                all_passed = False
-        except FileNotFoundError:
-            print("❌ FAILED")
-            print("   Error: ADB command not found.")
-            all_passed = False
-        except subprocess.TimeoutExpired:
-            print("❌ FAILED")
-            print("   Error: ADB command timed out.")
-            all_passed = False
+            data = read_json(path)
+        except Exception:
+            continue
+        if data.get("user_id") == user_id:
+            programs.append(data)
+    programs.sort(key=lambda p: p.get("created_at", 0), reverse=True)
+    return programs
 
-    # If ADB is not installed, skip remaining checks
-    if not all_passed:
-        print("-" * 50)
-        print("❌ System check failed. Please fix the issues above.")
-        return False
-
-    # Check 2: Device connected
-    print("2. Checking connected devices...", end=" ")
+def attach_calendar_to_program(program: Dict[str, Any], start_date: Optional[str]) -> None:
     try:
-        result = subprocess.run(
-            ["adb", "devices"], capture_output=True, text=True, timeout=10
+        base_date = date.fromisoformat(start_date) if start_date else date.today()
+    except Exception:
+        base_date = date.today()
+
+    calendar: List[Dict[str, Any]] = []
+    current = base_date
+
+    for week_block in program.get("plan", []):
+        week_idx = week_block.get("week")
+        for day in week_block.get("days", []):
+            label = day.get("label") or f"Day {day.get('day_index')}"
+            calendar.append({
+                "date": current.isoformat(),
+                "week": week_idx,
+                "day_index": day.get("day_index"),
+                "label": label,
+            })
+            current += timedelta(days=1)
+
+    program["calendar"] = calendar
+
+def save_storyboard(story: Dict[str, Any]) -> str:
+    ts = int(time.time())
+    sid = story.get("id") or f"sb_{ts}"
+    story["id"] = sid
+    story["created_at"] = ts
+    path = os.path.join(STORYBOARD_DIR, f"{sid}.json")
+    write_json(path, story)
+    return sid
+
+def load_storyboard(sb_id: str) -> Dict[str, Any]:
+    path = os.path.join(STORYBOARD_DIR, f"{sb_id}.json")
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Storyboard not found")
+    return read_json(path)
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Pydantic models
+# ───────────────────────────────────────────────────────────────────────────────
+class Telemetry(BaseModel):
+    source: str
+    session_id: str
+    metrics: Dict[str, float]
+    experiment: Optional[str] = None
+    variant: Optional[str] = None
+
+class AutoTuneReq(BaseModel):
+    move: str
+    window: int = 50
+    policy: Dict[str, float] = {}
+
+class RuleVersion(BaseModel):
+    label: str
+
+class ABStart(BaseModel):
+    name: str
+    metric: str
+    variant_a: Dict[str, float]
+    variant_b: Dict[str, float]
+    duration_sessions: int = 20
+
+class RegressGate(BaseModel):
+    name: str
+    min_depth: Optional[float] = None
+    max_wobble: Optional[float] = None
+
+class RegressReq(BaseModel):
+    gates: List[RegressGate]
+
+class AskPayload(BaseModel):
+    question: str
+    user_id: Optional[str] = None
+    session_id: Optional[str] = None
+    context: Optional[str] = None
+    telemetry: Optional[Dict[str, Any]] = None
+    mode: Optional[str] = "chat"  # "chat", "briefing_update", "program_help"
+
+class ProfileUpsert(BaseModel):
+    user_id: str
+    age: Optional[int] = None
+    height_cm: Optional[float] = None
+    weight_kg: Optional[float] = None
+    goals: Optional[List[str]] = None
+    injuries: Optional[List[str]] = None
+    notes: Optional[str] = None
+
+class ProgramRequest(BaseModel):
+    user_id: str
+    goal: str
+    weeks: int = 12
+    days_per_week: int = 4
+    home_only: bool = True
+    yoga_heavy: bool = True
+    assessment_summary: Optional[str] = None
+    extra_context: Optional[str] = None
+    start_date: Optional[str] = None
+    created_by: Optional[str] = None
+
+class StoryboardReq(BaseModel):
+    question: str
+    user_id: Optional[str] = None
+    max_slides: int = 8
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# FastAPI app
+# ───────────────────────────────────────────────────────────────────────────────
+app = FastAPI(title="Maat 2.0 Brain", version="2.2.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.middleware("http")(log_middleware)
+app.add_api_route("/metrics", metrics, methods=["GET"])
+
+
+@app.get("/")
+def root():
+    # fixes the 405 HEAD/GET confusion when you open the API in browser
+    return {"ok": True, "service": "Maat2.0 API", "hint": "Use /health or POST /ask"}
+
+
+@app.get("/health")
+def health():
+    return {
+        "ok": True,
+        "label": "Maat2.0",
+        "phase": 7,
+        "stt_url": STT_URL,
+        "tts_url": TTS_URL,
+        "advisor_mode": ADVISOR_MODE,
+        "has_local_phi3": HAS_LOCAL_PHI3,
+        "has_openai": bool(openai_client),
+        "openai_model": OPENAI_MODEL,
+    }
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Telemetry, tuning, experiments, regression tests (unchanged)
+# ───────────────────────────────────────────────────────────────────────────────
+@app.post("/telemetry/ingest")
+def telemetry_ingest(t: Telemetry):
+    rec = t.model_dump() | {"ts": int(time.time())}
+    path = os.path.join(TELEMETRY_DIR, f"t_{rec['ts']}_{t.session_id}.json")
+    write_json(path, rec)
+    agg_path = os.path.join(TELEMETRY_DIR, "rolling.jsonl")
+    with open(agg_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    return {"ok": True}
+
+def list_recent_telemetry(n: int = 200) -> List[Dict[str, Any]]:
+    items = []
+    for fname in sorted(os.listdir(TELEMETRY_DIR))[-n:]:
+        if fname.endswith(".json") and fname.startswith("t_"):
+            items.append(read_json(os.path.join(TELEMETRY_DIR, fname)))
+    return items
+
+@app.post("/tuning/auto")
+def tuning_auto(req: AutoTuneReq):
+    data = list_recent_telemetry(req.window)
+    if not data:
+        raise HTTPException(status_code=400, detail="No telemetry")
+
+    depths = [d["metrics"].get("depth", 0.0) for d in data if "depth" in d["metrics"]]
+    wobbles = [d["metrics"].get("knee_wobble_deg", 0.0) for d in data if "knee_wobble_deg" in d["metrics"]]
+    avg_depth = statistics.mean(depths) if depths else 0.0
+    avg_wobble = statistics.mean(wobbles) if wobbles else 999.0
+
+    adjust_pct = float(req.policy.get("adjust_pct", 0.1))
+    recommended: Dict[str, Any] = {}
+    notes: List[str] = []
+
+    if avg_depth < req.policy.get("depth_min", 0.8):
+        recommended["hips_drop"] = {"op": "scale_up", "by": adjust_pct, "reason": "avg_depth low"}
+        notes.append(f"Depth {avg_depth:.2f} < min {req.policy.get('depth_min', 0.8)}")
+
+    if avg_wobble > req.policy.get("wobble_max", 3.0):
+        recommended["tempo_slowdown"] = {"op": "scale_up", "by": adjust_pct, "reason": "knee wobble high"}
+        notes.append(f"Wobble {avg_wobble:.2f} > max {req.policy.get('wobble_max', 3.0)}")
+
+    proposal = {
+        "move": req.move,
+        "timestamp": int(time.time()),
+        "stats": {"avg_depth": avg_depth, "avg_wobble": avg_wobble},
+        "recommended": recommended,
+        "notes": notes,
+    }
+    path = os.path.join(RULES_DIR, f"tune_{proposal['timestamp']}.json")
+    write_json(path, proposal)
+    return {"ok": True, "proposal": proposal}
+
+@app.post("/rules/version/promote")
+def rules_version_promote(ver: RuleVersion):
+    snapshots = []
+    for fname in os.listdir(RULES_DIR):
+        if fname.startswith("tune_") and fname.endswith(".json"):
+            snapshots.append(read_json(os.path.join(RULES_DIR, fname)))
+    if not snapshots:
+        raise HTTPException(status_code=400, detail="No tuning proposals to version")
+    path = os.path.join(RULES_DIR, f"version_{int(time.time())}_{ver.label}.json")
+    write_json(path, {"label": ver.label, "proposals": snapshots})
+    return {"ok": True, "version_file": path}
+
+@app.post("/rules/version/rollback")
+def rules_version_rollback(ver: RuleVersion):
+    with open(os.path.join(RULES_DIR, "rollback.log"), "a", encoding="utf-8") as f:
+        f.write(f"{int(time.time())}\tROLLBACK\t{ver.label}\n")
+    return {"ok": True}
+
+@app.post("/experiments/ab/start")
+def experiments_ab_start(cfg: ABStart):
+    exp_id = f"exp_{int(time.time())}_{cfg.name}"
+    state = {
+        "id": exp_id,
+        "cfg": cfg.model_dump(),
+        "a": {"n": 0, "sum": 0.0},
+        "b": {"n": 0, "sum": 0.0},
+    }
+    path = os.path.join(EXPER_DIR, f"{exp_id}.json")
+    write_json(path, state)
+    return {"ok": True, "exp_id": exp_id}
+
+@app.get("/experiments/ab/status")
+def experiments_ab_status(exp_id: str):
+    path = os.path.join(EXPER_DIR, f"{exp_id}.json")
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Experiment not found")
+    state = read_json(path)
+    a = state["a"]
+    b = state["b"]
+    winner = None
+    if a["n"] > 0 and b["n"] > 0:
+        mean_a = a["sum"] / a["n"]
+        mean_b = b["sum"] / b["n"]
+        if abs(mean_a - mean_b) > 0.05:
+            winner = "A" if mean_a > mean_b else "B"
+        state["means"] = {"A": mean_a, "B": mean_b}
+        state["winner"] = winner
+    return state
+
+@app.post("/tests/regress/run")
+def tests_regress_run(req: RegressReq):
+    data = list_recent_telemetry(100)
+    depths = [d["metrics"].get("depth", 0.0) for d in data if "depth" in d["metrics"]]
+    wobbles = [d["metrics"].get("knee_wobble_deg", 0.0) for d in data if "knee_wobble_deg" in d["metrics"]]
+
+    results = []
+    for g in req.gates:
+        gate_res = {"name": g.name, "pass": True, "notes": []}
+        if g.min_depth is not None:
+            avg_depth = (sum(depths) / len(depths)) if depths else 0.0
+            if avg_depth < g.min_depth:
+                gate_res["pass"] = False
+                gate_res["notes"].append(f"avg_depth {avg_depth:.2f} < {g.min_depth}")
+        if g.max_wobble is not None:
+            avg_wobble = (sum(wobbles) / len(wobbles)) if wobbles else 999.0
+            if avg_wobble > g.max_wobble:
+                gate_res["pass"] = False
+                gate_res["notes"].append(f"avg_wobble {avg_wobble:.2f} > {g.max_wobble}")
+        results.append(gate_res)
+
+    overall = all(r["pass"] for r in results)
+    path = os.path.join(TESTS_DIR, f"regress_{int(time.time())}.json")
+    write_json(path, {"overall": overall, "results": results})
+    return {"overall": overall, "results": results}
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Voice: STT / TTS passthrough
+# ───────────────────────────────────────────────────────────────────────────────
+@app.post("/voice/stt")
+async def voice_stt(file: UploadFile = File(...)):
+    async with httpx.AsyncClient(timeout=120) as client:
+        files = {
+            "file": (file.filename, await file.read(), file.content_type or "application/octet-stream")
+        }
+        r = await client.post(f"{STT_URL}/stt", files=files)
+        if r.status_code != 200:
+            raise HTTPException(status_code=r.status_code, detail=r.text)
+        return JSONResponse(r.json())
+
+@app.post("/voice/tts")
+async def voice_tts(text: str = Form(...)):
+    async with httpx.AsyncClient(timeout=120) as client:
+        r = await client.post(f"{TTS_URL}/tts", data={"text": text})
+        if r.status_code != 200:
+            raise HTTPException(status_code=r.status_code, detail=r.text)
+        return StreamingResponse(io.BytesIO(r.content), media_type="audio/wav")
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# User Profile APIs
+# ───────────────────────────────────────────────────────────────────────────────
+@app.post("/users/profile/upsert")
+def profile_upsert(p: ProfileUpsert):
+    profile = load_user_profile(p.user_id)
+
+    demo = profile.get("demographics", {})
+    if p.age is not None:
+        demo["age"] = p.age
+    if p.height_cm is not None:
+        demo["height_cm"] = p.height_cm
+    if p.weight_kg is not None:
+        demo["weight_kg"] = p.weight_kg
+    profile["demographics"] = demo
+
+    if p.goals is not None:
+        profile["goals"] = p.goals
+    if p.injuries is not None:
+        profile["injuries"] = p.injuries
+
+    if p.notes:
+        prev = profile.get("last_briefing", "")
+        profile["last_briefing"] = (prev + "\n\n" + p.notes).strip()
+
+    save_user_profile(profile)
+    return {"ok": True, "profile": profile}
+
+@app.get("/users/profile/get")
+def profile_get(user_id: str):
+    return {"ok": True, "profile": load_user_profile(user_id)}
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Program generation APIs (unchanged)
+# ───────────────────────────────────────────────────────────────────────────────
+@app.post("/coach/program/generate")
+async def coach_program_generate(req: ProgramRequest):
+    if openai_client is None and not HAS_LOCAL_PHI3:
+        raise HTTPException(status_code=503, detail="No LLM is configured for program generation.")
+
+    profile = load_user_profile(req.user_id)
+
+    system_prompt = (
+        "You are Ma'at 2.0, a NASM-informed Pan-African virtual coach.\n"
+        "Return ONLY valid JSON.\n"
+    )
+
+    user_prompt = (
+        f"User profile:\n{json.dumps(profile, indent=2)}\n\n"
+        f"Goal: {req.goal}\nWeeks: {req.weeks}\nDays per week: {req.days_per_week}\n"
+        f"Home only: {req.home_only}\nYoga heavy: {req.yoga_heavy}\n\n"
+        f"Assessment:\n{req.assessment_summary or 'None'}\n\n"
+        f"Extra:\n{req.extra_context or ''}\n\n"
+        "Output JSON with keys: title, goal, weeks, days_per_week, notes, plan[].\n"
+    )
+
+    raw = None
+    if openai_client is not None:
+        resp = openai_client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[{"role": "system", "content": system_prompt},
+                      {"role": "user", "content": user_prompt}],
+            temperature=0.6,
         )
-        lines = result.stdout.strip().split("\n")
-        # Filter out header and empty lines, look for 'device' status
-        devices = [line for line in lines[1:] if line.strip() and "\tdevice" in line]
+        raw = resp.choices[0].message.content
+    else:
+        raw = phi3.generate(user_prompt)
 
-        if not devices:
-            print("❌ FAILED")
-            print("   Error: No devices connected.")
-            print("   Solution:")
-            print("     1. Enable USB debugging on your Android device")
-            print("     2. Connect via USB and authorize the connection")
-            print("     3. Or connect remotely: python main.py --connect <ip>:<port>")
-            all_passed = False
-        else:
-            device_ids = [d.split("\t")[0] for d in devices]
-            print(f"✅ OK ({len(devices)} device(s): {', '.join(device_ids)})")
-    except subprocess.TimeoutExpired:
-        print("❌ FAILED")
-        print("   Error: ADB command timed out.")
-        all_passed = False
-    except Exception as e:
-        print("❌ FAILED")
-        print(f"   Error: {e}")
-        all_passed = False
-
-    # If no device connected, skip ADB Keyboard check
-    if not all_passed:
-        print("-" * 50)
-        print("❌ System check failed. Please fix the issues above.")
-        return False
-
-    # Check 3: ADB Keyboard installed
-    print("3. Checking ADB Keyboard...", end=" ")
     try:
-        result = subprocess.run(
-            ["adb", "shell", "ime", "list", "-s"],
-            capture_output=True,
-            text=True,
-            timeout=10,
+        program = json.loads(raw)
+    except Exception:
+        program = {"title": "Program (unparsed)", "goal": req.goal, "weeks": req.weeks,
+                   "days_per_week": req.days_per_week, "notes": "Non-JSON output.", "plan": [], "raw": raw}
+
+    attach_calendar_to_program(program, req.start_date)
+    if req.created_by:
+        program["created_by"] = req.created_by
+
+    pid = save_program(req.user_id, program)
+    return {"ok": True, "program_id": pid, "program": program}
+
+@app.get("/coach/program/list")
+def coach_program_list(user_id: str):
+    programs = list_programs_for_user(user_id)
+    return {"ok": True, "programs": [{
+        "id": p.get("id"), "title": p.get("title"), "goal": p.get("goal"), "created_at": p.get("created_at")
+    } for p in programs]}
+
+@app.get("/coach/program/get")
+def coach_program_get(program_id: str):
+    path = os.path.join(PROGRAM_DIR, f"{program_id}.json")
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Program not found")
+    return {"ok": True, "program": read_json(path)}
+
+@app.get("/coach/calendar")
+def coach_calendar(user_id: str, program_id: Optional[str] = None):
+    programs = list_programs_for_user(user_id)
+    if not programs:
+        return {"ok": True, "events": [], "program_id": None}
+
+    chosen = None
+    if program_id:
+        chosen = next((p for p in programs if p.get("id") == program_id), None)
+    if chosen is None:
+        chosen = next((p for p in programs if "calendar" in p), programs[0])
+
+    return {"ok": True, "events": chosen.get("calendar") or [], "program_id": chosen.get("id")}
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# ASK
+# ───────────────────────────────────────────────────────────────────────────────
+@app.post("/ask")
+async def ask(payload: AskPayload):
+    question = payload.question
+    user_id = payload.user_id or "anonymous"
+    mode = payload.mode or "chat"
+
+    profile = load_user_profile(user_id)
+
+    telemetry_text = ""
+    if payload.telemetry:
+        t = payload.telemetry
+        telemetry_text = (
+            "\n\nWorkout telemetry:\n"
+            f"- Exercise: {t.get('exercise_id')}\n"
+            f"- Reps so far: {t.get('reps')}\n"
+            f"- Last depth score (0–1): {t.get('depth_score')}\n"
+            f"- Last form judged good?: {t.get('good_form')}\n"
         )
-        ime_list = result.stdout.strip()
 
-        if "com.android.adbkeyboard/.AdbIME" in ime_list:
-            print("✅ OK")
-        else:
-            print("❌ FAILED")
-            print("   Error: ADB Keyboard is not installed on the device.")
-            print("   Solution:")
-            print("     1. Download ADB Keyboard APK from:")
-            print(
-                "        https://github.com/senzhk/ADBKeyBoard/blob/master/ADBKeyboard.apk"
-            )
-            print("     2. Install it on your device: adb install ADBKeyboard.apk")
-            print(
-                "     3. Enable it in Settings > System > Languages & Input > Virtual Keyboard"
-            )
-            all_passed = False
-    except subprocess.TimeoutExpired:
-        print("❌ FAILED")
-        print("   Error: ADB command timed out.")
-        all_passed = False
-    except Exception as e:
-        print("❌ FAILED")
-        print(f"   Error: {e}")
-        all_passed = False
+    context_text = ""
+    if payload.context:
+        try:
+            ctx_obj = json.loads(payload.context)
+        except Exception:
+            ctx_obj = {"raw_context": payload.context}
+        context_text = "\n\nFront-end context:\n" + json.dumps(ctx_obj, indent=2)
 
-    print("-" * 50)
+    system_prompt = (
+        "You are Ma'at 2.0, Rashad's Pan-African AI assistant.\n"
+        "Be clear, safe, and helpful.\n"
+        "Default to 2–8 sentences unless asked to go long.\n\n"
+        "User profile:\n"
+        f"{json.dumps(profile, indent=2)}\n"
+        f"{telemetry_text}"
+        f"{context_text}\n"
+    )
 
-    if all_passed:
-        print("✅ All system checks passed!\n")
+    if mode == "briefing_update":
+        system_prompt += (
+            "\nUpdate your internal briefing about this user in 3–6 sentences, second person.\n"
+        )
+
+    if openai_client is None and not HAS_LOCAL_PHI3:
+        raise HTTPException(status_code=503, detail="No LLM configured (missing OPENAI_API_KEY).")
+
+    if openai_client is not None:
+        resp = openai_client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[{"role": "system", "content": system_prompt},
+                      {"role": "user", "content": question}],
+            temperature=0.6,
+        )
+        answer = resp.choices[0].message.content
     else:
-        print("❌ System check failed. Please fix the issues above.")
+        answer = phi3.generate(question)
 
-    return all_passed
+    if mode == "briefing_update":
+        profile["last_briefing"] = answer
+        save_user_profile(profile)
+
+    ts = int(time.time())
+    record = {
+        "ts": ts,
+        "question": question,
+        "answer": answer,
+        "session_id": payload.session_id,
+        "user_id": user_id,
+        "mode": mode,
+        "telemetry": payload.telemetry,
+    }
+    write_json(os.path.join(KNOWLEDGE_DIR, f"qa_{ts}.json"), record)
+    return record
 
 
-def check_model_api(base_url: str, model_name: str, api_key: str = "EMPTY") -> bool:
+# ───────────────────────────────────────────────────────────────────────────────
+# SLIDESHOW / STORYBOARD (NEW)
+# ───────────────────────────────────────────────────────────────────────────────
+@app.post("/storyboard/generate")
+async def storyboard_generate(req: StoryboardReq):
     """
-    Check if the model API is accessible and the specified model exists.
-
-    Checks:
-    1. Network connectivity to the API endpoint
-    2. Model exists in the available models list
-
-    Args:
-        base_url: The API base URL
-        model_name: The model name to check
-        api_key: The API key for authentication
-
-    Returns:
-        True if all checks pass, False otherwise.
+    Generates a slide deck outline (JSON) from a user question.
+    This is "the slideshow brain" step.
     """
-    print("🔍 Checking model API...")
-    print("-" * 50)
+    if openai_client is None and not HAS_LOCAL_PHI3:
+        raise HTTPException(status_code=503, detail="No LLM configured for storyboard generation.")
 
-    all_passed = True
+    user_id = req.user_id or "public"
+    profile = load_user_profile(user_id)
 
-    # Check 1: Network connectivity using chat API
-    print(f"1. Checking API connectivity ({base_url})...", end=" ")
+    system_prompt = (
+        "You are Mufasa's Slideshow Director.\n"
+        "Return ONLY valid JSON.\n"
+        "Goal: Convert the user's question into an 6-10 slide micro-lesson.\n"
+        "Each slide must have:\n"
+        "- title (short)\n"
+        "- bullets (3-6 bullets)\n"
+        "- narration (1 short paragraph)\n"
+        "No markdown.\n"
+    )
+
+    user_prompt = (
+        f"User: {user_id}\nProfile:\n{json.dumps(profile, indent=2)}\n\n"
+        f"Question: {req.question}\n"
+        f"Max slides: {req.max_slides}\n\n"
+        "Output JSON shape:\n"
+        "{\n"
+        '  "deck_title": string,\n'
+        '  "topic": string,\n'
+        '  "audience": "general",\n'
+        '  "slides": [\n'
+        '     {"title": string, "bullets": [string], "narration": string}\n'
+        "  ]\n"
+        "}\n"
+    )
+
+    if openai_client is not None:
+        resp = openai_client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[{"role": "system", "content": system_prompt},
+                      {"role": "user", "content": user_prompt}],
+            temperature=0.5,
+        )
+        raw = resp.choices[0].message.content
+    else:
+        raw = phi3.generate(user_prompt)
+
     try:
-        # Create OpenAI client
-        client = OpenAI(base_url=base_url, api_key=api_key, timeout=30.0)
+        deck = json.loads(raw)
+    except Exception:
+        deck = {
+            "deck_title": "Slideshow (unparsed)",
+            "topic": req.question[:80],
+            "audience": "general",
+            "slides": [{"title": "Error", "bullets": ["Model returned non-JSON"], "narration": raw}],
+        }
 
-        # Use chat completion to test connectivity (more universally supported than /models)
-        response = client.chat.completions.create(
-            model=model_name,
-            messages=[{"role": "user", "content": "Hi"}],
-            max_tokens=5,
-            temperature=0.0,
-            stream=False,
-        )
-
-        # Check if we got a valid response
-        if response.choices and len(response.choices) > 0:
-            print("✅ OK")
-        else:
-            print("❌ FAILED")
-            print("   Error: Received empty response from API")
-            all_passed = False
-
-    except Exception as e:
-        print("❌ FAILED")
-        error_msg = str(e)
-
-        # Provide more specific error messages
-        if "Connection refused" in error_msg or "Connection error" in error_msg:
-            print(f"   Error: Cannot connect to {base_url}")
-            print("   Solution:")
-            print("     1. Check if the model server is running")
-            print("     2. Verify the base URL is correct")
-            print(f"     3. Try: curl {base_url}/chat/completions")
-        elif "timed out" in error_msg.lower() or "timeout" in error_msg.lower():
-            print(f"   Error: Connection to {base_url} timed out")
-            print("   Solution:")
-            print("     1. Check your network connection")
-            print("     2. Verify the server is responding")
-        elif (
-            "Name or service not known" in error_msg
-            or "nodename nor servname" in error_msg
-        ):
-            print(f"   Error: Cannot resolve hostname")
-            print("   Solution:")
-            print("     1. Check the URL is correct")
-            print("     2. Verify DNS settings")
-        else:
-            print(f"   Error: {error_msg}")
-
-        all_passed = False
-
-    print("-" * 50)
-
-    if all_passed:
-        print("✅ Model API checks passed!\n")
-    else:
-        print("❌ Model API check failed. Please fix the issues above.")
-
-    return all_passed
+    story = {
+        "user_id": user_id,
+        "question": req.question,
+        "deck": deck,
+    }
+    sb_id = save_storyboard(story)
+    return {"ok": True, "id": sb_id, "storyboard": story}
 
 
-def parse_args() -> argparse.Namespace:
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(
-        description="Phone Agent - AI-powered phone automation",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-    # Run with default settings
-    python main.py
-
-    # Specify model endpoint
-    python main.py --base-url http://localhost:8000/v1
-
-    # Use API key for authentication
-    python main.py --apikey sk-xxxxx
-
-    # Run with specific device
-    python main.py --device-id emulator-5554
-
-    # Connect to remote device
-    python main.py --connect 192.168.1.100:5555
-
-    # List connected devices
-    python main.py --list-devices
-
-    # Enable TCP/IP on USB device and get connection info
-    python main.py --enable-tcpip
-
-    # List supported apps
-    python main.py --list-apps
-        """,
-    )
-
-    # Model options
-    parser.add_argument(
-        "--base-url",
-        type=str,
-        default=os.getenv("PHONE_AGENT_BASE_URL", "http://localhost:8000/v1"),
-        help="Model API base URL",
-    )
-
-    parser.add_argument(
-        "--model",
-        type=str,
-        default=os.getenv("PHONE_AGENT_MODEL", "autoglm-phone-9b"),
-        help="Model name",
-    )
-
-    parser.add_argument(
-        "--apikey",
-        type=str,
-        default=os.getenv("PHONE_AGENT_API_KEY", "EMPTY"),
-        help="API key for model authentication",
-    )
-
-    parser.add_argument(
-        "--max-steps",
-        type=int,
-        default=int(os.getenv("PHONE_AGENT_MAX_STEPS", "100")),
-        help="Maximum steps per task",
-    )
-
-    # Device options
-    parser.add_argument(
-        "--device-id",
-        "-d",
-        type=str,
-        default=os.getenv("PHONE_AGENT_DEVICE_ID"),
-        help="ADB device ID",
-    )
-
-    parser.add_argument(
-        "--connect",
-        "-c",
-        type=str,
-        metavar="ADDRESS",
-        help="Connect to remote device (e.g., 192.168.1.100:5555)",
-    )
-
-    parser.add_argument(
-        "--disconnect",
-        type=str,
-        nargs="?",
-        const="all",
-        metavar="ADDRESS",
-        help="Disconnect from remote device (or 'all' to disconnect all)",
-    )
-
-    parser.add_argument(
-        "--list-devices", action="store_true", help="List connected devices and exit"
-    )
-
-    parser.add_argument(
-        "--enable-tcpip",
-        type=int,
-        nargs="?",
-        const=5555,
-        metavar="PORT",
-        help="Enable TCP/IP debugging on USB device (default port: 5555)",
-    )
-
-    # Other options
-    parser.add_argument(
-        "--quiet", "-q", action="store_true", help="Suppress verbose output"
-    )
-
-    parser.add_argument(
-        "--list-apps", action="store_true", help="List supported apps and exit"
-    )
-
-    parser.add_argument(
-        "--lang",
-        type=str,
-        choices=["cn", "en"],
-        default=os.getenv("PHONE_AGENT_LANG", "cn"),
-        help="Language for system prompt (cn or en, default: cn)",
-    )
-
-    parser.add_argument(
-        "task",
-        nargs="?",
-        type=str,
-        help="Task to execute (interactive mode if not provided)",
-    )
-
-    return parser.parse_args()
+@app.get("/storyboard/get")
+def storyboard_get(id: str):
+    story = load_storyboard(id)
+    return {"ok": True, "storyboard": story}
 
 
-def handle_device_commands(args) -> bool:
-    """
-    Handle device-related commands.
+# ───────────────────────────────────────────────────────────────────────────────
+# Auth helpers (unchanged)
+# ───────────────────────────────────────────────────────────────────────────────
+@app.post("/auth/login")
+def login(role: str = "coach", tenant: str = "default", user_id: str = "u1"):
+    token = mint_jwt({"role": role, "tenant": tenant, "sub": user_id})
+    return {"token": token}
 
-    Returns:
-        True if a device command was handled (should exit), False otherwise.
-    """
-    conn = ADBConnection()
-
-    # Handle --list-devices
-    if args.list_devices:
-        devices = list_devices()
-        if not devices:
-            print("No devices connected.")
-        else:
-            print("Connected devices:")
-            print("-" * 60)
-            for device in devices:
-                status_icon = "✓" if device.status == "device" else "✗"
-                conn_type = device.connection_type.value
-                model_info = f" ({device.model})" if device.model else ""
-                print(
-                    f"  {status_icon} {device.device_id:<30} [{conn_type}]{model_info}"
-                )
-        return True
-
-    # Handle --connect
-    if args.connect:
-        print(f"Connecting to {args.connect}...")
-        success, message = conn.connect(args.connect)
-        print(f"{'✓' if success else '✗'} {message}")
-        if success:
-            # Set as default device
-            args.device_id = args.connect
-        return not success  # Continue if connection succeeded
-
-    # Handle --disconnect
-    if args.disconnect:
-        if args.disconnect == "all":
-            print("Disconnecting all remote devices...")
-            success, message = conn.disconnect()
-        else:
-            print(f"Disconnecting from {args.disconnect}...")
-            success, message = conn.disconnect(args.disconnect)
-        print(f"{'✓' if success else '✗'} {message}")
-        return True
-
-    # Handle --enable-tcpip
-    if args.enable_tcpip:
-        port = args.enable_tcpip
-        print(f"Enabling TCP/IP debugging on port {port}...")
-
-        success, message = conn.enable_tcpip(port, args.device_id)
-        print(f"{'✓' if success else '✗'} {message}")
-
-        if success:
-            # Try to get device IP
-            ip = conn.get_device_ip(args.device_id)
-            if ip:
-                print(f"\nYou can now connect remotely using:")
-                print(f"  python main.py --connect {ip}:{port}")
-                print(f"\nOr via ADB directly:")
-                print(f"  adb connect {ip}:{port}")
-            else:
-                print("\nCould not determine device IP. Check device WiFi settings.")
-        return True
-
-    return False
-
-
-def main():
-    """Main entry point."""
-    args = parse_args()
-
-    # Handle --list-apps (no system check needed)
-    if args.list_apps:
-        print("Supported apps:")
-        for app in sorted(list_supported_apps()):
-            print(f"  - {app}")
-        return
-
-    # Handle device commands (these may need partial system checks)
-    if handle_device_commands(args):
-        return
-
-    # Run system requirements check before proceeding
-    if not check_system_requirements():
-        sys.exit(1)
-
-    # Check model API connectivity and model availability
-    if not check_model_api(args.base_url, args.model, args.apikey):
-        sys.exit(1)
-
-    # Create configurations
-    model_config = ModelConfig(
-        base_url=args.base_url,
-        model_name=args.model,
-        api_key=args.apikey,
-    )
-
-    agent_config = AgentConfig(
-        max_steps=args.max_steps,
-        device_id=args.device_id,
-        verbose=not args.quiet,
-        lang=args.lang,
-    )
-
-    # Create agent
-    agent = PhoneAgent(
-        model_config=model_config,
-        agent_config=agent_config,
-    )
-
-    # Print header
-    print("=" * 50)
-    print("Phone Agent - AI-powered phone automation")
-    print("=" * 50)
-    print(f"Model: {model_config.model_name}")
-    print(f"Base URL: {model_config.base_url}")
-    print(f"Max Steps: {agent_config.max_steps}")
-    print(f"Language: {agent_config.lang}")
-
-    # Show device info
-    devices = list_devices()
-    if agent_config.device_id:
-        print(f"Device: {agent_config.device_id}")
-    elif devices:
-        print(f"Device: {devices[0].device_id} (auto-detected)")
-
-    print("=" * 50)
-
-    # Run with provided task or enter interactive mode
-    if args.task:
-        print(f"\nTask: {args.task}\n")
-        result = agent.run(args.task)
-        print(f"\nResult: {result}")
-    else:
-        # Interactive mode
-        print("\nEntering interactive mode. Type 'quit' to exit.\n")
-
-        while True:
-            try:
-                task = input("Enter your task: ").strip()
-
-                if task.lower() in ("quit", "exit", "q"):
-                    print("Goodbye!")
-                    break
-
-                if not task:
-                    continue
-
-                print()
-                result = agent.run(task)
-                print(f"\nResult: {result}\n")
-                agent.reset()
-
-            except KeyboardInterrupt:
-                print("\n\nInterrupted. Goodbye!")
-                break
-            except Exception as e:
-                print(f"\nError: {e}\n")
-
-
-if __name__ == "__main__":
-    main()
+@app.get("/auth/me")
+def me(request: Request):
+    payload = require_role(request, roles=("viewer", "coach", "owner"))
+    return {"you": payload}
