@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mufasa • YORUBA Lesson of the Day</title>
+
+  <style>
+    :root{
+      --bg:#070707;
+      --panel: rgba(10,10,10,.72);
+      --gold:#d6b25e;
+      --gold2:#f0d489;
+      --red:#e11d2e;
+      --green:#10b981;
+      --text:#f4f1e8;
+      --muted:#c9c2b3;
+      --stroke: rgba(214,178,94,.55);
+      --shadow: 0 20px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(1100px 500px at 50% 0%, rgba(214,178,94,.14), transparent 65%),
+        radial-gradient(900px 420px at 20% 20%, rgba(225,29,46,.12), transparent 65%),
+        radial-gradient(900px 420px at 80% 25%, rgba(16,185,129,.10), transparent 65%),
+        linear-gradient(180deg, #0a0a0a, #040404);
+      color: var(--text);
+      min-height:100vh;
+    }
+
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(0,0,0,.78), rgba(0,0,0,.35));
+      border-bottom: 1px solid rgba(214,178,94,.18);
+    }
+    .topbar-inner{
+      max-width:1100px; margin:0 auto; padding:14px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:12px; min-width: 0;
+    }
+    .mark{
+      width:42px; height:42px; border-radius: 12px;
+      background:
+        linear-gradient(135deg, rgba(214,178,94,.35), rgba(214,178,94,.06));
+      border: 1px solid rgba(214,178,94,.45);
+      box-shadow: 0 10px 28px rgba(214,178,94,.10);
+      display:grid; place-items:center;
+      position:relative;
+    }
+    .mark:before{
+      content:"";
+      position:absolute; inset:6px;
+      border-radius: 10px;
+      border: 1px solid rgba(214,178,94,.28);
+    }
+    .mark span{
+      font-weight:900; letter-spacing:.5px;
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      -webkit-background-clip:text; background-clip:text;
+      color: transparent;
+      text-shadow: 0 1px 0 rgba(0,0,0,.35);
+    }
+
+    .brand h1{
+      margin:0; font-size:14px; letter-spacing:.16em; text-transform:uppercase;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      -webkit-background-clip:text; background-clip:text;
+      color:transparent;
+    }
+    .brand p{ margin:2px 0 0; color: var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    .nav{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .btn{
+      border-radius: 999px;
+      padding:10px 14px;
+      border: 1px solid rgba(214,178,94,.45);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      cursor:pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      transition: transform .08s ease, background .15s ease;
+      text-decoration:none;
+      font-weight:600;
+      font-size:13px;
+      display:inline-flex; align-items:center; gap:8px;
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(214,178,94,.08); }
+    .btn.red{ border-color: rgba(225,29,46,.55); }
+    .btn.green{ border-color: rgba(16,185,129,.55); }
+    .btn.gold{ border-color: rgba(214,178,94,.65); }
+
+    .wrap{ max-width:1100px; margin:0 auto; padding:22px 18px 60px; }
+
+    .hero{
+      border-radius: var(--radius);
+      border: 1px solid rgba(214,178,94,.28);
+      background: linear-gradient(135deg, rgba(225,29,46,.09), rgba(0,0,0,.35) 35%, rgba(16,185,129,.08));
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+    }
+    @media (max-width: 900px){
+      .hero-grid{ grid-template-columns:1fr; }
+    }
+
+    .title{
+      margin:0;
+      font-size: 22px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .subtitle{
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height:1.5;
+      font-size: 13.5px;
+    }
+
+    .panel{
+      border-radius: var(--radius);
+      border: 1px solid rgba(214,178,94,.20);
+      background: var(--panel);
+      padding: 16px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    }
+
+    .kicker{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      margin-top:14px;
+    }
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      border: 1px solid rgba(214,178,94,.22);
+      background: rgba(0,0,0,.25);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .pill b{ color: var(--text); font-weight:700; }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 900px){
+      .row{ grid-template-columns:1fr; }
+    }
+
+    .section-title{
+      margin:0 0 10px;
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color: var(--muted);
+    }
+
+    .word{
+      border-radius: 14px;
+      border: 1px solid rgba(214,178,94,.18);
+      background: rgba(0,0,0,.30);
+      padding: 12px;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .word-top{
+      display:flex; justify-content:space-between; gap:10px; align-items:baseline; flex-wrap:wrap;
+    }
+    .sw{
+      font-weight:900;
+      font-size: 18px;
+      letter-spacing:.03em;
+      background: linear-gradient(180deg, #fff3c4, var(--gold));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .en{ color: var(--muted); font-size: 13px; }
+    .mini{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .controls{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 12px;
+    }
+
+    .status{
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer{
+      margin-top: 18px;
+      color: rgba(201,194,179,.85);
+      font-size: 12px;
+      line-height: 1.5;
+      border-top: 1px solid rgba(214,178,94,.16);
+      padding-top: 14px;
+    }
+
+    .note{
+      border-left: 3px solid rgba(214,178,94,.7);
+      padding: 10px 12px;
+      background: rgba(0,0,0,.25);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    .danger{
+      border-left-color: rgba(225,29,46,.7);
+    }
+
+    code{ color: #fff3c4; }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="mark"><span>M</span></div>
+        <div style="min-width:0">
+          <h1>Mufasa • YORUBA Lesson</h1>
+          <p id="todayLabel">Lesson of the Day • Loading…</p>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a class="btn gold" href="index.html">← Back to Black History</a>
+        <button class="btn green" id="btnSpeakAll" type="button">🔊 Speak Lesson</button>
+        <button class="btn red" id="btnStop" type="button">⏹ Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-grid">
+        <div class="panel">
+          <h2 class="title" id="lessonTitle">Swahili Lesson of the Day</h2>
+          <p class="subtitle" id="lessonSubtitle">
+            Three words. One sentence. One cultural note. Practice out loud (TTS + voice input when supported).
+          </p>
+
+          <div class="kicker">
+            <div class="pill"><b id="dayNum">Day</b></div>
+            <div class="pill">Theme: <b id="theme">—</b></div>
+            <div class="pill">Mode: <b id="mode">Text + Audio</b></div>
+          </div>
+
+          <div class="row" style="margin-top:16px">
+            <div class="panel">
+              <div class="section-title">Words</div>
+              <div id="words"></div>
+
+              <div class="controls">
+                <button class="btn gold" id="btnPrev" type="button">← Prev</button>
+                <button class="btn gold" id="btnNext" type="button">Next →</button>
+                <button class="btn green" id="btnMic" type="button">🎙 Practice (Mic)</button>
+              </div>
+
+              <div class="status" id="status">Loading lesson data…</div>
+            </div>
+
+            <div class="panel">
+              <div class="section-title">Daily Tip</div>
+              <div class="note" id="tip">—</div>
+
+              <div style="height:12px"></div>
+
+              <div class="section-title">Culture Note</div>
+              <div class="note" id="culture">—</div>
+
+              <div class="footer">
+                <div><b style="color:#fff3c4">How it works:</b> Tap <code>Speak Lesson</code> to hear it. Tap <code>Practice (Mic)</code> to repeat words. If your browser blocks mic/voice, you still get the full lesson by text.</div>
+              </div>
+
+              <div id="compat" class="note danger" style="display:none;margin-top:12px">
+                Your browser doesn’t support Speech Recognition here. Use Chrome on Android for best results.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">Quick Practice Flow</div>
+          <div class="note">
+            1) Listen to each word (🔊).<br/>
+            2) Repeat it 3 times (🎙).<br/>
+            3) Say the full sentence once.<br/><br/>
+            <b>Goal:</b> consistency + confidence — every day.
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="section-title">Today’s Sentence</div>
+          <div class="note" id="sentenceBox">—</div>
+
+          <div class="controls" style="margin-top:12px">
+            <button class="btn green" id="btnSpeakSentence" type="button">🔊 Speak Sentence</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ------------------------------
+  // Load JSON lesson pack
+  // Put swahili_30days.json next to this swahili.html (same folder) OR update the path below.
+  // ------------------------------
+  const DATA_URL = "yoruba_30days.json";
+
+  let PACK = null;
+  let idx = 0;
+
+  // Speech (TTS)
+  function speak(text){
+    try{
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.95;
+      u.pitch = 1.0;
+      window.speechSynthesis.speak(u);
+    }catch(e){
+      console.warn("TTS error", e);
+    }
+  }
+
+  // Speech Recognition (STT)
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let rec = null;
+
+  function initRec(){
+    if(!SpeechRecognition){
+      document.getElementById("compat").style.display = "block";
+      document.getElementById("mode").textContent = "Text only";
+      return;
+    }
+    rec = new SpeechRecognition();
+    rec.lang = "yo-NG"; // Yoruba (Nigeria)
+
+    rec.interimResults = false;
+    rec.maxAlternatives = 1;
+
+    rec.onresult = (e) => {
+      const said = e.results?.[0]?.[0]?.transcript || "";
+      setStatus("Heard: “" + said + "”");
+    };
+    rec.onerror = (e) => setStatus("Mic error: " + (e.error || "unknown"));
+    rec.onend = () => setStatus("Mic ready.");
+  }
+
+  function setStatus(msg){
+    document.getElementById("status").textContent = msg;
+  }
+
+  function render(){
+    const d = PACK.days[idx];
+    const dayLabel = `Day ${d.day} • ${d.theme}`;
+    document.getElementById("todayLabel").textContent = dayLabel;
+    document.getElementById("lessonTitle").textContent = `Swahili Lesson • Day ${d.day}`;
+    document.getElementById("dayNum").textContent = `Day ${d.day}/30`;
+    document.getElementById("theme").textContent = d.theme;
+    document.getElementById("tip").textContent = d.tip;
+    document.getElementById("culture").textContent = d.culture;
+
+    const wordsWrap = document.getElementById("words");
+    wordsWrap.innerHTML = "";
+
+    // Sentence from the pack: we’ll use the provided sentence in the 3rd word item
+    const sentence = d.words?.[2]?.sentence || "";
+    document.getElementById("sentenceBox").innerHTML = sentence
+      ? `<b style="color:#fff3c4">${sentence}</b>`
+      : "—";
+
+    d.words.forEach((w, i) => {
+      const el = document.createElement("div");
+      el.className = "word";
+
+      el.innerHTML = `
+        <div class="word-top">
+          <div class="sw">${w.swahili}</div>
+          <div class="en">${w.english}</div>
+        </div>
+        <div class="mini">Pronunciation: <b style="color:#fff3c4">${w.pronunciation}</b></div>
+        <div class="controls" style="margin:0">
+          <button class="btn green" type="button" data-speak="${i}">🔊 Speak</button>
+          <button class="btn red" type="button" data-practice="${i}">🎙 Practice</button>
+        </div>
+      `;
+
+      wordsWrap.appendChild(el);
+    });
+
+    // Wire buttons inside word cards
+    wordsWrap.querySelectorAll("[data-speak]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const w = d.words[Number(btn.getAttribute("data-speak"))];
+        speak(`${w.swahili}. ${w.english}. Pronunciation: ${w.pronunciation}.`);
+      });
+    });
+
+    wordsWrap.querySelectorAll("[data-practice]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if(!rec){ initRec(); }
+        if(!rec){ return; }
+        setStatus("Listening… say the word 3 times.");
+        rec.start();
+      });
+    });
+
+    setStatus("Lesson loaded. Tap Speak Lesson or Practice (Mic).");
+  }
+
+  function speakAll(){
+    const d = PACK.days[idx];
+    const parts = [];
+    parts.push(`YORUBA lesson, day ${d.day}. Theme: ${d.theme}.`);
+    d.words.forEach(w => parts.push(`${w.swahili}. ${w.english}. Pronunciation: ${w.pronunciation}.`));
+    const sentence = d.words?.[2]?.sentence;
+    if(sentence) parts.push(`Sentence: ${sentence}`);
+    parts.push(`Tip: ${d.tip}`);
+    parts.push(`Culture note: ${d.culture}`);
+    speak(parts.join(" "));
+  }
+
+  async function load(){
+    try{
+     const res = await fetch("/api/yoruba/today");
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      PACK = await res.json();
+      // Default: use local day-of-month as a simple “daily rotation”
+      const day = new Date().getDate(); // 1..31
+      idx = Math.min((day - 1) % 30, PACK.days.length - 1);
+      render();
+      initRec();
+    }catch(e){
+      console.error(e);
+      setStatus("Could not load YORUBA_30days.json. Make sure it is in the same folder as YORUBA.html.");
+    }
+  }
+
+  // Top controls
+  document.getElementById("btnSpeakAll").addEventListener("click", speakAll);
+  document.getElementById("btnStop").addEventListener("click", () => {
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    if(rec){ try{ rec.abort(); }catch(e){} }
+    setStatus("Stopped.");
+  });
+
+  document.getElementById("btnPrev").addEventListener("click", () => {
+    if(!PACK) return;
+    idx = (idx - 1 + PACK.days.length) % PACK.days.length;
+    render();
+  });
+  document.getElementById("btnNext").addEventListener("click", () => {
+    if(!PACK) return;
+    idx = (idx + 1) % PACK.days.length;
+    render();
+  });
+
+  document.getElementById("btnMic").addEventListener("click", () => {
+    if(!rec){ initRec(); }
+    if(!rec){ return; }
+    setStatus("Listening… say today’s sentence once.");
+    rec.start();
+  });
+
+  document.getElementById("btnSpeakSentence").addEventListener("click", () => {
+    if(!PACK) return;
+    const d = PACK.days[idx];
+    const sentence = d.words?.[2]?.sentence || "";
+    if(sentence) speak(sentence);
+  });
+
+  load();
+</script>
+</body>
+</html>
