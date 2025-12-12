@@ -2,801 +2,945 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Prince of Pan-Africa • Black History Year-Round</title>
-  <meta name="description" content="Ask Black History questions year-round. Powered by MufasaBrain." />
-  <link rel="icon" href="data:," />
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>30 Days of Swahili • Year-Round Black History</title>
   <style>
     :root{
-      --bg0:#050607;
-      --bg1:#0b0f12;
-      --panel: rgba(12, 14, 16, .72);
-      --panel2: rgba(8, 10, 11, .88);
-
-      --gold:#d7b25a;
-      --gold2:#f2df9b;
-
+      --bg:#060606;
+      --panel:#0d0d0f;
+      --gold:#d8b24c;
       --red:#c1121f;
-      --green:#2e7d32;
-
-      --text:#f5f0e6;
-      --muted: rgba(245,240,230,.72);
-
-      --ring: 0 0 0 1px rgba(215,178,90,.35), 0 0 0 2px rgba(0,0,0,.65);
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
-      --radius: 18px;
-
-      --maxw: 1180px;
+      --green:#0b7a3b;
+      --text:#f2f2f2;
+      --muted:#b8b8b8;
+      --line:rgba(216,178,76,.25);
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius:18px;
     }
-
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
       margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1200px 700px at 70% -10%, rgba(215,178,90,.15), transparent 60%),
-        radial-gradient(900px 500px at 10% 10%, rgba(193,18,31,.12), transparent 55%),
-        radial-gradient(800px 500px at 90% 45%, rgba(46,125,50,.12), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      overflow-x:hidden;
+        radial-gradient(900px 500px at 10% 10%, rgba(193,18,31,.18), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(11,122,59,.18), transparent 60%),
+        radial-gradient(900px 500px at 50% 100%, rgba(216,178,76,.12), transparent 60%),
+        var(--bg);
+      min-height:100vh;
     }
-
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:var(--maxw); margin:0 auto; padding:22px 18px 50px}
-
-    /* Top bar */
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 16px;
-      border-radius: calc(var(--radius) + 6px);
-      background: linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.35));
-      box-shadow: var(--shadow);
-      outline: 1px solid rgba(215,178,90,.25);
+    a{color:inherit}
+    header{
+      position:sticky; top:0;
       backdrop-filter: blur(10px);
+      background: rgba(6,6,6,.72);
+      border-bottom:1px solid rgba(216,178,76,.18);
+      z-index:10;
+    }
+    .wrap{max-width:1050px;margin:0 auto;padding:14px 16px;}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .brand{
-      display:flex; gap:14px; align-items:center;
-      min-width: 240px;
+      display:flex; align-items:center; gap:12px;
     }
-    .sigil{
-      width:44px; height:44px; border-radius:12px;
-      display:grid; place-items:center;
+    .logo{
+      width:42px;height:42px;border-radius:12px;
+      border:1px solid rgba(216,178,76,.45);
       background:
-        radial-gradient(circle at 30% 25%, rgba(242,223,155,.22), transparent 60%),
-        linear-gradient(180deg, rgba(215,178,90,.20), rgba(0,0,0,.25));
-      outline: 1px solid rgba(215,178,90,.45);
-      box-shadow: 0 8px 22px rgba(0,0,0,.45);
-      position:relative;
-    }
-    .sigil::after{
-      content:"";
-      position:absolute; inset:6px;
-      border-radius:10px;
-      outline: 1px solid rgba(193,18,31,.22);
-    }
-    .sigil span{
-      font-weight:800;
-      letter-spacing:.06em;
-      color: var(--gold2);
-      text-shadow: 0 1px 0 rgba(0,0,0,.85), 0 0 18px rgba(215,178,90,.18);
-    }
-    .brand h1{
-      margin:0;
-      font-size:14px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color: rgba(242,223,155,.95);
-      line-height:1.2;
-    }
-    .brand p{
-      margin:2px 0 0;
-      font-size:12px;
-      color: var(--muted);
-      letter-spacing:.04em;
-    }
-
-    .nav{
-      display:flex; gap:14px; align-items:center; flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .chip{
-      padding:9px 12px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.35);
-      outline: 1px solid rgba(215,178,90,.22);
-      color: rgba(245,240,230,.88);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      transition: transform .08s ease, outline-color .16s ease, background .16s ease;
-      cursor:pointer;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .chip:hover{ transform: translateY(-1px); outline-color: rgba(215,178,90,.5); background: rgba(0,0,0,.5); }
-    .chip.red{ outline-color: rgba(193,18,31,.35); }
-    .chip.green{ outline-color: rgba(46,125,50,.35); }
-
-    /* Hero */
-    .hero{
-      margin-top:18px;
-      border-radius: calc(var(--radius) + 10px);
-      overflow:hidden;
-      position:relative;
-      outline: 1px solid rgba(215,178,90,.25);
+        linear-gradient(135deg, rgba(193,18,31,.9), rgba(6,6,6,.9)),
+        radial-gradient(circle at 70% 30%, rgba(216,178,76,.35), transparent 55%),
+        radial-gradient(circle at 30% 80%, rgba(11,122,59,.25), transparent 55%);
       box-shadow: var(--shadow);
-      background:
-        radial-gradient(900px 520px at 30% 20%, rgba(215,178,90,.16), transparent 60%),
-        radial-gradient(900px 520px at 80% 50%, rgba(46,125,50,.10), transparent 60%),
-        radial-gradient(900px 520px at 15% 80%, rgba(193,18,31,.10), transparent 60%),
-        linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.45));
-      backdrop-filter: blur(12px);
     }
-    .hero::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        linear-gradient(90deg,
-          rgba(193,18,31,.28),
-          rgba(215,178,90,.28),
-          rgba(46,125,50,.28)
-        );
-      filter: blur(18px);
-      opacity:.35;
-      pointer-events:none;
+    .titleblock h1{font-size:14px;margin:0;letter-spacing:.4px}
+    .titleblock p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    nav{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end;
     }
-    .hero-inner{
-      position:relative;
-      padding:28px 22px 22px;
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-      align-items:stretch;
-    }
-    @media (max-width: 940px){
-      .hero-inner{ grid-template-columns:1fr; }
-      .brand{min-width:auto}
-    }
-
-    .crest{
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.32));
-      outline: 1px solid rgba(215,178,90,.28);
-      padding:18px 18px 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-    .kicker{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-      margin-bottom:10px;
-    }
-    .tag{
-      font-size:12px;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      padding:6px 10px;
+    .pill{
+      border:1px solid rgba(216,178,76,.25);
+      background: rgba(13,13,15,.75);
+      color: var(--text);
+      padding:8px 10px;
       border-radius:999px;
-      outline: 1px solid rgba(215,178,90,.32);
-      background: rgba(0,0,0,.35);
-      color: rgba(242,223,155,.92);
-    }
-    .tag.red{ outline-color: rgba(193,18,31,.38); }
-    .tag.green{ outline-color: rgba(46,125,50,.38); }
-
-    .title{
-      margin:8px 0 8px;
-      font-size:34px;
-      line-height:1.06;
-      letter-spacing:.02em;
-      text-shadow: 0 1px 0 rgba(0,0,0,.9);
-    }
-    .subtitle{
-      margin:0;
-      color: var(--muted);
-      font-size:14px;
-      line-height:1.6;
-      max-width: 68ch;
-    }
-
-    .cta-row{
-      margin-top:16px;
-      display:flex; gap:12px; flex-wrap:wrap;
-      align-items:center;
-    }
-    .btn{
-      border:0;
-      padding:11px 14px;
-      border-radius: 12px;
+      font-size:12px;
       cursor:pointer;
-      font-weight:700;
-      letter-spacing:.06em;
-      color: rgba(0,0,0,.92);
-      background: linear-gradient(180deg, rgba(242,223,155,.95), rgba(215,178,90,.92));
-      outline: 1px solid rgba(0,0,0,.6);
-      box-shadow: 0 10px 24px rgba(0,0,0,.38);
-      transition: transform .08s ease, filter .16s ease;
-      white-space:nowrap;
+      transition:.15s ease;
+      user-select:none;
     }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
-    .btn.secondary{
-      color: rgba(245,240,230,.92);
-      background: rgba(0,0,0,.35);
-      outline: 1px solid rgba(215,178,90,.26);
-      box-shadow: none;
-    }
-    .btn.secondary:hover{ outline-color: rgba(215,178,90,.55); }
-
-    .rightpanel{
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(0,0,0,.62), rgba(0,0,0,.38));
-      outline: 1px solid rgba(215,178,90,.22);
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-    .panel-title{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-    }
-    .panel-title h3{
-      margin:0;
-      font-size:12px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color: rgba(242,223,155,.9);
-    }
-    .status{
-      display:flex; align-items:center; gap:8px;
-      font-size:12px;
-      color: var(--muted);
-    }
-    .dot{
-      width:8px; height:8px; border-radius:50%;
-      background: rgba(255,255,255,.22);
-      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
-    }
-    .dot.ok{ background: rgba(46,125,50,.9); box-shadow: 0 0 0 3px rgba(46,125,50,.12); }
-    .dot.bad{ background: rgba(193,18,31,.9); box-shadow: 0 0 0 3px rgba(193,18,31,.12); }
-
-    /* Main grid */
-    .grid{
-      margin-top:18px;
-      display:grid;
-      grid-template-columns: 1fr 380px;
-      gap:18px;
-      align-items:start;
-    }
-    @media (max-width: 980px){
-      .grid{ grid-template-columns:1fr; }
-    }
-
+    .pill:hover{transform:translateY(-1px);border-color:rgba(216,178,76,.5)}
+    .pill.active{border-color:rgba(216,178,76,.8); box-shadow:0 0 0 2px rgba(216,178,76,.15) inset}
+    main{padding:20px 16px 60px}
+    .grid{max-width:1050px;margin:0 auto;display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
     .card{
+      background: rgba(13,13,15,.78);
+      border:1px solid rgba(216,178,76,.18);
       border-radius: var(--radius);
-      background: var(--panel);
-      outline: 1px solid rgba(215,178,90,.18);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
       overflow:hidden;
     }
     .card .hd{
-      padding:14px 16px;
-      background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.18));
-      border-bottom: 1px solid rgba(215,178,90,.16);
-      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      padding:16px 16px 12px;
+      border-bottom:1px solid rgba(216,178,76,.14);
+      background:
+        linear-gradient(180deg, rgba(193,18,31,.12), transparent 60%),
+        linear-gradient(180deg, rgba(11,122,59,.10), transparent 60%);
     }
-    .card .hd h2{
-      margin:0;
-      font-size:12px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color: rgba(242,223,155,.92);
-    }
-    .card .bd{ padding:16px; }
-
-    .two{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-    }
-    @media (max-width: 720px){ .two{ grid-template-columns:1fr; } }
-
-    .mini{
-      padding:14px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.35);
-      outline: 1px solid rgba(215,178,90,.15);
-    }
-    .mini h4{
-      margin:0 0 6px;
-      font-size:12px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color: rgba(245,240,230,.9);
-    }
-    .mini p{
-      margin:0;
-      font-size:13px;
-      color: var(--muted);
-      line-height:1.55;
-    }
-    .mini .accent{
-      display:inline-block;
-      margin-top:10px;
-      font-size:12px;
-      color: rgba(242,223,155,.9);
-      letter-spacing:.06em;
-    }
-
-    /* Chat */
-    .chatbox{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      height: 520px;
-    }
-    .log{
-      flex:1;
-      overflow:auto;
-      padding:12px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.32);
-      outline: 1px solid rgba(215,178,90,.14);
-      scroll-behavior:smooth;
-    }
-    .msg{
+    .card .hd h2{margin:0;font-size:16px}
+    .card .hd p{margin:6px 0 0;font-size:12px;color:var(--muted);line-height:1.35}
+    .card .bd{padding:16px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .btn{
+      border:1px solid rgba(216,178,76,.25);
+      background: rgba(6,6,6,.65);
+      color: var(--text);
       padding:10px 12px;
-      border-radius: 14px;
-      margin:10px 0;
-      max-width: 92%;
-      line-height:1.55;
-      font-size:14px;
-      white-space:pre-wrap;
-      word-break:break-word;
+      border-radius: 12px;
+      font-size:13px;
+      cursor:pointer;
+      transition:.15s ease;
+      user-select:none;
     }
-    .msg.user{
-      margin-left:auto;
-      background: rgba(193,18,31,.14);
-      outline: 1px solid rgba(193,18,31,.25);
+    .btn:hover{transform:translateY(-1px);border-color:rgba(216,178,76,.55)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(193,18,31,.85), rgba(11,122,59,.75));
+      border-color: rgba(216,178,76,.55);
     }
-    .msg.bot{
-      background: rgba(46,125,50,.12);
-      outline: 1px solid rgba(46,125,50,.22);
+    .btn.good{background: rgba(11,122,59,.18); border-color: rgba(11,122,59,.45)}
+    .btn.warn{background: rgba(193,18,31,.16); border-color: rgba(193,18,31,.42)}
+    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .tag{
+      display:inline-flex;gap:8px;align-items:center;
+      border:1px solid rgba(216,178,76,.22);
+      background: rgba(6,6,6,.55);
+      padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted)
     }
-    .msg.bot strong{
-      color: rgba(242,223,155,.95);
-      text-shadow: 0 1px 0 rgba(0,0,0,.8);
+    .big{
+      font-size:26px;margin:0 0 6px;letter-spacing:.4px
     }
-
-    .composer{
-      display:grid;
-      grid-template-columns: 1fr auto;
-      gap:10px;
-      align-items:center;
+    .sub{color:var(--muted);font-size:13px;line-height:1.4;margin:0}
+    .divider{height:1px;background:rgba(216,178,76,.14);margin:14px 0}
+    .wordbox{
+      border:1px solid rgba(216,178,76,.18);
+      border-radius: 16px;
+      padding:14px;
+      background: rgba(6,6,6,.55);
     }
-    .input{
+    .wordline{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+    .sw{font-size:26px;letter-spacing:.6px;font-weight:700}
+    .en{font-size:13px;color:var(--muted)}
+    .prog{
+      margin-top:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .meter{
+      flex:1;
+      height:10px;border-radius:999px;
+      background: rgba(216,178,76,.12);
+      border:1px solid rgba(216,178,76,.18);
+      overflow:hidden;
+    }
+    .fill{height:100%;width:0%;background: linear-gradient(90deg, rgba(193,18,31,.85), rgba(216,178,76,.85), rgba(11,122,59,.85));}
+    .note{
+      font-size:12px;color:var(--muted);line-height:1.4;
+      border-left:3px solid rgba(216,178,76,.55);
+      padding-left:10px;margin:12px 0 0;
+    }
+    textarea, input{
       width:100%;
-      padding:12px 12px;
-      border-radius: 14px;
-      border:0;
-      outline: 1px solid rgba(215,178,90,.22);
-      background: rgba(0,0,0,.45);
-      color: rgba(245,240,230,.95);
+      background: rgba(6,6,6,.55);
+      border:1px solid rgba(216,178,76,.18);
+      color:var(--text);
+      border-radius: 12px;
+      padding:10px 12px;
       font-size:14px;
+      outline:none;
     }
-    .input:focus{ outline: 1px solid rgba(215,178,90,.55); box-shadow: 0 0 0 3px rgba(215,178,90,.10); }
-
-    .smallrow{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      color: var(--muted);
-      font-size:12px;
-      margin-top:6px;
-    }
-    .pill{
-      padding:6px 10px;
-      border-radius:999px;
-      outline: 1px solid rgba(215,178,90,.18);
-      background: rgba(0,0,0,.28);
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
+    textarea{min-height:90px;resize:vertical}
+    .mini{font-size:12px;color:var(--muted);margin-top:6px}
+    .toast{
+      position:fixed;left:50%;transform:translateX(-50%);
+      bottom:18px;
+      background: rgba(13,13,15,.92);
+      border:1px solid rgba(216,178,76,.25);
+      color:var(--text);
+      padding:10px 12px;border-radius: 999px;
+      box-shadow: var(--shadow);
+      display:none;
+      z-index:50;
+      font-size:13px;
     }
     .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:11px;
-      padding:2px 6px;
-      border-radius:8px;
-      outline: 1px solid rgba(245,240,230,.12);
-      background: rgba(0,0,0,.35);
-      color: rgba(245,240,230,.85);
-    }
-
-    /* Footer */
-    .foot{
-      margin-top:18px;
-      padding:14px 16px;
-      border-radius: var(--radius);
-      background: rgba(0,0,0,.28);
-      outline: 1px solid rgba(215,178,90,.14);
-      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size:12px;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    /* Subtle gold edge */
-    .gold-edge{
-      position:relative;
-    }
-    .gold-edge::after{
-      content:"";
-      position:absolute; inset:0;
-      pointer-events:none;
-      border-radius: inherit;
-      box-shadow: inset 0 0 0 1px rgba(215,178,90,.18);
+      padding:2px 6px;
+      border:1px solid rgba(216,178,76,.22);
+      border-radius:8px;
+      background: rgba(6,6,6,.55);
+      color:var(--muted);
     }
   </style>
 </head>
 
 <body>
+<header>
   <div class="wrap">
-
-    <!-- TOP BAR -->
-    <header class="topbar gold-edge" role="banner">
+    <div class="topbar">
       <div class="brand">
-        <div class="sigil" aria-hidden="true"><span>PPA</span></div>
-        <div>
-          <h1>Prince of Pan-Africa</h1>
-          <p>Black History • Year-Round • Powered by MufasaBrain</p>
+        <div class="logo" aria-hidden="true"></div>
+        <div class="titleblock">
+          <h1>Year-Round Black History • 30 Days of Swahili</h1>
+          <p>Voice-first practice: 3 words/day • repeat x3 • sentence • your sentence</p>
         </div>
       </div>
-
-      <nav class="nav" aria-label="Primary">
-        <a class="chip red" href="#ask">Ask</a>
-        <a class="chip" href="#timeline">Timeline</a>
-        <a class="chip green" href="#library">Library</a>
-        <button class="chip" id="btnCheck">Check Brain</button>
-        <button class="chip" id="btnMember">Membership</button>
+      <nav>
+        <div class="pill active" data-tab="learn">Learn Swahili</div>
+        <div class="pill" data-tab="history">History Link</div>
+        <div class="pill" data-tab="settings">Settings</div>
       </nav>
-    </header>
-
-    <!-- HERO -->
-    <section class="hero gold-edge" aria-label="Hero">
-      <div class="hero-inner">
-        <div class="crest">
-          <div class="kicker">
-            <span class="tag red">Red</span>
-            <span class="tag">Gold</span>
-            <span class="tag green">Green</span>
-            <span class="tag">Year-Round</span>
-          </div>
-
-          <h2 class="title">Black History — Every Month Is Black History.</h2>
-          <p class="subtitle">
-            Ask anything: empires, revolutions, inventors, movements, leaders, migrations, and hidden histories.
-            This page is built to feel like a museum lobby — elegant, focused, and alive.
-          </p>
-
-          <div class="cta-row">
-            <a class="btn" href="#ask">Ask a Black History Question</a>
-            <button class="btn secondary" id="btnDemoQ">Run a Demo Question</button>
-            <button class="btn secondary" id="btnClear">Clear Chat</button>
-          </div>
-
-          <div class="smallrow" style="margin-top:12px;">
-            <span class="pill"><span class="dot ok" id="dotStatus"></span> <span id="txtStatus">Ready</span></span>
-            <span class="pill">Theme: <strong style="color:rgba(242,223,155,.95)">Pan-African</strong></span>
-            <span class="pill">Tip: Press <span class="kbd">Enter</span> to send</span>
-          </div>
-        </div>
-
-        <aside class="rightpanel gold-edge">
-          <div class="panel-title">
-            <h3>Year-Round Focus</h3>
-            <div class="status"><span class="dot" id="dotBrain"></span><span id="brainLabel">Not checked</span></div>
-          </div>
-
-          <div class="mini">
-            <h4>Today’s Spotlight</h4>
-            <p id="spotlightText">
-              “From Timbuktu to Harlem — knowledge moves, adapts, and returns stronger.”
-            </p>
-            <span class="accent" id="spotlightHint">Ask for: “a 5-minute lesson” + any topic</span>
-          </div>
-
-          <div class="mini">
-            <h4>Membership Gate (optional)</h4>
-            <p>
-              Use this section to lock downloads + premium features.
-              For now, it’s a placeholder button you can wire to Stripe, Patreon, or Discord roles later.
-            </p>
-            <span class="accent">Button: “Download Mufasa” (members)</span>
-          </div>
-
-          <button class="btn secondary" id="btnDownload" title="Wire this to your membership flow later">
-            Download Mufasa (Members)
-          </button>
-        </aside>
-      </div>
-    </section>
-
-    <!-- MAIN GRID -->
-    <div class="grid">
-      <!-- LEFT: CONTENT -->
-      <main class="card gold-edge" id="ask">
-        <div class="hd">
-          <h2>Ask the Black History Bot</h2>
-          <div class="smallrow" style="margin:0;">
-            <span class="pill">Mode: <strong style="color:rgba(242,223,155,.95)">Black History</strong></span>
-            <span class="pill">User: <span id="userIdLabel">public</span></span>
-          </div>
-        </div>
-
-        <div class="bd">
-          <div class="chatbox">
-            <div class="log" id="log" aria-live="polite" aria-label="Chat log">
-              <div class="msg bot">
-                <strong>Prince of Pan-Africa:</strong> Ask me a Black History question. If you want it structured, say:
-                “Give me a 3-part lesson: context, key figures, why it matters today.”
-              </div>
-            </div>
-
-            <div>
-              <div class="composer">
-                <input id="q" class="input" placeholder="Type your question… (e.g., ‘Explain the Haitian Revolution and its global impact.’)" />
-                <button id="send" class="btn" style="padding:11px 16px;">Send</button>
-              </div>
-              <div class="smallrow">
-                <span class="pill">Quick prompts:</span>
-                <button class="chip" data-prompt="Teach me the Mali Empire in 5 minutes.">Mali Empire</button>
-                <button class="chip" data-prompt="Explain the Haitian Revolution and why it matters today.">Haiti</button>
-                <button class="chip" data-prompt="Give me 10 Black inventors and what they created.">Inventors</button>
-                <button class="chip" data-prompt="Explain the Great Migration and its cultural effects.">Great Migration</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <!-- RIGHT: YEAR-ROUND LIBRARY -->
-      <aside class="card gold-edge" id="library">
-        <div class="hd">
-          <h2>Year-Round Library</h2>
-          <span class="pill">Curated paths</span>
-        </div>
-
-        <div class="bd">
-          <div class="two">
-            <div class="mini">
-              <h4>Empires & Kingdoms</h4>
-              <p>Ghana • Mali • Songhai • Kongo • Kush • Axum • Benin • Great Zimbabwe</p>
-              <span class="accent">Ask: “Compare Mali and Songhai.”</span>
-            </div>
-            <div class="mini">
-              <h4>Resistance & Revolt</h4>
-              <p>Maroon societies • Haiti • Nat Turner • Tulsa • Civil Rights • Anti-colonial movements</p>
-              <span class="accent">Ask: “Give me a timeline.”</span>
-            </div>
-            <div class="mini">
-              <h4>Ideas & Culture</h4>
-              <p>Pan-Africanism • Garveyism • Harlem Renaissance • Afrofuturism • Music lineages</p>
-              <span class="accent">Ask: “Connect the dots.”</span>
-            </div>
-            <div class="mini">
-              <h4>Builders & Inventors</h4>
-              <p>Science • medicine • engineering • agriculture • entrepreneurship • education</p>
-              <span class="accent">Ask: “Top 10 breakthroughs.”</span>
-            </div>
-          </div>
-        </div>
-      </aside>
     </div>
+  </div>
+</header>
 
-    <!-- TIMELINE -->
-    <section class="card gold-edge" id="timeline" style="margin-top:18px;">
+<main>
+  <div class="grid">
+
+    <!-- LEFT: Lesson -->
+    <section class="card" id="tab-learn">
       <div class="hd">
-        <h2>Timeline (Year-Round)</h2>
-        <span class="pill">Use as navigation prompts</span>
+        <h2 id="dayTitle">Day 1 of 30 • Swahili</h2>
+        <p id="dayTheme">Theme: Unity & Identity</p>
       </div>
       <div class="bd">
-        <div class="two">
-          <div class="mini">
-            <h4>Ancient</h4>
-            <p>Nilotic civilizations • Nubia/Kush • Axum • Carthage • early trade networks</p>
-            <span class="accent">Ask: “Teach me Ancient Africa.”</span>
+
+        <p class="big" id="lessonHeadline">Speak it. Hear it. Own it.</p>
+        <p class="sub" id="lessonSub">Tap <span class="kbd">Start</span>. We’ll guide you word-by-word with voice practice.</p>
+
+        <div class="divider"></div>
+
+        <!-- Controls -->
+        <div class="row">
+          <button class="btn primary" id="btnStart">Start Today’s Lesson</button>
+          <button class="btn" id="btnRepeat" disabled>Repeat Audio</button>
+          <span class="tag" id="voiceStatus">🎤 STT: Checking…</span>
+          <span class="tag" id="ttsStatus">🔊 TTS: Ready</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Word Card -->
+        <div class="wordbox">
+          <div class="wordline">
+            <div>
+              <div class="sw" id="swWord">UMOJA</div>
+              <div class="en" id="enWord">unity</div>
+            </div>
+            <span class="tag" id="levelTag">Step 1/4 • Say word 3x</span>
           </div>
-          <div class="mini">
-            <h4>Medieval</h4>
-            <p>Trans-Saharan trade • universities • manuscripts • empires & diplomacy</p>
-            <span class="accent">Ask: “Timbuktu deep dive.”</span>
+
+          <div class="prog">
+            <div class="meter"><div class="fill" id="fill"></div></div>
+            <div class="tag" id="progressText">0%</div>
           </div>
-          <div class="mini">
-            <h4>Colonial & Resistance</h4>
-            <p>Partition • extraction • uprisings • liberation movements • diaspora survival</p>
-            <span class="accent">Ask: “Resistance leaders by region.”</span>
+
+          <div class="divider"></div>
+
+          <!-- Voice actions -->
+          <div class="row">
+            <button class="btn good" id="btnListen">🔊 Listen</button>
+            <button class="btn" id="btnSay">🎤 Say it</button>
+            <button class="btn" id="btnSkipVoice">I said it (no mic)</button>
           </div>
-          <div class="mini">
-            <h4>Modern</h4>
-            <p>Civil Rights • global Black politics • cultural revolutions • present-day movements</p>
-            <span class="accent">Ask: “Connect past to today.”</span>
+
+          <p class="note" id="coachNote">
+            We’ll do each word: say it 3 times → hear a sentence → repeat → then make your own sentence.
+          </p>
+
+          <div class="divider"></div>
+
+          <!-- Sentence + user sentence -->
+          <div id="sentenceArea" style="display:none">
+            <div class="row" style="justify-content:space-between">
+              <div class="tag">Sentence</div>
+              <button class="btn" id="btnSentenceListen">🔊 Hear sentence</button>
+            </div>
+            <p style="margin:10px 0 6px;font-size:18px" id="sentenceSw">Umoja ni nguvu.</p>
+            <p style="margin:0;color:var(--muted)" id="sentenceEn">Unity is strength.</p>
+
+            <div class="divider"></div>
+
+            <div class="row">
+              <button class="btn" id="btnSentenceRepeat">🎤 Repeat sentence</button>
+              <button class="btn" id="btnSentenceSkip">I repeated it (no mic)</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <label style="font-size:12px;color:var(--muted)">Your sentence (use the Swahili word)</label>
+            <textarea id="userSentence" placeholder="Type your Swahili sentence here (or speak it if supported)…"></textarea>
+            <div class="row" style="margin-top:10px">
+              <button class="btn" id="btnUserSentenceSpeak">🎤 Speak my sentence</button>
+              <button class="btn good" id="btnUserSentenceSubmit">Submit sentence</button>
+            </div>
+            <div class="mini" id="userSentenceHint">Tip: Keep it simple. Just make sure the word is included.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="row" style="justify-content:space-between">
+            <button class="btn" id="btnBack" disabled>← Back</button>
+            <button class="btn primary" id="btnNext" disabled>Next →</button>
           </div>
         </div>
+
+        <div class="divider"></div>
+
+        <!-- Daily Language Insight -->
+        <div class="card" style="border-radius:16px">
+          <div class="hd">
+            <h2 style="font-size:14px;margin:0">Daily Swahili Insight</h2>
+            <p style="margin:6px 0 0;color:var(--muted);font-size:12px" id="grammarTip">
+              Swahili vowels are always pronounced (no silent vowels). A, E, I, O, U keep consistent sounds.
+            </p>
+          </div>
+          <div class="bd">
+            <div class="row" style="justify-content:space-between">
+              <span class="tag">Bonus</span>
+              <button class="btn" id="btnTipSpeak">🔊 Read aloud</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="foot gold-edge" role="contentinfo">
-      <div>
-        <strong style="color:rgba(242,223,155,.95)">Prince of Pan-Africa</strong> • Black History Year-Round
+    <!-- RIGHT: History + Progress -->
+    <aside class="card" id="tab-history" style="display:none">
+      <div class="hd">
+        <h2>History Link</h2>
+        <p>We keep language connected to Black history and unity — year-round, not seasonal.</p>
       </div>
-      <div>
-        <span style="opacity:.8;">Backend:</span> <span id="backendLabel">mufasabrain.onrender.com</span>
+      <div class="bd">
+        <p style="margin:0 0 10px;line-height:1.45;color:var(--text)" id="cultureNote">
+          Swahili grew as a trade language along the East African coast—built for communication across communities, which made it a unifying tongue across nations.
+        </p>
+        <div class="divider"></div>
+        <div class="row">
+          <button class="btn" id="btnCultureSpeak">🔊 Read aloud</button>
+          <button class="btn" id="btnResetProgress">Reset my progress</button>
+        </div>
+        <p class="note" style="margin-top:14px">
+          Phase 1 goal: daily habit + voice practice. Stars/Black Dollar rewards can plug in later.
+        </p>
       </div>
-    </footer>
+    </aside>
+
+    <aside class="card" id="tab-settings" style="display:none">
+      <div class="hd">
+        <h2>Settings</h2>
+        <p>Pick a voice, adjust pace, and choose your day.</p>
+      </div>
+      <div class="bd">
+        <label style="font-size:12px;color:var(--muted)">TTS Voice</label>
+        <select id="voiceSelect" class="btn" style="width:100%;text-align:left"></select>
+        <div class="mini">If you don’t hear audio on iPhone, tap any button first (user gesture required).</div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <span class="tag">Day</span>
+          <input id="dayPicker" type="number" min="1" max="30" value="1" style="max-width:140px" />
+          <button class="btn" id="btnGoDay">Go</button>
+          <button class="btn" id="btnToday">Today</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <label style="font-size:12px;color:var(--muted)">Speaking Rate</label>
+        <input id="rate" type="range" min="0.8" max="1.2" step="0.05" value="1" />
+        <div class="mini">Lower = slower (clearer). Higher = faster.</div>
+      </div>
+    </aside>
 
   </div>
+</main>
 
-  <script>
-    /**
-     * CONFIG
-     * If your brain URL changes, update it here.
-     */
-    const BRAIN_BASE_URL = "https://mufasabrain.onrender.com";
-    const ASK_URL = `${BRAIN_BASE_URL}/ask`;
-    const HEALTH_URL = `${BRAIN_BASE_URL}/health`;
+<div class="toast" id="toast"></div>
 
-    // Basic "public" user id for now; you can replace with login later.
-    const USER_ID = "public_black_history_user";
+<script>
+/**
+ * 30 Days of Swahili – front-end MVP
+ * - TTS: speechSynthesis
+ * - STT: SpeechRecognition / webkitSpeechRecognition (best on Chrome/Android)
+ * - Fallback: “I said it” buttons
+ *
+ * Data:
+ * - You can replace LESSONS with API fetch later.
+ */
 
-    const $ = (id) => document.getElementById(id);
-    const logEl = $("log");
-    const qEl = $("q");
-    const sendBtn = $("send");
+const LESSONS = [
+  {
+    day: 1,
+    theme: "Unity & Identity",
+    words: [
+      { sw:"umoja", en:"unity", sentenceSw:"Umoja ni nguvu.", sentenceEn:"Unity is strength." },
+      { sw:"jamii", en:"community", sentenceSw:"Jamii yetu ni muhimu.", sentenceEn:"Our community is important." },
+      { sw:"nguvu", en:"strength", sentenceSw:"Tuna nguvu pamoja.", sentenceEn:"We have strength together." }
+    ],
+    tip: "Swahili vowels are always pronounced (no silent vowels). A, E, I, O, U keep consistent sounds.",
+    culture: "Swahili grew as a trade language along the East African coast—built for communication across communities, which made it a unifying tongue across nations."
+  },
+  {
+    day: 2,
+    theme: "Greetings & Respect",
+    words: [
+      { sw:"habari", en:"news / how are you?", sentenceSw:"Habari yako?", sentenceEn:"How are you?" },
+      { sw:"asante", en:"thank you", sentenceSw:"Asante sana.", sentenceEn:"Thank you very much." },
+      { sw:"tafadhali", en:"please", sentenceSw:"Tafadhali, njoo hapa.", sentenceEn:"Please, come here." }
+    ],
+    tip: "Swahili spelling is mostly phonetic: you say what you see. That makes pronunciation easier once you learn vowel sounds.",
+    culture: "Greetings matter in many African cultures. Swahili greetings carry respect and relationship—don’t rush them."
+  }
+  // Add day 3–30 later (or load from API).
+];
 
-    const dotBrain = $("dotBrain");
-    const brainLabel = $("brainLabel");
-    const dotStatus = $("dotStatus");
-    const txtStatus = $("txtStatus");
-    const userIdLabel = $("userIdLabel");
-    const backendLabel = $("backendLabel");
+// ---------- State ----------
+const state = {
+  tab: "learn",
+  day: 1,
+  wordIndex: 0,          // 0..2
+  phase: 0,              // 0=idle, 1=say word, 2=sentence, 3=repeat sentence, 4=your sentence, 5=done word
+  sayCount: 0,           // 0..3
+  sentenceRepeated: false,
+  userSentenceOk: false,
+  started: false,
+  sttSupported: false,
+  voices: [],
+  selectedVoiceURI: null,
+};
 
-    userIdLabel.textContent = USER_ID.replaceAll("_", " ");
-    backendLabel.textContent = BRAIN_BASE_URL.replace("https://", "").replace("http://", "");
+// ---------- Elements ----------
+const $ = (id)=>document.getElementById(id);
+const dayTitle = $("dayTitle");
+const dayTheme = $("dayTheme");
+const lessonHeadline = $("lessonHeadline");
+const lessonSub = $("lessonSub");
+const swWord = $("swWord");
+const enWord = $("enWord");
+const levelTag = $("levelTag");
+const fill = $("fill");
+const progressText = $("progressText");
+const coachNote = $("coachNote");
+const sentenceArea = $("sentenceArea");
+const sentenceSw = $("sentenceSw");
+const sentenceEn = $("sentenceEn");
+const userSentence = $("userSentence");
+const userSentenceHint = $("userSentenceHint");
+const grammarTip = $("grammarTip");
+const cultureNote = $("cultureNote");
+const voiceSelect = $("voiceSelect");
+const dayPicker = $("dayPicker");
+const rateEl = $("rate");
 
-    function addMsg(text, who="bot"){
-      const d = document.createElement("div");
-      d.className = `msg ${who}`;
-      d.textContent = text;
-      logEl.appendChild(d);
-      logEl.scrollTop = logEl.scrollHeight;
+const btnStart = $("btnStart");
+const btnRepeat = $("btnRepeat");
+const btnListen = $("btnListen");
+const btnSay = $("btnSay");
+const btnSkipVoice = $("btnSkipVoice");
+const btnNext = $("btnNext");
+const btnBack = $("btnBack");
+const btnSentenceListen = $("btnSentenceListen");
+const btnSentenceRepeat = $("btnSentenceRepeat");
+const btnSentenceSkip = $("btnSentenceSkip");
+const btnUserSentenceSpeak = $("btnUserSentenceSpeak");
+const btnUserSentenceSubmit = $("btnUserSentenceSubmit");
+const btnTipSpeak = $("btnTipSpeak");
+const btnCultureSpeak = $("btnCultureSpeak");
+const btnResetProgress = $("btnResetProgress");
+const btnGoDay = $("btnGoDay");
+const btnToday = $("btnToday");
+
+const voiceStatus = $("voiceStatus");
+const ttsStatus = $("ttsStatus");
+const toast = $("toast");
+
+// ---------- Tabs ----------
+document.querySelectorAll(".pill").forEach(p=>{
+  p.addEventListener("click", ()=>{
+    document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+    p.classList.add("active");
+    const tab = p.dataset.tab;
+    state.tab = tab;
+    $("tab-learn").style.display = tab==="learn" ? "" : "none";
+    $("tab-history").style.display = tab==="history" ? "" : "none";
+    $("tab-settings").style.display = tab==="settings" ? "" : "none";
+  });
+});
+
+// ---------- Utilities ----------
+function showToast(msg){
+  toast.textContent = msg;
+  toast.style.display = "block";
+  setTimeout(()=>toast.style.display="none", 2200);
+}
+
+function normalize(s){
+  return (s||"")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu,"")
+    .trim();
+}
+
+function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
+
+function currentLesson(){
+  const found = LESSONS.find(l=>l.day===state.day);
+  return found || LESSONS[0];
+}
+
+function currentWord(){
+  return currentLesson().words[state.wordIndex];
+}
+
+function saveProgress(){
+  const key = "swahili_progress_v1";
+  const data = {
+    day: state.day,
+    wordIndex: state.wordIndex,
+    phase: state.phase,
+    sayCount: state.sayCount,
+    sentenceRepeated: state.sentenceRepeated,
+    userSentenceOk: state.userSentenceOk,
+    started: state.started
+  };
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function loadProgress(){
+  const key = "swahili_progress_v1";
+  const raw = localStorage.getItem(key);
+  if(!raw) return;
+  try{
+    const d = JSON.parse(raw);
+    state.day = clamp(Number(d.day)||1,1,30);
+    state.wordIndex = clamp(Number(d.wordIndex)||0,0,2);
+    state.phase = Number(d.phase)||0;
+    state.sayCount = Number(d.sayCount)||0;
+    state.sentenceRepeated = !!d.sentenceRepeated;
+    state.userSentenceOk = !!d.userSentenceOk;
+    state.started = !!d.started;
+  }catch{}
+}
+
+function resetProgress(){
+  localStorage.removeItem("swahili_progress_v1");
+  state.day = 1;
+  state.wordIndex = 0;
+  state.phase = 0;
+  state.sayCount = 0;
+  state.sentenceRepeated = false;
+  state.userSentenceOk = false;
+  state.started = false;
+  render();
+  showToast("Progress reset.");
+}
+
+// ---------- TTS ----------
+function loadVoices(){
+  state.voices = window.speechSynthesis?.getVoices?.() || [];
+  voiceSelect.innerHTML = "";
+  const opt0 = document.createElement("option");
+  opt0.value = "";
+  opt0.textContent = "Default voice";
+  voiceSelect.appendChild(opt0);
+
+  state.voices.forEach(v=>{
+    const opt = document.createElement("option");
+    opt.value = v.voiceURI;
+    opt.textContent = `${v.name} (${v.lang})`;
+    voiceSelect.appendChild(opt);
+  });
+
+  // keep selection
+  if(state.selectedVoiceURI){
+    voiceSelect.value = state.selectedVoiceURI;
+  }
+}
+
+function speak(text){
+  return new Promise((resolve)=>{
+    if(!("speechSynthesis" in window)){
+      showToast("TTS not supported on this browser.");
+      return resolve();
     }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = Number(rateEl.value || 1);
 
-    function setStatus(ok, label){
-      dotStatus.classList.remove("ok", "bad");
-      dotStatus.classList.add(ok ? "ok" : "bad");
-      txtStatus.textContent = label;
+    // pick selected voice if available
+    if(state.selectedVoiceURI && state.voices.length){
+      const v = state.voices.find(x=>x.voiceURI===state.selectedVoiceURI);
+      if(v) u.voice = v;
     }
+    u.onend = ()=>resolve();
+    u.onerror = ()=>resolve();
+    window.speechSynthesis.speak(u);
+  });
+}
 
-    async function checkBrain(){
-      brainLabel.textContent = "Checking…";
-      dotBrain.classList.remove("ok", "bad");
-      try{
-        const r = await fetch(HEALTH_URL, { method:"GET" });
-        const j = await r.json();
-        if(j && j.ok){
-          dotBrain.classList.add("ok");
-          brainLabel.textContent = `Online • ${j.label || "MufasaBrain"} • model: ${j.openai_model || "n/a"}`;
-          setStatus(true, "Brain online");
-        } else {
-          dotBrain.classList.add("bad");
-          brainLabel.textContent = "Responded, but not OK";
-          setStatus(false, "Brain responded (not OK)");
-        }
-      } catch(e){
-        dotBrain.classList.add("bad");
-        brainLabel.textContent = "Offline / blocked";
-        setStatus(false, "Brain offline");
-      }
+// ---------- STT ----------
+let recognizer = null;
+function initSTT(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    state.sttSupported = false;
+    voiceStatus.textContent = "🎤 STT: Not supported (use buttons)";
+    return;
+  }
+  state.sttSupported = true;
+  voiceStatus.textContent = "🎤 STT: Ready";
+  recognizer = new SR();
+  recognizer.lang = "en-US"; // recognition language; we’ll match words manually
+  recognizer.interimResults = false;
+  recognizer.maxAlternatives = 3;
+}
+
+function listenOnce(){
+  return new Promise((resolve)=>{
+    if(!state.sttSupported || !recognizer){
+      return resolve({ ok:false, text:"" });
     }
-
-    async function ask(question){
-      const payload = {
-        question,
-        user_id: USER_ID,
-        mode: "chat",
-        // Domain hint: your backend currently treats context as JSON string.
-        context: JSON.stringify({
-          domain: "black_history",
-          style: "elegant",
-          ask_format_hint: "Prefer structured answers with context, key figures, timeline, and why it matters today."
-        })
+    try{
+      recognizer.onresult = (e)=>{
+        const t = e.results?.[0]?.[0]?.transcript || "";
+        resolve({ ok:true, text:t });
       };
-
-      setStatus(true, "Thinking…");
-      try{
-        const r = await fetch(ASK_URL, {
-          method:"POST",
-          headers: { "Content-Type":"application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if(!r.ok){
-          const t = await r.text();
-          throw new Error(t || `HTTP ${r.status}`);
-        }
-
-        const j = await r.json();
-        // Your FastAPI /ask returns a record with "answer"
-        const answer = j.answer || JSON.stringify(j, null, 2);
-        setStatus(true, "Ready");
-        return answer;
-      } catch(e){
-        setStatus(false, "Error");
-        return `⚠️ Error talking to brain: ${String(e.message || e)}`;
-      }
+      recognizer.onerror = ()=>resolve({ ok:false, text:"" });
+      recognizer.onend = ()=>{ /* handled by resolve in result/error */ };
+      recognizer.start();
+    }catch{
+      resolve({ ok:false, text:"" });
     }
+  });
+}
 
-    async function onSend(){
-      const text = (qEl.value || "").trim();
-      if(!text) return;
-      qEl.value = "";
+// ---------- Lesson Logic ----------
+function computeProgressPercent(){
+  // Rough: each word has 3 (say) + 1 (sentence repeat) + 1 (user sentence) = 5 steps => 15 total
+  const total = 15;
+  let done = 0;
+  done += state.wordIndex * 5;
+  done += Math.min(state.sayCount,3); // 0..3
+  if(state.sentenceRepeated) done += 1;
+  if(state.userSentenceOk) done += 1;
+  return Math.round((done/total)*100);
+}
 
-      addMsg(text, "user");
+function setPhaseTag(){
+  const wi = state.wordIndex + 1;
+  if(!state.started) levelTag.textContent = "Not started";
+  else if(state.sayCount < 3) levelTag.textContent = `Word ${wi}/3 • Say word ${3-state.sayCount} more`;
+  else if(!state.sentenceRepeated) levelTag.textContent = `Word ${wi}/3 • Repeat sentence`;
+  else if(!state.userSentenceOk) levelTag.textContent = `Word ${wi}/3 • Your sentence`;
+  else levelTag.textContent = `Word ${wi}/3 • Complete`;
+}
 
-      const preface =
-        "You are Prince of Pan-Africa, a Black History mentor bot.\n" +
-        "Answer elegantly. Use clear sections when helpful.\n" +
-        "Avoid filler. If unsure, say what you’re unsure about.\n\n";
+function render(){
+  const lesson = currentLesson();
+  const w = currentWord();
 
-      const answer = await ask(preface + text);
-      addMsg(answer, "bot");
+  dayTitle.textContent = `Day ${lesson.day} of 30 • Swahili`;
+  dayTheme.textContent = `Theme: ${lesson.theme}`;
+
+  swWord.textContent = (w.sw || "").toUpperCase();
+  enWord.textContent = w.en || "";
+
+  sentenceSw.textContent = w.sentenceSw || "";
+  sentenceEn.textContent = w.sentenceEn || "";
+
+  grammarTip.textContent = lesson.tip || "";
+  cultureNote.textContent = lesson.culture || "";
+
+  // show sentence area after 3 says
+  sentenceArea.style.display = (state.started && state.sayCount >= 3) ? "" : "none";
+
+  // buttons
+  btnRepeat.disabled = !state.started;
+  btnNext.disabled = !state.started || !(state.sayCount>=3 && state.sentenceRepeated && state.userSentenceOk);
+  btnBack.disabled = !state.started || (state.wordIndex===0 && state.sayCount===0 && !state.sentenceRepeated && !state.userSentenceOk);
+
+  setPhaseTag();
+
+  const pct = computeProgressPercent();
+  fill.style.width = pct + "%";
+  progressText.textContent = pct + "%";
+
+  saveProgress();
+}
+
+// ---------- Actions ----------
+async function startLesson(){
+  state.started = true;
+  state.phase = 1;
+  showToast("Lesson started.");
+  btnStart.disabled = true;
+  btnRepeat.disabled = false;
+  await speak(`Day ${state.day}. ${currentLesson().theme}. Let's begin. First word: ${currentWord().sw}.`);
+  render();
+}
+
+async function listenWord(){
+  const w = currentWord().sw;
+  await speak(w);
+  showToast("Listen first, then say it.");
+}
+
+async function sayWord(){
+  if(state.sayCount >= 3){
+    showToast("Word completed. Move to sentence.");
+    return;
+  }
+  const target = normalize(currentWord().sw);
+  if(!state.sttSupported){
+    showToast("Mic not supported here. Use 'I said it'.");
+    return;
+  }
+  voiceStatus.textContent = "🎤 STT: Listening…";
+  const res = await listenOnce();
+  voiceStatus.textContent = "🎤 STT: Ready";
+
+  const heard = normalize(res.text);
+  if(!res.ok || !heard){
+    showToast("Didn’t catch that. Try again.");
+    return;
+  }
+
+  // simple match (contains target)
+  const ok = heard.includes(target);
+  if(ok){
+    state.sayCount += 1;
+    showToast(`Good. ${state.sayCount}/3`);
+    if(state.sayCount === 3){
+      await speak(`Great. Now listen to the sentence: ${currentWord().sentenceSw}`);
     }
+  }else{
+    showToast(`Close. Try again. Target: ${currentWord().sw}`);
+    await speak(`Try again: ${currentWord().sw}`);
+  }
+  render();
+}
 
-    // Buttons / events
-    sendBtn.addEventListener("click", onSend);
-    qEl.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" && !e.shiftKey){
-        e.preventDefault();
-        onSend();
-      }
-    });
+async function skipWordSay(){
+  if(state.sayCount < 3) state.sayCount += 1;
+  showToast(`Marked said. ${state.sayCount}/3`);
+  if(state.sayCount === 3){
+    await speak(`Now the sentence: ${currentWord().sentenceSw}`);
+  }
+  render();
+}
 
-    document.querySelectorAll("[data-prompt]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        qEl.value = btn.getAttribute("data-prompt");
-        qEl.focus();
-      });
-    });
+async function hearSentence(){
+  await speak(currentWord().sentenceSw);
+}
 
-    $("btnDemoQ").addEventListener("click", async () => {
-      qEl.value = "Give me a 3-part lesson on Marcus Garvey: context, key ideas, why it matters today.";
-      qEl.focus();
-    });
+async function repeatSentence(){
+  if(!state.sttSupported){
+    showToast("Mic not supported here. Use 'I repeated it'.");
+    return;
+  }
+  voiceStatus.textContent = "🎤 STT: Listening…";
+  const res = await listenOnce();
+  voiceStatus.textContent = "🎤 STT: Ready";
+  const heard = normalize(res.text);
+  if(!res.ok || !heard){
+    showToast("Didn’t catch that. Try again.");
+    return;
+  }
+  // basic: must contain the word
+  const target = normalize(currentWord().sw);
+  if(heard.includes(target)){
+    state.sentenceRepeated = true;
+    showToast("Nice. Now make your own sentence.");
+  }else{
+    showToast("Try again—make sure you include the key word.");
+    await speak(`Repeat again: ${currentWord().sentenceSw}`);
+  }
+  render();
+}
 
-    $("btnClear").addEventListener("click", () => {
-      logEl.innerHTML = "";
-      addMsg("Prince of Pan-Africa: Ask me a Black History question. If you want it structured, say: “Give me a 3-part lesson: context, key figures, why it matters today.”", "bot");
-      setStatus(true, "Ready");
-    });
+function skipSentenceRepeat(){
+  state.sentenceRepeated = true;
+  showToast("Marked repeated.");
+  render();
+}
 
-    $("btnCheck").addEventListener("click", checkBrain);
+async function speakUserSentence(){
+  const text = userSentence.value.trim();
+  if(!text){
+    showToast("Type your sentence first (or speak if supported).");
+    return;
+  }
+  await speak(text);
+}
 
-    $("btnMember").addEventListener("click", () => {
-      addMsg("Membership is not wired yet. Next step: connect a payment provider + issue a token, then gate downloads.", "bot");
-    });
+async function sttUserSentence(){
+  if(!state.sttSupported){
+    showToast("Mic not supported here. Type your sentence.");
+    return;
+  }
+  voiceStatus.textContent = "🎤 STT: Listening…";
+  const res = await listenOnce();
+  voiceStatus.textContent = "🎤 STT: Ready";
+  if(res.ok && res.text){
+    userSentence.value = res.text;
+    showToast("Captured. Now submit.");
+  }else{
+    showToast("Didn’t catch that. Try again.");
+  }
+}
 
-    $("btnDownload").addEventListener("click", () => {
-      addMsg("Download is currently locked (placeholder). When you’re ready, we’ll connect membership + a signed download link.", "bot");
-    });
+async function submitUserSentence(){
+  const text = normalize(userSentence.value);
+  const target = normalize(currentWord().sw);
+  if(!text){
+    showToast("Write a sentence first.");
+    return;
+  }
+  if(!text.includes(target)){
+    showToast(`Make sure your sentence includes: ${currentWord().sw}`);
+    return;
+  }
+  state.userSentenceOk = true;
+  showToast("✅ Sentence accepted.");
+  render();
+}
 
-    // auto check on load
-    checkBrain();
-  </script>
+async function nextWord(){
+  if(!(state.sayCount>=3 && state.sentenceRepeated && state.userSentenceOk)){
+    showToast("Finish the steps first.");
+    return;
+  }
+
+  // advance
+  if(state.wordIndex < 2){
+    state.wordIndex += 1;
+    state.sayCount = 0;
+    state.sentenceRepeated = false;
+    state.userSentenceOk = false;
+    userSentence.value = "";
+    await speak(`Next word: ${currentWord().sw}`);
+    render();
+    return;
+  }
+
+  // done all 3 words
+  await speak(`Day ${state.day} complete. Great work.`);
+  showToast("Day complete ✅");
+  // move to next day (optional)
+  // state.day = Math.min(30, state.day + 1);
+  render();
+}
+
+async function back(){
+  // simple back: if in middle of a word, reduce steps first; otherwise go to previous word
+  if(state.userSentenceOk){
+    state.userSentenceOk = false;
+    showToast("Back: redo your sentence.");
+  } else if(state.sentenceRepeated){
+    state.sentenceRepeated = false;
+    showToast("Back: repeat sentence.");
+  } else if(state.sayCount>0){
+    state.sayCount -= 1;
+    showToast(`Back: word says ${state.sayCount}/3`);
+  } else if(state.wordIndex>0){
+    state.wordIndex -= 1;
+    state.sayCount = 3;
+    state.sentenceRepeated = true;
+    state.userSentenceOk = true;
+    showToast("Back: previous word.");
+  }
+  render();
+}
+
+// ---------- Events ----------
+btnStart.addEventListener("click", startLesson);
+btnRepeat.addEventListener("click", async()=>{ await speak(currentWord().sw); });
+btnListen.addEventListener("click", listenWord);
+btnSay.addEventListener("click", sayWord);
+btnSkipVoice.addEventListener("click", skipWordSay);
+
+btnSentenceListen.addEventListener("click", hearSentence);
+btnSentenceRepeat.addEventListener("click", repeatSentence);
+btnSentenceSkip.addEventListener("click", skipSentenceRepeat);
+
+btnUserSentenceSpeak.addEventListener("click", sttUserSentence);
+btnUserSentenceSubmit.addEventListener("click", submitUserSentence);
+
+btnNext.addEventListener("click", nextWord);
+btnBack.addEventListener("click", back);
+
+btnTipSpeak.addEventListener("click", async()=>{ await speak(currentLesson().tip); });
+btnCultureSpeak.addEventListener("click", async()=>{ await speak(currentLesson().culture); });
+
+btnResetProgress.addEventListener("click", resetProgress);
+
+voiceSelect.addEventListener("change", ()=>{
+  state.selectedVoiceURI = voiceSelect.value || null;
+  showToast("Voice updated.");
+});
+
+btnGoDay.addEventListener("click", ()=>{
+  const d = clamp(Number(dayPicker.value||1),1,30);
+  state.day = d;
+  state.wordIndex = 0;
+  state.sayCount = 0;
+  state.sentenceRepeated = false;
+  state.userSentenceOk = false;
+  state.started = false;
+  btnStart.disabled = false;
+  render();
+  showToast(`Loaded Day ${d}.`);
+});
+
+btnToday.addEventListener("click", ()=>{
+  // simple: day = stored day, else 1
+  showToast("Using saved progress day.");
+  render();
+});
+
+rateEl.addEventListener("input", ()=>{ /* just used in speak() */ });
+
+// ---------- Init ----------
+(function init(){
+  loadProgress();
+  initSTT();
+
+  // TTS voices load async on some browsers
+  if("speechSynthesis" in window){
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    ttsStatus.textContent = "🔊 TTS: Ready";
+  }else{
+    ttsStatus.textContent = "🔊 TTS: Not supported";
+  }
+
+  // show mic status
+  if(state.sttSupported){
+    voiceStatus.textContent = "🎤 STT: Ready";
+  }else{
+    voiceStatus.textContent = "🎤 STT: Not supported (use buttons)";
+  }
+
+  dayPicker.value = state.day;
+
+  // If they already started, keep start disabled
+  btnStart.disabled = state.started;
+  render();
+})();
+</script>
 </body>
 </html>
