@@ -1,0 +1,13 @@
+[
+  {
+    "day": 1,
+    "theme": "Yorùbá Basics",
+    "fact": "Yorùbá uses tone marks (ẹ, ọ, ṣ and accents) that change meaning.",
+    "words": [
+      {"sw": "Báwo", "en": "How are you?", "pron": "BAH-woh"},
+      {"sw": "Mo wà dáadáa", "en": "I am fine", "pron": "moh wah dah-dah"},
+      {"sw": "Ẹ ṣé", "en": "Thank you", "pron": "eh sheh"}
+    ],
+    "example_sentence": "Báwo? Mo wà dáadáa. Ẹ ṣé!"
+  }
+]
