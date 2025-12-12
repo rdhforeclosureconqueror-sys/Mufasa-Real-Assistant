@@ -31,3 +31,17 @@ def swahili_today():
     idx = (date.today().timetuple().tm_yday - 1) % len(lessons)
     lesson = lessons[idx]
     return lesson
+YORUBA_PATH = Path("resources") / "yoruba_30days.json"
+
+@app.get("/yoruba")
+def yoruba_page():
+    return FileResponse("yoruba.html")
+
+@app.get("/api/yoruba/today")
+def yoruba_today():
+    if not YORUBA_PATH.exists():
+        return JSONResponse({"error": "Missing resources/yoruba_30days.json"}, status_code=404)
+
+    lessons = json.loads(YORUBA_PATH.read_text(encoding="utf-8"))
+    idx = (date.today().timetuple().tm_yday - 1) % len(lessons)
+    return lessons[idx]
