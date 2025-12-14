@@ -1,12 +1,8 @@
-function saveProgress(portal, code) {
-  localStorage.setItem(`portal.${portal}.resume`, code);
-}
-function loadProgress(portal) {
-  return localStorage.getItem(`portal.${portal}.resume`);
-}
-function saveNotes(portal, text) {
-  localStorage.setItem(`portal.${portal}.notes`, text);
-}
-function loadNotes(portal) {
-  return localStorage.getItem(`portal.${portal}.notes`) || "";
-}
+// localStorage helpers
+window.AppState = {
+  save(key, val) { localStorage.setItem(key, JSON.stringify(val)); },
+  load(key, def) {
+    try { return JSON.parse(localStorage.getItem(key)) ?? def; }
+    catch { return def; }
+  }
+};
