@@ -1,113 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Order of Ma’at Portal | Mufasa Real Assistant</title>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<link rel="icon" href="../assets/lion.png">
-<style>
-  body {
-    margin:0; background:linear-gradient(135deg,#000,#013220);
-    color:#f7e7b3; font-family:"Poppins",sans-serif;
-    display:flex; flex-direction:column; height:100vh;
-  }
-  header{
-    background:rgba(0,0,0,0.7); color:gold;
-    text-align:center; font-size:1.8em; padding:15px;
-    border-bottom:2px solid gold;
-  }
-  main{
-    flex:1; display:grid;
-    grid-template-columns:35% 65%;
-    gap:10px; padding:15px;
-  }
-  section{
-    background:rgba(255,255,255,0.05);
-    border:1px solid gold; border-radius:15px;
-    padding:15px; overflow:auto;
-  }
-  h2{margin-top:0;color:goldenrod;text-align:center;}
-  #progressbar{
-    width:100%; height:15px; border-radius:10px;
-    background:rgba(255,255,255,0.1); overflow:hidden; margin:10px 0;
-  }
-  #progressbar div{
-    height:100%; width:0%; background:gold;
-    transition:width 0.5s ease;
-  }
-  textarea{
-    width:100%; height:150px; resize:none;
-    border-radius:10px; border:none;
-    padding:10px; background:rgba(255,255,255,0.1);
-    color:#fff; font-family:inherit; font-size:1em;
-  }
-  .calendar{
-    display:grid; grid-template-columns:repeat(6,1fr);
-    gap:5px; margin-top:10px;
-  }
-  .calendar div{
-    text-align:center; padding:6px; border-radius:8px;
-    background:rgba(255,255,255,0.1); cursor:pointer;
-  }
-  .calendar .done{background:gold;color:black;}
-  #chat-box{
-    height:60%; overflow-y:auto;
-    border:1px solid rgba(255,215,0,0.4);
-    border-radius:10px; padding:10px; margin-bottom:10px;
-    background:rgba(0,0,0,0.4);
-  }
-  #chat-input{
-    display:flex; align-items:center; gap:10px;
-  }
-  #prompt{
-    flex:1; padding:10px; border:none;
-    border-radius:10px; font-size:1em;
-  }
-  button{
-    background:gold; border:none; border-radius:10px;
-    padding:8px 15px; font-weight:bold; cursor:pointer;
-  }
-  button:hover{background:#f5c518;}
-  footer{
-    text-align:center; font-size:0.8em; color:#aaa; padding:10px;
-  }
-</style>
-</head>
-<body>
-<header>⚖️ Order of Ma’at — 30-Day Realignment Portal</header>
+// portal.js — shared logic for all portals
 
-<main>
-  <!-- LEFT PANEL -->
-  <section>
-    <h2>Your Journey</h2>
-    <label>Progress</label>
-    <div id="progressbar"><div></div></div>
-    <div id="progress-text">Day 1 of 30</div>
+function initPortal(portalCode, firstPrompt){
+  const chatBox=document.getElementById("chat-box");
+  const promptEl=document.getElementById("prompt");
+  const sendBtn=document.getElementById("send");
+  const speakBtn=document.getElementById("speak");
+  const journal=document.getElementById("journal");
+  const progressBar=document.querySelector("#progressbar div");
+  const progressText=document.getElementById("progress-text");
+  const calendar=document.getElementById("calendar");
 
-    <h3>🗓 Calendar</h3>
-    <div class="calendar" id="calendar"></div>
+  const keyBase=portalCode+"_";
+  let progress=parseInt(localStorage.getItem(keyBase+"progress")||"1");
+  let notes=localStorage.getItem(keyBase+"journal")||"";
+  journal.value=notes;
 
-    <h3>📝 Journal</h3>
-    <textarea id="journal" placeholder="Reflect, write your thoughts here..."></textarea>
-  </section>
+  // Calendar build
+  for(let i=1;i<=30;i++){
+    const d=document.createElement("div");
+    d.textContent=i;
+    if(i<=progress)d.classList.add("done");
+    d.addEventListener("click",()=>setProgress(i));
+    calendar.appendChild(d);
+  }
 
-  <!-- RIGHT PANEL -->
-  <section>
-    <h2>Ask Mufasa</h2>
-    <div id="chat-box"></div>
+  function setProgress(val){
+    progress=Math.min(30,Math.max(1,val));
+    localStorage.setItem(keyBase+"progress",progress);
+    updateProgress();
+  }
 
-    <div id="chat-input">
-      <input id="prompt" type="text" placeholder="Type your question or reflection...">
-      <button id="speak">🎙</button>
-      <button id="send">➤</button>
-    </div>
-  </section>
-</main>
+  function updateProgress(){
+    const pct=(progress/30)*100;
+    progressBar.style.width=pct+"%";
+    progressText.textContent=`Day ${progress} of 30`;
+    document.querySelectorAll(".calendar div").forEach((d,i)=>{
+      d.classList.toggle("done",i<progress);
+    });
+  }
 
-<footer>© 2025 Mufasa Real Assistant | Pan-African Ethos</footer>
-<script src="portal.js"></script>
-<script>
-  initPortal("MAAT30:v2","What is Ma’at?");
-</script>
-</body>
-</html>
+  updateProgress();
+
+  // Journal auto-save
+  journal.addEventListener("input",()=>{
+    localStorage.setItem(keyBase+"journal",journal.value);
+  });
+
+  // Chat
+  async function sendMessage(text){
+    if(!text.trim())return;
+    const msg=document.createElement("div");
+    msg.textContent="🧍 "+text;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop=chatBox.scrollHeight;
+    promptEl.value="";
+    const payload={question:`${portalCode}\n${text}`};
+    try{
+      const res=await fetch("/ask",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload)
+      });
+      const data=await res.json();
+      const reply=document.createElement("div");
+      reply.textContent="🦁 "+(data.answer||"No response.");
+      chatBox.appendChild(reply);
+      chatBox.scrollTop=chatBox.scrollHeight;
+      setProgress(progress+1);
+    }catch(e){
+      const err=document.createElement("div");
+      err.textContent="⚠️ Connection error.";
+      chatBox.appendChild(err);
+    }
+  }
+
+  sendBtn.onclick=()=>sendMessage(promptEl.value);
+  promptEl.addEventListener("keydown",e=>{
+    if(e.key==="Enter")sendMessage(promptEl.value);
+  });
+
+  // Speech
+  speakBtn.onclick=()=>{
+    const synth=window.speechSynthesis;
+    const utter=new SpeechSynthesisUtterance(promptEl.value||firstPrompt);
+    utter.voice=synth.getVoices().find(v=>v.lang.startsWith("en")&&v.name.toLowerCase().includes("female"))||null;
+    synth.speak(utter);
+  };
+
+  // preload first prompt
+  if(chatBox.innerText.trim()===""){
+    sendMessage(firstPrompt);
+  }
+}
