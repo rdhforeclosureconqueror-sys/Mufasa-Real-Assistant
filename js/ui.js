@@ -1,57 +1,86 @@
-const app = document.getElementById("app");
+const portalBox = document.getElementById("portal-tabs");
+const chatWin = document.getElementById("chat-window");
+const userInput = document.getElementById("user-input");
+const sendBtn = document.getElementById("send-btn");
+const micBtn = document.getElementById("mic-btn");
+const canvas = document.getElementById("reveal-canvas");
+const ctx = canvas.getContext("2d");
 
-function speak(text) {
-  const synth = window.speechSynthesis;
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "en-US";
-  synth.cancel();
-  synth.speak(utter);
+// ── build portal buttons ──
+MUFASA_CFG.PORTALS.forEach(p => {
+  const b = document.createElement("button");
+  b.textContent = p.title;
+  b.onclick = () => { userInput.value = p.start; sendBtn.click(); };
+  portalBox.appendChild(b);
+});
+
+// ── append message ──
+function addMsg(role, txt) {
+  const div = document.createElement("div");
+  div.className = "message " + role;
+  div.textContent = txt;
+  chatWin.appendChild(div);
+  chatWin.scrollTop = chatWin.scrollHeight;
 }
 
-function renderDashboard() {
-  app.innerHTML = `
-    <h2>Choose a Portal</h2>
-    <div id="portals">
-      ${Object.values(CONFIG.PORTALS).map(p => `
-        <div class="card">
-          <h3>${p.title}</h3>
-          <button onclick="openPortal('${p.id}')">Enter</button>
-        </div>`).join("")}
-    </div>
-  `;
+// ── speech synthesis ──
+function speak(txt) {
+  if (!window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang = "en-US";
+  u.rate = 1;
+  u.pitch = 1;
+  window.speechSynthesis.speak(u);
+  revealImage(txt); // trigger art reveal while speaking
 }
 
-function openPortal(portalId) {
-  const portal = CONFIG.PORTALS[portalId];
-  const resume = loadProgress(portalId) || "START";
-  app.innerHTML = `
-    <div id="chat">
-      <h2>${portal.title}</h2>
-      <div id="messages"></div>
-      <textarea id="input" placeholder="Type or press Continue..."></textarea>
-      <button id="sendBtn">Send</button>
-      <button id="contBtn">Continue</button>
-      <button id="speakBtn">🔊 Read Aloud</button>
-      <button id="shareBtn">📤 Share</button>
-      <textarea id="notes" placeholder="Your notes...">${loadNotes(portalId)}</textarea>
-    </div>
-  `;
+// ── speech recognition ──
+let recognition;
+if ("webkitSpeechRecognition" in window) {
+  recognition = new webkitSpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.onresult = e => {
+    userInput.value = e.results[0][0].transcript;
+    sendBtn.click();
+  };
+}
+micBtn.onclick = () => recognition && recognition.start();
 
-  const messages = document.getElementById("messages");
-  const input = document.getElementById("input");
+// ── AI-generated image reveal (local draw) ──
+function revealImage(prompt) {
+  // Placeholder: load from Unsplash AI-like endpoint
+  const url = `https://source.unsplash.com/700x400/?${encodeURIComponent(prompt)}`;
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.globalAlpha = 0;
+    ctx.drawImage(img, 0, 0);
+    let alpha = 0;
+    const fade = setInterval(() => {
+      alpha += 0.02;
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(img, 0, 0);
+      if (alpha >= 1) clearInterval(fade);
+    }, 80);
+  };
+  img.src = url;
+}
 
-  async function send(msg) {
-    messages.innerHTML += `<div class="chat-msg user">🧑 ${msg}</div>`;
-    const data = await askMufasa({ question: msg, portal_id: portalId, resume_code: resume });
-    messages.innerHTML += `<div class="chat-msg bot">🤖 ${data.answer}</div>`;
-    saveProgress(portalId, data.next_resume_code || "");
-    document.getElementById("notes").addEventListener("change", e => saveNotes(portalId, e.target.value));
+// ── send question ──
+sendBtn.onclick = async () => {
+  const q = userInput.value.trim();
+  if (!q) return;
+  addMsg("user", q);
+  userInput.value = "";
+  try {
+    const ans = await askMufasa(q);
+    addMsg("bot", ans);
+    speak(ans);
+  } catch (e) {
+    addMsg("bot", "⚠️ Connection error.");
   }
-
-  document.getElementById("sendBtn").onclick = () => send(input.value);
-  document.getElementById("contBtn").onclick = () => send("Continue");
-  document.getElementById("speakBtn").onclick = () => speak(messages.innerText);
-  document.getElementById("shareBtn").onclick = () => shareResponse(messages.innerText);
-}
-
-renderDashboard();
+};
