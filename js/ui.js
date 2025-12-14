@@ -84,3 +84,50 @@ sendBtn.onclick = async () => {
     addMsg("bot", "⚠️ Connection error.");
   }
 };
+// ─── Portal Memory Integration ───
+function loadPortalMemory(portalId) {
+  const mem = AppState.getPortal(portalId);
+  if (mem.lastQuestion && mem.lastAnswer) {
+    addMsg("user", mem.lastQuestion);
+    addMsg("bot", mem.lastAnswer);
+  }
+}
+
+function savePortalMemory(portalId, q, a) {
+  AppState.savePortal(portalId, { lastQuestion: q, lastAnswer: a, ts: Date.now() });
+}
+
+// Modify portal buttons so they load memory before starting
+portalBox.querySelectorAll("button").forEach(btn => {
+  const portal = MUFASA_CFG.PORTALS.find(p => p.title === btn.textContent);
+  btn.onclick = () => {
+    chatWin.innerHTML = "";
+    const mem = AppState.getPortal(portal.id);
+    if (mem.lastQuestion && mem.lastAnswer) {
+      addMsg("bot", `📘 Resuming your last session on ${portal.title}...`);
+      loadPortalMemory(portal.id);
+    } else {
+      userInput.value = portal.start;
+      sendBtn.click();
+    }
+    AppState.save("activePortal", portal.id);
+  };
+});
+
+// Update sendBtn onclick to record progress
+const originalSend = sendBtn.onclick;
+sendBtn.onclick = async () => {
+  const q = userInput.value.trim();
+  if (!q) return;
+  const active = AppState.load("activePortal", null);
+  addMsg("user", q);
+  userInput.value = "";
+  try {
+    const ans = await askMufasa(q);
+    addMsg("bot", ans);
+    speak(ans);
+    if (active) savePortalMemory(active, q, ans);
+  } catch {
+    addMsg("bot", "⚠️ Connection error.");
+  }
+};
