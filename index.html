@@ -1,24 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mufasa Real Assistant</title>
-  <link rel="stylesheet" href="assets/css/app.css">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/app.css" />
 </head>
 <body>
-  <header>
-    <h1>Mufasa Real Assistant</h1>
-    <p>Black History • African Languages • Ma’at Alignment</p>
+  <!-- ───── BACKGROUND LAYERS ───── -->
+  <div id="bg-container">
+    <img src="assets/img/lion_bg.png" id="lion-bg" alt="Lion" />
+    <img src="assets/img/africa_bg.png" id="africa-bg" alt="Africa" />
+  </div>
+
+  <!-- ───── MAIN NAVIGATION ───── -->
+  <header class="top-nav">
+    <div class="logo-title">🦁 MUFASA REAL ASSISTANT</div>
+    <nav id="main-tabs">
+      <button data-route="ask">Ask</button>
+      <button data-route="timeline">Timeline</button>
+      <button data-route="library">Library</button>
+      <button data-route="checkbrain">Check Brain</button>
+      <button data-route="membership">Membership</button>
+    </nav>
   </header>
 
-  <main id="app"></main>
+  <!-- ───── CONTENT AREA (ROUTED) ───── -->
+  <main id="app-root">
 
+    <!-- ===== ASK / DASHBOARD ===== -->
+    <section id="view-ask" class="view active">
+      <h2>Welcome to the Living Library</h2>
+      <p>Choose a Portal below or ask Mufasa a question.</p>
+
+      <!-- Portal Tabs -->
+      <div id="portal-tabs" class="portal-tabs">
+        <!-- JS will render all 13 portals here -->
+      </div>
+
+      <!-- Chat Window -->
+      <div class="chat-container">
+        <div id="chat-window" class="chat-window"></div>
+
+        <div class="chat-input">
+          <textarea id="user-input" placeholder="Type or speak your question..."></textarea>
+          <div class="chat-controls">
+            <button id="mic-btn" title="Speak"><span>🎤</span></button>
+            <button id="send-btn" title="Send"><span>➤</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Reveal Canvas -->
+      <div id="image-reveal" class="image-reveal">
+        <canvas id="reveal-canvas"></canvas>
+      </div>
+    </section>
+
+    <!-- ===== TIMELINE ===== -->
+    <section id="view-timeline" class="view">
+      <h2>Pan-African Timeline</h2>
+      <p>Ancient → Modern Era timeline goes here (coming soon).</p>
+    </section>
+
+    <!-- ===== LIBRARY ===== -->
+    <section id="view-library" class="view">
+      <h2>Library</h2>
+      <p>Curated texts, videos & resources (coming soon).</p>
+    </section>
+
+    <!-- ===== CHECK BRAIN ===== -->
+    <section id="view-checkbrain" class="view">
+      <h2>Check Brain</h2>
+      <div id="progress-list"></div>
+    </section>
+
+    <!-- ===== MEMBERSHIP ===== -->
+    <section id="view-membership" class="view">
+      <h2>Membership / Login</h2>
+      <p>Feature coming soon.</p>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <span>© 2025 Mufasa Real Assistant | Pan-African Living Library</span>
+  </footer>
+
+  <!-- Scripts -->
   <script src="js/config.js"></script>
-  <script src="js/api.js"></script>
   <script src="js/state.js"></script>
-  <script src="js/share.js"></script>
-  <script src="js/ui.js"></script>
   <script src="js/router.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/share.js"></script>
 </body>
 </html>
