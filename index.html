@@ -1,103 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mufasa Real Assistant</title>
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
-  <!-- Styles -->
-  <link rel="stylesheet" href="assets/css/app.css" />
+  <meta charset="UTF-8">
+  <title>Mufasa Real Assistant | Pan-African Knowledge Portals</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="assets/lion.png">
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(120deg, #000000 40%, #8B0000 80%);
+      color: #f8f5e1;
+      font-family: "Poppins", sans-serif;
+      height: 100vh; overflow: hidden;
+      display: flex; flex-direction: column;
+      align-items: center;
+    }
+    header {
+      color: gold;
+      font-size: 2em;
+      letter-spacing: 1.5px;
+      padding: 20px 0;
+      text-align: center;
+      border-bottom: 2px solid gold;
+      width: 100%;
+      background: rgba(0,0,0,0.6);
+    }
+    nav {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 10px; padding: 15px; background: rgba(255,215,0,0.1);
+      border-bottom: 2px solid #b8860b;
+    }
+    .tab {
+      padding: 10px 20px;
+      border-radius: 15px;
+      background: rgba(255,215,0,0.15);
+      border: 1px solid gold;
+      color: gold;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .tab:hover {
+      background: gold;
+      color: black;
+      transform: scale(1.05);
+    }
+    .tab.active {
+      background: gold;
+      color: black;
+    }
+    iframe {
+      flex: 1;
+      width: 95%;
+      border: none;
+      border-radius: 20px;
+      margin: 10px;
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0 0 20px rgba(255,215,0,0.3);
+    }
+    footer {
+      padding: 10px;
+      color: #aaa;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
-  <!-- ───── BACKGROUND LAYERS ───── -->
-  <div id="bg-container">
-    <img src="assets/img/lion_bg.png" id="lion-bg" alt="Lion" />
-    <img src="assets/img/africa_bg.png" id="africa-bg" alt="Africa" />
-  </div>
+  <header>🦁 Mufasa Real Assistant — Pan-African Portals</header>
 
-  <!-- ───── MAIN NAVIGATION ───── -->
-  <header class="top-nav">
-    <div class="logo-title">🦁 MUFASA REAL ASSISTANT</div>
-    <nav id="main-tabs">
-      <button data-route="ask">Ask</button>
-      <button data-route="timeline">Timeline</button>
-      <button data-route="library">Library</button>
-      <button data-route="checkbrain">Check Brain</button>
-      <button data-route="membership">Membership</button>
-    </nav>
-  </header>
+  <nav id="tabs">
+    <div class="tab active" data-page="portals/maat.html">Order of Ma’at</div>
+    <div class="tab" data-page="portals/decolonize.html">Decolonize the Mind</div>
+    <div class="tab" data-page="portals/melanin.html">Melanin Superpower</div>
+    <div class="tab" data-page="portals/mega.html">Black Megacities</div>
+    <div class="tab" data-page="portals/bwom.html">Black Woman Portal</div>
+    <div class="tab" data-page="portals/civ.html">African Civilization</div>
+    <div class="tab" data-page="portals/lab.html">Ancestral Science Lab</div>
+    <div class="tab" data-page="portals/pyr.html">Pyramid Systems</div>
+    <div class="tab" data-page="portals/sca.html">Scalar Waves</div>
+    <div class="tab" data-page="portals/bcf.html">Book of Coming Forth</div>
+    <div class="tab" data-page="portals/rop.html">Rites of Passage</div>
+  </nav>
 
-  <!-- ───── CONTENT AREA (ROUTED) ───── -->
-  <main id="app-root">
+  <iframe id="portal-frame" src="portals/maat.html"></iframe>
 
-    <!-- ===== ASK / DASHBOARD ===== -->
-    <section id="view-ask" class="view active">
-      <h2>Welcome to the Living Library</h2>
-      <p>Choose a Portal below or ask Mufasa a question.</p>
+  <footer>© 2025 Mufasa Real Assistant | Built with OpenAI + Pan-African Ethos</footer>
 
-      <!-- Portal Tabs -->
-      <div id="portal-tabs" class="portal-tabs">
-        <!-- JS will render all 13 portals here -->
-      </div>
-
-      <!-- Chat Window -->
-      <div class="chat-container">
-        <div id="chat-window" class="chat-window"></div>
-
-        <div class="chat-input">
-          <textarea id="user-input" placeholder="Type or speak your question..."></textarea>
-          <div class="chat-controls">
-            <button id="mic-btn" title="Speak"><span>🎤</span></button>
-            <button id="send-btn" title="Send"><span>➤</span></button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Image Reveal Canvas -->
-      <div id="image-reveal" class="image-reveal">
-        <canvas id="reveal-canvas"></canvas>
-      </div>
-    </section>
-
-    <!-- ===== TIMELINE ===== -->
-    <section id="view-timeline" class="view">
-      <h2>Pan-African Timeline</h2>
-      <p>Ancient → Modern Era timeline goes here (coming soon).</p>
-    </section>
-
-    <!-- ===== LIBRARY ===== -->
-    <section id="view-library" class="view">
-      <h2>Library</h2>
-      <p>Curated texts, videos & resources (coming soon).</p>
-    </section>
-
-    <!-- ===== CHECK BRAIN ===== -->
-    <section id="view-checkbrain" class="view">
-      <h2>Check Brain</h2>
-      <div id="progress-list"></div>
-    </section>
-
-    <!-- ===== MEMBERSHIP ===== -->
-    <section id="view-membership" class="view">
-      <h2>Membership / Login</h2>
-      <p>Feature coming soon.</p>
-    </section>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <span>© 2025 Mufasa Real Assistant | Pan-African Living Library</span>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="js/config.js"></script>
-  <script src="js/state.js"></script>
-  <script src="js/router.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/share.js"></script>
+  <script src="portals/tabs.js"></script>
 </body>
 </html>
