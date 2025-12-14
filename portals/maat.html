@@ -1,108 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Order of Ma’at | Mufasa Real Assistant</title>
-  <link rel="icon" href="../assets/lion.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      background: linear-gradient(120deg, #000000 40%, #006400 70%);
-      color: #f8f5e1;
-      font-family: "Poppins", sans-serif;
-      margin: 0; padding: 0;
-      height: 100vh; overflow: hidden;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-start;
-    }
-    header {
-      text-align: center;
-      padding: 20px;
-      color: gold;
-      font-size: 1.8em;
-      letter-spacing: 2px;
-      border-bottom: 2px solid #b8860b;
-      width: 100%;
-    }
-    #chat-container {
-      flex: 1;
-      width: 90%;
-      max-width: 800px;
-      display: flex;
-      flex-direction: column;
-      background: rgba(0,0,0,0.4);
-      border: 2px solid gold;
-      border-radius: 20px;
-      padding: 20px;
-      overflow-y: auto;
-      margin-top: 20px;
-    }
-    .message {
-      margin: 10px 0;
-      padding: 10px 15px;
-      border-radius: 12px;
-      line-height: 1.4em;
-    }
-    .user { background: #b8860b; align-self: flex-end; }
-    .bot { background: rgba(255,255,255,0.1); border: 1px solid gold; align-self: flex-start; }
-    #input-row {
-      width: 90%; max-width: 800px;
-      display: flex; align-items: center;
-      padding: 10px; margin-bottom: 20px;
-    }
-    #user-input {
-      flex: 1; padding: 10px; font-size: 1em;
-      border-radius: 10px; border: 1px solid #b8860b;
-      background: rgba(255,255,255,0.1); color: white;
-    }
-    button {
-      margin-left: 10px; padding: 10px 15px;
-      background: gold; border: none;
-      border-radius: 10px; cursor: pointer;
-      font-weight: bold; color: black;
-    }
-    #journal {
-      width: 90%; max-width: 800px;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid gold; border-radius: 15px;
-      margin-bottom: 10px;
-      padding: 10px; color: #f8f5e1;
-    }
-    #art-canvas {
-      position: absolute; bottom: 0; right: 0;
-      width: 300px; height: 300px; border-radius: 50%;
-      border: 3px solid gold; overflow: hidden;
-      background-color: rgba(255,255,255,0.05);
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Order of Ma’at Portal | Mufasa Real Assistant</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" href="../assets/lion.png">
+<style>
+  body {
+    margin:0; background:linear-gradient(135deg,#000,#013220);
+    color:#f7e7b3; font-family:"Poppins",sans-serif;
+    display:flex; flex-direction:column; height:100vh;
+  }
+  header{
+    background:rgba(0,0,0,0.7); color:gold;
+    text-align:center; font-size:1.8em; padding:15px;
+    border-bottom:2px solid gold;
+  }
+  main{
+    flex:1; display:grid;
+    grid-template-columns:35% 65%;
+    gap:10px; padding:15px;
+  }
+  section{
+    background:rgba(255,255,255,0.05);
+    border:1px solid gold; border-radius:15px;
+    padding:15px; overflow:auto;
+  }
+  h2{margin-top:0;color:goldenrod;text-align:center;}
+  #progressbar{
+    width:100%; height:15px; border-radius:10px;
+    background:rgba(255,255,255,0.1); overflow:hidden; margin:10px 0;
+  }
+  #progressbar div{
+    height:100%; width:0%; background:gold;
+    transition:width 0.5s ease;
+  }
+  textarea{
+    width:100%; height:150px; resize:none;
+    border-radius:10px; border:none;
+    padding:10px; background:rgba(255,255,255,0.1);
+    color:#fff; font-family:inherit; font-size:1em;
+  }
+  .calendar{
+    display:grid; grid-template-columns:repeat(6,1fr);
+    gap:5px; margin-top:10px;
+  }
+  .calendar div{
+    text-align:center; padding:6px; border-radius:8px;
+    background:rgba(255,255,255,0.1); cursor:pointer;
+  }
+  .calendar .done{background:gold;color:black;}
+  #chat-box{
+    height:60%; overflow-y:auto;
+    border:1px solid rgba(255,215,0,0.4);
+    border-radius:10px; padding:10px; margin-bottom:10px;
+    background:rgba(0,0,0,0.4);
+  }
+  #chat-input{
+    display:flex; align-items:center; gap:10px;
+  }
+  #prompt{
+    flex:1; padding:10px; border:none;
+    border-radius:10px; font-size:1em;
+  }
+  button{
+    background:gold; border:none; border-radius:10px;
+    padding:8px 15px; font-weight:bold; cursor:pointer;
+  }
+  button:hover{background:#f5c518;}
+  footer{
+    text-align:center; font-size:0.8em; color:#aaa; padding:10px;
+  }
+</style>
 </head>
 <body>
-  <header>Order of Ma’at — 30 Day Realignment</header>
-  
-  <section id="journal">
-    <h3>Journal Notes</h3>
-    <textarea id="notes" rows="4" style="width:100%; background:rgba(255,255,255,0.05); color:white; border:none; border-radius:10px;"></textarea>
+<header>⚖️ Order of Ma’at — 30-Day Realignment Portal</header>
+
+<main>
+  <!-- LEFT PANEL -->
+  <section>
+    <h2>Your Journey</h2>
+    <label>Progress</label>
+    <div id="progressbar"><div></div></div>
+    <div id="progress-text">Day 1 of 30</div>
+
+    <h3>🗓 Calendar</h3>
+    <div class="calendar" id="calendar"></div>
+
+    <h3>📝 Journal</h3>
+    <textarea id="journal" placeholder="Reflect, write your thoughts here..."></textarea>
   </section>
-  
-  <section id="chat-container"></section>
-  
-  <div id="input-row">
-    <input id="user-input" placeholder="Speak or type your reflection..." />
-    <button id="speak-btn">🎙</button>
-    <button id="send-btn">Send</button>
-    <button id="tts-btn">🔊</button>
-  </div>
 
-  <canvas id="art-canvas"></canvas>
+  <!-- RIGHT PANEL -->
+  <section>
+    <h2>Ask Mufasa</h2>
+    <div id="chat-box"></div>
 
-  <script type="module" src="portal.js"></script>
-  <script>
-    importPortal({
-      portalId: "MAAT30:v2",
-      title: "Order of Ma’at",
-      defaultPrompt: "What is Ma’at?",
-      askEndpoint: "/ask"
-    });
-  </script>
+    <div id="chat-input">
+      <input id="prompt" type="text" placeholder="Type your question or reflection...">
+      <button id="speak">🎙</button>
+      <button id="send">➤</button>
+    </div>
+  </section>
+</main>
+
+<footer>© 2025 Mufasa Real Assistant | Pan-African Ethos</footer>
+<script src="portal.js"></script>
+<script>
+  initPortal("MAAT30:v2","What is Ma’at?");
+</script>
 </body>
 </html>
