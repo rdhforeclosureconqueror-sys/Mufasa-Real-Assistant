@@ -1,126 +1,170 @@
-export function importPortal(config) {
-  const { portalId, title, defaultPrompt, askEndpoint } = config;
-  const chatBox = document.getElementById("chat-container");
-  const input = document.getElementById("user-input");
-  const notes = document.getElementById("notes");
-  const speakBtn = document.getElementById("speak-btn");
-  const sendBtn = document.getElementById("send-btn");
-  const ttsBtn = document.getElementById("tts-btn");
-  const canvas = document.getElementById("art-canvas");
-  const ctx = canvas.getContext("2d");
+/* ================================================================
+   MUFASA PORTAL JS — Bright Royal Edition
+   Handles chat logic, AI fetch, journal, TTS, STT, and progress
+   ================================================================ */
 
-  const storageKey = `portal.${portalId}`;
-  const imgDateKey = `${portalId}.lastImageDate`;
+// 🌍 API base (edit if deployed elsewhere)
+const API_BASE = window.location.origin;
 
-  // Load saved journal
-  notes.value = localStorage.getItem(`${storageKey}.notes`) || "";
-  notes.addEventListener("input", () => {
-    localStorage.setItem(`${storageKey}.notes`, notes.value);
+// 🦁 Elements
+const portalSelector = document.getElementById("portal-selector");
+const chatWindow = document.getElementById("chat-window");
+const userInput = document.getElementById("user-input");
+const sendBtn = document.getElementById("send-btn");
+const speakBtn = document.getElementById("speak-btn");
+const journalInput = document.getElementById("journal-input");
+const saveJournalBtn = document.getElementById("save-journal-btn");
+const progressFill = document.getElementById("progress-fill");
+const progressText = document.getElementById("progress-text");
+const calendar = document.getElementById("calendar");
+
+// 🧠 Persistent memory (localStorage)
+let currentPortal = localStorage.getItem("mufasa_portal") || "";
+let currentDay = parseInt(localStorage.getItem("mufasa_day") || "1");
+let journals = JSON.parse(localStorage.getItem("mufasa_journals") || "{}");
+
+// 🎙️ Voice setup
+const synth = window.speechSynthesis;
+let recognition;
+if ("webkitSpeechRecognition" in window) {
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = false;
+  recognition.lang = "en-US";
+}
+
+// 🔊 Text-to-Speech function (silent by default toggleable later)
+function speakText(text) {
+  if (!text || !synth) return;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.voice = synth.getVoices().find(v => v.name.includes("Female")) || null;
+  utter.rate = 1;
+  utter.pitch = 1;
+  synth.cancel();
+  synth.speak(utter);
+}
+
+// 🗣️ Speech-to-Text listener
+if (recognition) {
+  speakBtn.addEventListener("click", () => {
+    recognition.start();
   });
 
-  // Draw reveal
-  async function revealImage(url) {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = url;
-    await img.decode();
-    const start = performance.now();
-    const duration = 20000;
-    function draw(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      const radius = canvas.width * progress;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(canvas.width/2, canvas.height/2, radius, 0, 2*Math.PI);
-      ctx.clip();
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      ctx.restore();
-      if (progress < 1) requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
-  }
-
-  // Add message
-  function addMessage(text, cls="bot") {
-    const div = document.createElement("div");
-    div.className = `message ${cls}`;
-    div.textContent = text;
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-
-  // TTS
-  function speak(text) {
-    const synth = window.speechSynthesis;
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.voice = synth.getVoices().find(v => v.lang.startsWith("en"));
-    utter.pitch = 1; utter.rate = 1;
-    synth.speak(utter);
-  }
-
-  // STT
-  const recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let recog;
-  if (recognition) {
-    recog = new recognition();
-    recog.lang = "en-US";
-    recog.onresult = (e) => {
-      input.value = e.results[0][0].transcript;
-    };
-  }
-  speakBtn.onclick = () => recog && recog.start();
-
-  // Send to API
-  async function ask(prompt) {
-    addMessage(prompt, "user");
-    const systemPrompt = `
-U-CORE:v1
-MODE=UNPOLARIZED
-BIND=${portalId}
-OUTPUT=PHASED
-RESUME_RULE=DAY1
-END
-    `;
-    const q = `${systemPrompt}\n\n${prompt}`;
-    const res = await fetch(askEndpoint, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ question: q })
-    });
-    const data = await res.json();
-    const answer = data.answer || "No response.";
-    addMessage(answer, "bot");
-    speak(answer);
-
-    // Image limit
-    const today = new Date().toISOString().slice(0,10);
-    const last = localStorage.getItem(imgDateKey);
-    if (last !== today) {
-      localStorage.setItem(imgDateKey, today);
-      const imgPrompt = `Generate an image that represents this response: ${answer}`;
-      const imgRes = await fetch(askEndpoint, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ question: imgPrompt })
-      });
-      const imgData = await imgRes.json();
-      const imgUrl = imgData.answer.match(/https?:[^\s]+/i)?.[0];
-      if (imgUrl) revealImage(imgUrl);
-    }
-  }
-
-  sendBtn.onclick = () => {
-    if (input.value.trim()) {
-      ask(input.value.trim());
-      input.value = "";
-    }
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    userInput.value = transcript;
   };
-  ttsBtn.onclick = () => speak(chatBox.lastChild?.textContent || "");
-  
-  // Initial question
-  if (!localStorage.getItem(`${storageKey}.started`)) {
-    ask(defaultPrompt);
-    localStorage.setItem(`${storageKey}.started`, "1");
+}
+
+// 🪶 Display chat messages
+function addMessage(text, sender = "user") {
+  const msg = document.createElement("div");
+  msg.className = `message ${sender}`;
+  msg.textContent = text;
+  chatWindow.appendChild(msg);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+// 🕊️ Send to backend
+async function sendToAI(text) {
+  if (!text.trim()) return;
+
+  addMessage(text, "user");
+  userInput.value = "";
+
+  const payload = {
+    question: `${currentPortal ? `[${currentPortal}] ` : ""}${text}`,
+    user_id: "browser-client",
+  };
+
+  try {
+    const res = await fetch(`${API_BASE}/ask`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+
+    const reply = data.answer || "(no reply)";
+    addMessage(reply, "bot");
+    speakText(reply); // 🎧 Mufasa speaks here
+
+    // Mark progress and calendar
+    updateProgress();
+    markCalendar();
+  } catch (err) {
+    console.error(err);
+    addMessage("⚠️ Error reaching AI service.", "bot");
   }
 }
+
+// ✉️ Send Button
+sendBtn.addEventListener("click", () => {
+  const text = userInput.value;
+  sendToAI(text);
+});
+
+// 🔄 Portal change
+portalSelector.addEventListener("change", (e) => {
+  currentPortal = e.target.value;
+  localStorage.setItem("mufasa_portal", currentPortal);
+  chatWindow.innerHTML = "";
+  addMessage(`You’ve entered the ${e.target.selectedOptions[0].text} portal.`, "bot");
+});
+
+// 📓 Journal save
+saveJournalBtn.addEventListener("click", () => {
+  const note = journalInput.value.trim();
+  if (!note) return;
+  const today = new Date().toISOString().split("T")[0];
+  journals[today] = note;
+  localStorage.setItem("mufasa_journals", JSON.stringify(journals));
+  addMessage("📝 Journal saved.", "bot");
+  journalInput.value = "";
+});
+
+// 📅 Calendar generator
+function buildCalendar() {
+  const now = new Date();
+  const monthName = now.toLocaleString("default", { month: "long" });
+  const year = now.getFullYear();
+
+  const first = new Date(year, now.getMonth(), 1);
+  const daysInMonth = new Date(year, now.getMonth() + 1, 0).getDate();
+
+  let html = `<h4>${monthName} ${year}</h4><div class="cal-grid">`;
+  for (let i = 1; i <= daysInMonth; i++) {
+    const dayStr = `${year}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
+    const marked = journals[dayStr] ? "marked" : "";
+    html += `<div class="day ${marked}">${i}</div>`;
+  }
+  html += "</div>";
+  calendar.innerHTML = html;
+}
+
+// ✅ Mark current day
+function markCalendar() {
+  buildCalendar();
+}
+
+// 📈 Progress bar
+function updateProgress() {
+  currentDay = Math.min(currentDay + 1, 30);
+  localStorage.setItem("mufasa_day", currentDay);
+  const pct = (currentDay / 30) * 100;
+  progressFill.style.width = `${pct}%`;
+  progressText.textContent = `Day ${currentDay} of 30`;
+}
+
+// 🪩 Restore saved state
+function initState() {
+  if (currentPortal) {
+    portalSelector.value = currentPortal;
+    addMessage(`Resuming ${portalSelector.selectedOptions[0].text} portal.`, "bot");
+  }
+  buildCalendar();
+  updateProgress();
+}
+
+initState();
