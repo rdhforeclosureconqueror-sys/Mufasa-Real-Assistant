@@ -1,6 +1,6 @@
 // API + portal definitions
 window.MUFASA_CFG = {
-  API_BASE: "https://your-render-api-url.onrender.com",
+  API_BASE: "https://mufasa-real-assistant-api.onrender.com",
   PORTALS: [
     { id: "maat", title: "Order of Ma’at", start: "What is the Order of Ma’at?" },
     { id: "decolonize", title: "Decolonize the Mind", start: "How do I know if my mind has been decolonized?" },
