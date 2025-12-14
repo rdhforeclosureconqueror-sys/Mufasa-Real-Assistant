@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order of Ma’at | Mufasa Real Assistant</title>
+  <link rel="icon" href="../assets/lion.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: linear-gradient(120deg, #000000 40%, #006400 70%);
+      color: #f8f5e1;
+      font-family: "Poppins", sans-serif;
+      margin: 0; padding: 0;
+      height: 100vh; overflow: hidden;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      color: gold;
+      font-size: 1.8em;
+      letter-spacing: 2px;
+      border-bottom: 2px solid #b8860b;
+      width: 100%;
+    }
+    #chat-container {
+      flex: 1;
+      width: 90%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0,0,0,0.4);
+      border: 2px solid gold;
+      border-radius: 20px;
+      padding: 20px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 12px;
+      line-height: 1.4em;
+    }
+    .user { background: #b8860b; align-self: flex-end; }
+    .bot { background: rgba(255,255,255,0.1); border: 1px solid gold; align-self: flex-start; }
+    #input-row {
+      width: 90%; max-width: 800px;
+      display: flex; align-items: center;
+      padding: 10px; margin-bottom: 20px;
+    }
+    #user-input {
+      flex: 1; padding: 10px; font-size: 1em;
+      border-radius: 10px; border: 1px solid #b8860b;
+      background: rgba(255,255,255,0.1); color: white;
+    }
+    button {
+      margin-left: 10px; padding: 10px 15px;
+      background: gold; border: none;
+      border-radius: 10px; cursor: pointer;
+      font-weight: bold; color: black;
+    }
+    #journal {
+      width: 90%; max-width: 800px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid gold; border-radius: 15px;
+      margin-bottom: 10px;
+      padding: 10px; color: #f8f5e1;
+    }
+    #art-canvas {
+      position: absolute; bottom: 0; right: 0;
+      width: 300px; height: 300px; border-radius: 50%;
+      border: 3px solid gold; overflow: hidden;
+      background-color: rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body>
+  <header>Order of Ma’at — 30 Day Realignment</header>
+  
+  <section id="journal">
+    <h3>Journal Notes</h3>
+    <textarea id="notes" rows="4" style="width:100%; background:rgba(255,255,255,0.05); color:white; border:none; border-radius:10px;"></textarea>
+  </section>
+  
+  <section id="chat-container"></section>
+  
+  <div id="input-row">
+    <input id="user-input" placeholder="Speak or type your reflection..." />
+    <button id="speak-btn">🎙</button>
+    <button id="send-btn">Send</button>
+    <button id="tts-btn">🔊</button>
+  </div>
+
+  <canvas id="art-canvas"></canvas>
+
+  <script type="module" src="portal.js"></script>
+  <script>
+    importPortal({
+      portalId: "MAAT30:v2",
+      title: "Order of Ma’at",
+      defaultPrompt: "What is Ma’at?",
+      askEndpoint: "/ask"
+    });
+  </script>
+</body>
+</html>
