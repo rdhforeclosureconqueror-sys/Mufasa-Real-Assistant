@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Swahili 30 Days | Mufasa Real Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0; background: linear-gradient(160deg,#000,#228B22);
+      color: #fff; font-family: "Poppins", sans-serif;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; height: 100vh;
+    }
+    h1 { color: gold; }
+    #lesson {
+      width: 80%; max-width: 700px; text-align: center;
+      border: 2px solid gold; border-radius: 15px;
+      padding: 20px; background: rgba(255,255,255,0.1);
+      box-shadow: 0 0 15px rgba(255,215,0,0.3);
+    }
+    button {
+      margin-top: 15px; padding: 10px 20px;
+      border: none; border-radius: 10px;
+      background: gold; color: black; font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🇰🇪 Swahili Lesson of the Day</h1>
+  <div id="lesson">Loading...</div>
+  <button id="tts">🔊 Listen</button>
+
+  <script>
+    async function loadLesson() {
+      const res = await fetch("/api/swahili/today");
+      const data = await res.json();
+      document.getElementById("lesson").innerText =
+        data.phrase || data.text || JSON.stringify(data);
+    }
+    function speak(text) {
+      const synth = window.speechSynthesis;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.voice = synth.getVoices().find(v => v.lang.startsWith("en"));
+      synth.speak(utter);
+    }
+    document.getElementById("tts").onclick = () => {
+      speak(document.getElementById("lesson").innerText);
+    };
+    loadLesson();
+  </script>
+</body>
+</html>
