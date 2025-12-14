@@ -1,0 +1,285 @@
+/* ============================================================
+   MUFASA PORTAL — Bright Royal Theme (Emerald + Black + Gold)
+   Responsive + Elegant + Calmly Animated
+   ============================================================ */
+
+:root {
+  --emerald: #008b5d;
+  --emerald-light: #00b579;
+  --black: #0b0b0b;
+  --gold: #f4c542;
+  --offwhite: #f5f5f5;
+  --accent: #00ffcc;
+}
+
+/* 🌍 GLOBAL */
+body {
+  margin: 0;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, var(--black), var(--emerald));
+  color: var(--offwhite);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Hide until intro finishes */
+.hidden {
+  display: none;
+}
+
+/* 🦁 INTRO SCREEN */
+#intro-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 999;
+  transition: opacity 1.2s ease;
+}
+
+#intro-screen.fade-out {
+  opacity: 0;
+}
+
+#lion-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+  z-index: -1;
+}
+
+.intro-title {
+  color: var(--gold);
+  font-size: 2.5rem;
+  letter-spacing: 3px;
+  animation: fadeIn 2s ease;
+}
+
+/* 🔰 HEADER */
+header {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid var(--gold);
+  flex-wrap: wrap;
+}
+
+.brand-title {
+  font-size: 1.4rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+nav select {
+  background: var(--emerald);
+  color: var(--offwhite);
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  transition: 0.3s ease;
+}
+
+nav select:hover {
+  background: var(--emerald-light);
+}
+
+/* ⚡ MAIN LAYOUT */
+main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+/* CHAT SECTION */
+#chat-section {
+  flex: 3;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#chat-window {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--emerald-light);
+  border-radius: 10px;
+  padding: 1rem;
+  background: rgba(20, 20, 20, 0.6);
+}
+
+#chat-window::-webkit-scrollbar {
+  width: 8px;
+}
+#chat-window::-webkit-scrollbar-thumb {
+  background: var(--emerald-light);
+  border-radius: 10px;
+}
+
+#chat-controls {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#user-input {
+  width: 100%;
+  min-height: 60px;
+  border: 1px solid var(--emerald-light);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--offwhite);
+  border-radius: 8px;
+  padding: 0.5rem;
+  resize: none;
+}
+
+#chat-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+#chat-buttons button {
+  background: var(--emerald);
+  color: var(--offwhite);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 1rem;
+}
+
+#chat-buttons button:hover {
+  background: var(--emerald-light);
+}
+
+/* ASIDE PANEL */
+#side-panel {
+  flex: 1.5;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.panel-block {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--emerald-light);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.panel-block h3 {
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+/* JOURNAL + PROGRESS */
+#journal-input {
+  width: 100%;
+  min-height: 100px;
+  border: 1px solid var(--emerald-light);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--offwhite);
+  padding: 0.5rem;
+}
+
+#save-journal-btn {
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#save-journal-btn:hover {
+  background: var(--emerald-light);
+  color: var(--offwhite);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#progress-fill {
+  height: 100%;
+  width: 5%;
+  background: var(--gold);
+  transition: width 0.6s ease;
+}
+
+/* 📅 CALENDAR */
+#calendar {
+  color: var(--offwhite);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* 🦶 FOOTER */
+footer {
+  text-align: center;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  border-top: 1px solid var(--emerald-light);
+  color: var(--offwhite);
+  font-size: 0.9rem;
+}
+
+/* ✨ ANIMATIONS */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 📱 MOBILE RESPONSIVE */
+@media (max-width: 900px) {
+  main {
+    flex-direction: column;
+  }
+
+  #chat-section, #side-panel {
+    flex: unset;
+    width: 100%;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  nav select {
+    width: 100%;
+  }
+}
