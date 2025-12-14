@@ -1,100 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mufasa Real Assistant | Pan-African Knowledge Portals</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="assets/lion.png">
-  <style>
-    body {
-      margin: 0;
-      background: linear-gradient(120deg, #000000 40%, #006400 80%);
-      color: #f8f5e1;
-      font-family: "Poppins", sans-serif;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    header {
-      color: gold;
-      font-size: 2em;
-      letter-spacing: 1.5px;
-      padding: 20px 0;
-      text-align: center;
-      border-bottom: 2px solid gold;
-      width: 100%;
-      background: rgba(0,0,0,0.6);
-    }
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      padding: 15px;
-      background: rgba(255,215,0,0.1);
-      border-bottom: 2px solid #b8860b;
-    }
-    .tab {
-      padding: 10px 20px;
-      border-radius: 15px;
-      background: rgba(255,215,0,0.15);
-      border: 1px solid gold;
-      color: gold;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .tab:hover {
-      background: gold;
-      color: black;
-      transform: scale(1.05);
-    }
-    .tab.active {
-      background: gold;
-      color: black;
-    }
-    iframe {
-      flex: 1;
-      width: 95%;
-      border: none;
-      border-radius: 20px;
-      margin: 10px;
-      background: rgba(0,0,0,0.5);
-      box-shadow: 0 0 20px rgba(255,215,0,0.3);
-      transition: opacity 0.4s ease;
-    }
-    footer {
-      padding: 10px;
-      color: #aaa;
-      font-size: 0.9em;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mufasa Portal | Bright Royal Edition</title>
+  <link rel="stylesheet" href="portal.css" />
 </head>
+
 <body>
-  <header>🦁 Mufasa Real Assistant — Pan-African Portals</header>
+  <!-- 🦁 Fullscreen Lion Intro -->
+  <div id="intro-screen">
+    <div class="intro-overlay"></div>
+    <img id="lion-bg" alt="Lion Intro Background" />
+    <h1 class="intro-title">MUFASA REAL ASSISTANT</h1>
+  </div>
 
-  <nav id="tabs">
-    <div class="tab active" data-page="portals/maat.html">Order of Ma’at</div>
-    <div class="tab" data-page="portals/decolonize.html">Decolonize the Mind</div>
-    <div class="tab" data-page="portals/melanin.html">Melanin Superpower</div>
-    <div class="tab" data-page="portals/mega.html">Black Megacities</div>
-    <div class="tab" data-page="portals/bwom.html">Black Woman Portal</div>
-    <div class="tab" data-page="portals/civ.html">African Civilization</div>
-    <div class="tab" data-page="portals/lab.html">Ancestral Science Lab</div>
-    <div class="tab" data-page="portals/pyr.html">Pyramid Systems</div>
-    <div class="tab" data-page="portals/sca.html">Scalar Waves</div>
-    <div class="tab" data-page="portals/bcf.html">Book of Coming Forth</div>
-    <div class="tab" data-page="portals/rop.html">Rites of Passage</div>
-    <div class="tab" data-page="languages/swahili.html">Swahili 30 Days</div>
-    <div class="tab" data-page="languages/yoruba.html">Yoruba 30 Days</div>
-  </nav>
+  <!-- 🌍 Main App Container -->
+  <div id="app" class="hidden">
 
-  <iframe id="portal-frame" src="portals/maat.html"></iframe>
+    <!-- 🔰 Header -->
+    <header>
+      <h1 class="brand-title">🦁 Mufasa Real Assistant</h1>
 
-  <footer>© 2025 Mufasa Real Assistant | Built with OpenAI + Pan-African Ethos</footer>
+      <!-- Dropdown Navigation for Portals -->
+      <nav>
+        <select id="portal-selector">
+          <option value="">Select a Portal</option>
+          <option value="MAAT30">Order of Ma’at</option>
+          <option value="DECLO30">Decolonize the Mind</option>
+          <option value="MEL30">Melanin: The Superpower</option>
+          <option value="MEGA30">Black Megacities After Slavery</option>
+          <option value="BWOM30">The Black Woman</option>
+          <option value="CIV30">Africans Built Civilization</option>
+          <option value="LAB30">Ancestral Science Lab</option>
+          <option value="PYR30">Pyramid Portal</option>
+          <option value="SCA30">Scalar Waves</option>
+          <option value="BCF30">Book of Coming Forth by Day</option>
+          <option value="ROP30">Rites of Passage</option>
+        </select>
+      </nav>
+    </header>
 
-  <script defer src="portals/tabs.js"></script>
+    <!-- ⚡ Chat + Journal Layout -->
+    <main>
+      <section id="chat-section">
+        <div id="chat-window">
+          <!-- Chat messages appear here dynamically -->
+        </div>
+
+        <div id="chat-controls">
+          <textarea id="user-input" placeholder="Type your message or speak..."></textarea>
+          <div id="chat-buttons">
+            <button id="speak-btn">🎙️ Speak</button>
+            <button id="send-btn">Send</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 📜 Right Panel: Journal, Progress, Calendar -->
+      <aside id="side-panel">
+        <div class="panel-block">
+          <h3>📅 Calendar</h3>
+          <div id="calendar"></div>
+        </div>
+
+        <div class="panel-block">
+          <h3>🧭 Progress</h3>
+          <p id="progress-text">Day 1 of 30</p>
+          <div class="progress-bar">
+            <div id="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="panel-block">
+          <h3>📝 Journal</h3>
+          <textarea id="journal-input" placeholder="Reflect and write your thoughts here..."></textarea>
+          <button id="save-journal-btn">💾 Save Note</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- 📜 Footer -->
+  <footer>
+    <p>© 2025 Mufasa Real Assistant | Pan-African Knowledge Network</p>
+  </footer>
+
+  <!-- JS Scripts -->
+  <script src="portal.js"></script>
+
+  <script>
+    /* ===============================
+       🦁 Intro Fade Logic
+       =============================== */
+    window.addEventListener('load', () => {
+      const lionBg = document.getElementById('lion-bg');
+      const intro = document.getElementById('intro-screen');
+      const app = document.getElementById('app');
+
+      // Base64 of your uploaded lion image
+      lionBg.src = "data:image/webp;base64,UklGRhYAAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSCwAAAABAAQAAQAA..."; 
+      // (the full Base64 data will be inserted here – I’ll include it in final export)
+
+      setTimeout(() => {
+        intro.classList.add('fade-out');
+        setTimeout(() => {
+          intro.style.display = 'none';
+          app.classList.remove('hidden');
+        }, 1200);
+      }, 1500);
+    });
+  </script>
 </body>
 </html>
