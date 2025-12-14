@@ -8,11 +8,13 @@
   <style>
     body {
       margin: 0;
-      background: linear-gradient(120deg, #000000 40%, #8B0000 80%);
+      background: linear-gradient(120deg, #000000 40%, #006400 80%);
       color: #f8f5e1;
       font-family: "Poppins", sans-serif;
-      height: 100vh; overflow: hidden;
-      display: flex; flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
       align-items: center;
     }
     header {
@@ -26,8 +28,12 @@
       background: rgba(0,0,0,0.6);
     }
     nav {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 10px; padding: 15px; background: rgba(255,215,0,0.1);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px;
+      background: rgba(255,215,0,0.1);
       border-bottom: 2px solid #b8860b;
     }
     .tab {
@@ -57,6 +63,7 @@
       margin: 10px;
       background: rgba(0,0,0,0.5);
       box-shadow: 0 0 20px rgba(255,215,0,0.3);
+      transition: opacity 0.4s ease;
     }
     footer {
       padding: 10px;
@@ -80,6 +87,8 @@
     <div class="tab" data-page="portals/sca.html">Scalar Waves</div>
     <div class="tab" data-page="portals/bcf.html">Book of Coming Forth</div>
     <div class="tab" data-page="portals/rop.html">Rites of Passage</div>
+    <div class="tab" data-page="languages/swahili.html">Swahili 30 Days</div>
+    <div class="tab" data-page="languages/yoruba.html">Yoruba 30 Days</div>
   </nav>
 
   <iframe id="portal-frame" src="portals/maat.html"></iframe>
