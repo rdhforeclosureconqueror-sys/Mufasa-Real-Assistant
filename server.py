@@ -1,47 +1,47 @@
-import json
-from datetime import date
-from pathlib import Path
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import openai
+import os
 
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, JSONResponse
+# ===============================
+# 🔥 Mufasa AI Server — Flask
+# ===============================
 
-app = FastAPI()
+app = Flask(__name__)
+CORS(app)  # enable cross-origin requests for local testing
 
-DATA_PATH = Path("resources") / "swahili_30days.json"
+# Load your OpenAI API key from environment variable
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-@app.get("/")
+@app.route("/")
 def home():
-    return FileResponse("index.html")
+    return jsonify({"message": "🦁 Mufasa AI is online — Pan-African Portal active."})
 
-@app.get("/swahili")
-def swahili_page():
-    return FileResponse("swahili.html")
+@app.route("/api/chat", methods=["POST"])
+def chat():
+    data = request.get_json()
+    user_message = data.get("message", "")
 
-@app.get("/api/swahili/today")
-def swahili_today():
-    if not DATA_PATH.exists():
-        return JSONResponse(
-            {"error": "Missing resources/swahili_30days.json"},
-            status_code=404
+    if not user_message:
+        return jsonify({"reply": "I didn’t catch that. Try again."})
+
+    try:
+        # Call OpenAI’s API
+        response = openai.ChatCompletion.create(
+            model="gpt-4o-mini",  # Fast & affordable model
+            messages=[
+                {"role": "system", "content": "You are Mufasa, a wise Pan-African AI mentor who speaks with warmth and clarity."},
+                {"role": "user", "content": user_message}
+            ],
+            max_tokens=200
         )
 
-    lessons = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+        reply = response["choices"][0]["message"]["content"].strip()
+        return jsonify({"reply": reply})
 
-    # pick day-of-year mod 30 -> stable “lesson of the day”
-    idx = (date.today().timetuple().tm_yday - 1) % len(lessons)
-    lesson = lessons[idx]
-    return lesson
-YORUBA_PATH = Path("resources") / "yoruba_30days.json"
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({"reply": "Mufasa encountered a problem processing that request."})
 
-@app.get("/yoruba")
-def yoruba_page():
-    return FileResponse("yoruba.html")
-
-@app.get("/api/yoruba/today")
-def yoruba_today():
-    if not YORUBA_PATH.exists():
-        return JSONResponse({"error": "Missing resources/yoruba_30days.json"}, status_code=404)
-
-    lessons = json.loads(YORUBA_PATH.read_text(encoding="utf-8"))
-    idx = (date.today().timetuple().tm_yday - 1) % len(lessons)
-    return lessons[idx]
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
