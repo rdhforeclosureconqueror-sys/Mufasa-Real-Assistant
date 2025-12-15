@@ -8,30 +8,20 @@
 </head>
 
 <body>
-  <!-- 🦁 Lion Intro Video -->
+  <!-- 🦁 INTRO VIDEO -->
   <div id="intro-screen">
     <video autoplay muted id="intro-video">
-      <source src="assets/fire-lion.mp4" type="video/mp4">
+      <source src="assets/fire-lion.mp4" type="video/mp4" />
     </video>
     <h1 class="intro-title">PAN AFRICA UNITE</h1>
   </div>
 
-  <!-- 🌍 Main App Container -->
+  <!-- 🌍 MAIN APP -->
   <div id="app" class="hidden">
     <header>
       <h1 class="brand-title">🦁 Mufasa Real Assistant</h1>
-      <nav>
-        <select id="portal-selector"></select>
-      </nav>
-    </header>
-  </div>
-</body>
 
-    <!-- 🔰 Header -->
-    <header>
-      <h1 class="brand-title">🦁 Mufasa Real Assistant</h1>
-
-      <!-- Dropdown Navigation for Portals -->
+      <!-- 🔽 Portal Selector -->
       <nav>
         <select id="portal-selector">
           <option value="">Select a Portal</option>
@@ -50,12 +40,10 @@
       </nav>
     </header>
 
-    <!-- ⚡ Chat + Journal Layout -->
+    <!-- ⚡ Chat + Journal -->
     <main>
       <section id="chat-section">
-        <div id="chat-window">
-          <!-- Chat messages appear here dynamically -->
-        </div>
+        <div id="chat-window"></div>
 
         <div id="chat-controls">
           <textarea id="user-input" placeholder="Type your message or speak..."></textarea>
@@ -66,7 +54,7 @@
         </div>
       </section>
 
-      <!-- 📜 Right Panel: Journal, Progress, Calendar -->
+      <!-- 📜 Side Panel -->
       <aside id="side-panel">
         <div class="panel-block">
           <h3>📅 Calendar</h3>
@@ -88,40 +76,101 @@
         </div>
       </aside>
     </main>
+
+    <footer>
+      <p>© 2025 Mufasa Real Assistant | Pan-African Knowledge Network</p>
+    </footer>
   </div>
 
-  <!-- 📜 Footer -->
-  <footer>
-    <p>© 2025 Mufasa Real Assistant | Pan-African Knowledge Network</p>
-  </footer>
+  <!-- JS FILES -->
+  <script src="portal.js" defer></script>
+  <script src="tabs.js" defer></script>
 
-  <!-- JS Scripts -->
-
-<link rel="stylesheet" href="portal.css">
-<script src="portal.js" defer></script>
-<script src="tabs.js" defer></script>
-
+  <!-- 🧠 Core Chat, TTS, STT Logic -->
   <script>
     /* ===============================
        🦁 Intro Fade Logic
        =============================== */
     window.addEventListener('load', () => {
-      const lionBg = document.getElementById('lion-bg');
       const intro = document.getElementById('intro-screen');
+      const video = document.getElementById('intro-video');
       const app = document.getElementById('app');
 
-      // Base64 of your uploaded lion image
-      lionBg.src = "data:image/webp;base64,UklGRhYAAABXRUJQVlA4WAoAAAAQAAAAEwAAEwAAQUxQSCwAAAABAAQAAQAA..."; 
-      // (the full Base64 data will be inserted here – I’ll include it in final export)
-
-      setTimeout(() => {
+      function showApp() {
         intro.classList.add('fade-out');
         setTimeout(() => {
           intro.style.display = 'none';
           app.classList.remove('hidden');
         }, 1200);
-      }, 1500);
+      }
+
+      setTimeout(showApp, 6000);
+      video.addEventListener('ended', showApp);
     });
+
+    /* ===============================
+       🎤 Speech-to-Text + AI Response
+       =============================== */
+    const speakBtn = document.getElementById('speak-btn');
+    const sendBtn = document.getElementById('send-btn');
+    const userInput = document.getElementById('user-input');
+    const chatWindow = document.getElementById('chat-window');
+
+    let recognition;
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const text = event.results[0][0].transcript;
+        userInput.value = text;
+      };
+    }
+
+    speakBtn.addEventListener('click', () => {
+      if (recognition) recognition.start();
+    });
+
+    sendBtn.addEventListener('click', async () => {
+      const message = userInput.value.trim();
+      if (!message) return;
+      addMessage('You', message);
+      userInput.value = '';
+
+      // 🌍 Connect to AI (change endpoint to your Render / API URL)
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+      });
+
+      const data = await response.json();
+      const reply = data.reply || '...';
+      addMessage('Mufasa', reply);
+      speakText(reply);
+    });
+
+    function addMessage(sender, text) {
+      const div = document.createElement('div');
+      div.className = sender === 'You' ? 'user-msg' : 'ai-msg';
+      div.textContent = `${sender}: ${text}`;
+      chatWindow.appendChild(div);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    /* ===============================
+       🔊 Text-to-Speech (TTS)
+       =============================== */
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.pitch = 0.9;
+      utterance.rate = 1.0;
+      utterance.voice = speechSynthesis.getVoices().find(v => v.name.includes('Female')) || null;
+      speechSynthesis.speak(utterance);
+    }
   </script>
 </body>
 </html>
