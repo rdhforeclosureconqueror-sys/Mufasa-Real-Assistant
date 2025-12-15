@@ -22,7 +22,7 @@ import openai
 # 🔧 CONFIGURATION
 # ============================================
 
-app = FastAPI(title="Mufasa Real Assistant", version="2.0")
+app = FastAPI(title="https://mufasa-real-assistant-api.onrender.com", version="2.0")
 
 # Allow all origins for now (you can restrict later)
 app.add_middleware(
