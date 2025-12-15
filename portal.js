@@ -4,7 +4,7 @@
    ================================================================ */
 
 // 🌍 API base (edit if deployed elsewhere)
-const API_BASE = https://mufasa-real-assistant-api.onrender.com;
+const API_BASE = "https://mufasa-real-assistant-api.onrender.com";
 
 // 🦁 Elements
 const portalSelector = document.getElementById("portal-selector");
