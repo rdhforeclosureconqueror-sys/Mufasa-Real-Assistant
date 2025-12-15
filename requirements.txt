@@ -19,4 +19,4 @@ uvicorn[standard]
 fastapi
 Flask
 flask-cors
-
+python-multipart
