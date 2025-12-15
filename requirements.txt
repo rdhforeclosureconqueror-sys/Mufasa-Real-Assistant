@@ -17,3 +17,6 @@ openai>=2.9.0
 # mypy>=1.0.0
 uvicorn[standard]
 fastapi
+Flask
+flask-cors
+
