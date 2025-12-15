@@ -78,7 +78,7 @@ async function sendToAI(text) {
   };
 
   try {
-    const res = await fetch(`${API_BASE}/ask`, {
+   const res = await fetch(`${API_BASE}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
