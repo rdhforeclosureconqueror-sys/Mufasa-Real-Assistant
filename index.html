@@ -8,18 +8,24 @@
 </head>
 
 <body>
-  <!-- 🦁 Fullscreen Lion Intro -->
+  <!-- 🦁 Lion Intro Video -->
   <div id="intro-screen">
-    <div class="intro-overlay"></div>
-    <img id="lion-bg" alt="Lion Intro Background" />
+    <video autoplay muted loop id="intro-video">
+      <source src="assets/fire-lion.mp4" type="video/mp4">
+    </video>
     <h1 class="intro-title">MUFASA REAL ASSISTANT</h1>
   </div>
-<video autoplay muted loop id="bgVideo">
-  <source src="assets/fire-lion.mp4" type="video/mp4">
-</video>
 
   <!-- 🌍 Main App Container -->
   <div id="app" class="hidden">
+    <header>
+      <h1 class="brand-title">🦁 Mufasa Real Assistant</h1>
+      <nav>
+        <select id="portal-selector"></select>
+      </nav>
+    </header>
+  </div>
+</body>
 
     <!-- 🔰 Header -->
     <header>
