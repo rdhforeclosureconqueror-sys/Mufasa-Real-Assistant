@@ -168,3 +168,16 @@ function initState() {
 }
 
 initState();
+window.addEventListener("load", () => {
+  const introScreen = document.getElementById("intro-screen");
+  const app = document.getElementById("app");
+
+  // Wait ~5 seconds before fading out intro
+  setTimeout(() => {
+    introScreen.classList.add("fade-out");
+    setTimeout(() => {
+      introScreen.style.display = "none";
+      app.classList.remove("hidden");
+    }, 1500); // wait for fade-out animation to finish
+  }, 5000); // 5-second intro duration
+});
