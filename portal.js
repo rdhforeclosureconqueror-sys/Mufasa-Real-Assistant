@@ -173,21 +173,23 @@ window.addEventListener("load", () => {
   const introVideo = document.getElementById("intro-video");
   const app = document.getElementById("app");
 
-  function endIntro() {
-    // Add fade animation
-    introScreen.classList.add("fade-out");
-
-    // Wait for fade to complete, then hide intro and show app
-    setTimeout(() => {
-      introScreen.style.display = "none";
-      app.classList.remove("hidden");
-      console.log("Intro finished — app now visible.");
-    }, 1500); // this matches your CSS fade-out animation
+  function showApp() {
+    console.log("Revealing app...");
+    introScreen.style.display = "none"; // Hide intro completely
+    app.classList.remove("hidden");     // Show main app
+    app.style.opacity = 0;
+    app.style.transition = "opacity 1s ease";
+    setTimeout(() => (app.style.opacity = 1), 100); // Fade in
   }
 
-  // Automatically end after 6 seconds
+  function endIntro() {
+    introScreen.classList.add("fade-out");
+    setTimeout(showApp, 1500); // Wait for fade-out animation
+  }
+
+  // Auto end after 6 seconds
   setTimeout(endIntro, 6000);
 
-  // (Optional) Also end when video naturally ends
+  // Also end when video ends (backup trigger)
   introVideo.addEventListener("ended", endIntro);
 });
