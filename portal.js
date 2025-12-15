@@ -18,6 +18,7 @@ const progressFill = document.getElementById("progress-fill");
 const progressText = document.getElementById("progress-text");
 const calendar = document.getElementById("calendar");
 
+
 // 🧠 Persistent memory (localStorage)
 let currentPortal = localStorage.getItem("mufasa_portal") || "";
 let currentDay = parseInt(localStorage.getItem("mufasa_day") || "1");
