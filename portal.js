@@ -170,14 +170,22 @@ function initState() {
 initState();
 window.addEventListener("load", () => {
   const introScreen = document.getElementById("intro-screen");
+  const introVideo = document.getElementById("intro-video");
   const app = document.getElementById("app");
 
-  // Wait ~5 seconds before fading out intro
-  setTimeout(() => {
+  // Pause the video once intro ends
+  const endIntro = () => {
     introScreen.classList.add("fade-out");
     setTimeout(() => {
+      introVideo.pause();
       introScreen.style.display = "none";
       app.classList.remove("hidden");
-    }, 1500); // wait for fade-out animation to finish
-  }, 2000); // 5-second intro duration
+    }, 1500); // match your fade-out animation time
+  };
+
+  // Option A: End automatically after 6 seconds
+  setTimeout(endIntro, 6000);
+
+  // Option B: OR end when the video finishes playing (if not looped)
+  introVideo.addEventListener("ended", endIntro);
 });
