@@ -179,5 +179,5 @@ window.addEventListener("load", () => {
       introScreen.style.display = "none";
       app.classList.remove("hidden");
     }, 1500); // wait for fade-out animation to finish
-  }, 5000); // 5-second intro duration
+  }, 2000); // 5-second intro duration
 });
