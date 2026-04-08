@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Quest Pilot (V1)</title>
+  <link rel="stylesheet" href="assets/css/quest-pilot.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Community Quest Pilot (V1)</h1>
+    <div>
+      <a href="/index.html">Back to Assistant</a>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel auth-panel">
+      <h2>Sign In / Register</h2>
+      <div class="stack">
+        <label>Email <input id="auth-email" type="email" placeholder="you@example.org" /></label>
+        <label>Password <input id="auth-password" type="password" placeholder="Minimum 8 chars" /></label>
+        <label>Full Name (register only) <input id="auth-name" type="text" placeholder="Your name" /></label>
+        <label>Role (register only)
+          <select id="auth-role">
+            <option value="participant">participant</option>
+            <option value="partner_admin">partner_admin</option>
+          </select>
+        </label>
+      </div>
+      <div class="btn-row">
+        <button id="register-btn">Register</button>
+        <button id="login-btn">Login</button>
+        <button id="logout-btn" class="secondary">Logout</button>
+      </div>
+      <p id="session-status" class="status">Not authenticated.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Participant Flow</h2>
+      <div class="btn-row">
+        <button id="load-quests-btn">Load Available Quests (Local Pilot List)</button>
+      </div>
+      <div id="participant-quests" class="list"></div>
+
+      <h3>Selected Quest</h3>
+      <div id="quest-detail" class="box muted">Choose a quest from the list.</div>
+
+      <h3>Join / Enroll</h3>
+      <div class="stack-inline">
+        <input id="enroll-quest-id" type="number" placeholder="Quest ID" />
+        <button id="enroll-btn">Enroll Me</button>
+      </div>
+
+      <h3>Submit QR Check-In</h3>
+      <div class="stack-inline">
+        <input id="checkin-quest-id" type="number" placeholder="Quest ID" />
+        <input id="checkin-qr" type="text" placeholder="QR code value" />
+        <button id="checkin-btn">Submit Check-In</button>
+      </div>
+
+      <h3>Progress & Leaderboard</h3>
+      <div class="stack-inline">
+        <input id="metrics-quest-id" type="number" placeholder="Quest ID" />
+        <button id="load-metrics-btn">Refresh</button>
+      </div>
+      <pre id="progress-output" class="box muted">Progress not loaded.</pre>
+      <pre id="leaderboard-output" class="box muted">Leaderboard not loaded.</pre>
+    </section>
+
+    <section class="panel">
+      <h2>Partner Flow</h2>
+      <h3>Organization Context</h3>
+      <div class="stack">
+        <label>Org Name <input id="org-name" type="text" placeholder="Community Org" /></label>
+        <label>Org Slug <input id="org-slug" type="text" placeholder="community-org" /></label>
+      </div>
+      <div class="btn-row">
+        <button id="create-org-btn">Create Organization</button>
+      </div>
+      <p id="org-output" class="status muted">No organization selected.</p>
+
+      <h3>Create Quest</h3>
+      <div class="stack">
+        <label>Org ID <input id="quest-org-id" type="number" placeholder="Organization ID" /></label>
+        <label>Quest Title <input id="quest-title" type="text" placeholder="River Clean-up" /></label>
+        <label>Description <textarea id="quest-description" placeholder="Pilot quest"></textarea></label>
+        <label><input id="quest-order" type="checkbox" checked /> Enforce checkpoint order</label>
+      </div>
+      <div class="btn-row">
+        <button id="create-quest-btn">Create Quest</button>
+      </div>
+      <p id="quest-output" class="status muted">No quest created yet.</p>
+
+      <h3>Add Checkpoint</h3>
+      <div class="stack">
+        <label>Quest ID <input id="cp-quest-id" type="number" placeholder="Quest ID" /></label>
+        <label>Checkpoint Title / Instructions <input id="cp-title" type="text" placeholder="Start at community center" /></label>
+        <label>Position <input id="cp-position" type="number" min="1" placeholder="1" /></label>
+        <label>QR Code <input id="cp-qr" type="text" placeholder="QR-START" /></label>
+        <label>Points <input id="cp-points" type="number" min="0" value="10" /></label>
+      </div>
+      <div class="btn-row">
+        <button id="add-cp-btn">Add Checkpoint</button>
+      </div>
+
+      <h3>Enrollment + Reporting</h3>
+      <div class="stack-inline">
+        <input id="report-quest-id" type="number" placeholder="Quest ID" />
+        <button id="load-report-btn">Load Quest Report</button>
+      </div>
+      <pre id="report-output" class="box muted">Report not loaded.</pre>
+    </section>
+  </main>
+
+  <section class="panel page-panel">
+    <h2>Pilot Activity Log</h2>
+    <div id="activity-log" class="log"></div>
+  </section>
+
+  <script src="js/quest_api_v1.js"></script>
+  <script src="js/quest_pilot_app.js"></script>
+</body>
+</html>
