@@ -270,7 +270,7 @@
 
   <!-- 🧠 CORE SCRIPT -->
   <script>
-    const API_BASE = "https://mufasa-real-assistant-api.onrender.com";
+    const API_BASE = window.location.origin;
 
     window.addEventListener("load", () => {
       const intro = document.getElementById("intro-screen");
@@ -314,11 +314,11 @@
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ question: message }),
       });
 
       const data = await res.json();
-      const reply = data.reply || "Mufasa is silent...";
+      const reply = data.answer || "Mufasa is silent...";
       addMessage("Mufasa", reply);
       speakText(reply);
       lastReply = reply;
