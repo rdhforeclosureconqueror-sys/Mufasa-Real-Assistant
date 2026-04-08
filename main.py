@@ -1,24 +1,24 @@
-import os
 import io
 import json
+import os
 import time
-from typing import Any, Dict, Optional, List
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 import httpx
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Request
-from fastapi.responses import JSONResponse, StreamingResponse
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from dotenv import load_dotenv
-
-# OpenAI (new SDK)
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from openai import OpenAI
+from pydantic import BaseModel
 
 # ─────────────────────────────────────────────────────────────
 # Env + Paths
 # ─────────────────────────────────────────────────────────────
 load_dotenv()
 
+BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = os.getenv("DATA_DIR", "/data")
 STORYBOARD_DIR = os.path.join(DATA_DIR, "storyboards")
 KNOWLEDGE_DIR = os.path.join(DATA_DIR, "knowledge")
@@ -35,15 +35,14 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini").strip()
 
 openai_client: Optional[OpenAI] = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
-
 # ─────────────────────────────────────────────────────────────
 # App
 # ─────────────────────────────────────────────────────────────
-app = FastAPI(title="Mufasa Real Assistant API", version="1.0.0")
+app = FastAPI(title="Mufasa Real Assistant API", version="1.1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # you can tighten later
+    allow_origins=["*"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -51,7 +50,13 @@ app.add_middleware(
 
 
 @app.get("/")
-def root():
+def index():
+    """Serve the single-page frontend directly from the backend."""
+    return FileResponse(BASE_DIR / "index.html")
+
+
+@app.get("/api")
+def root_api():
     return {
         "ok": True,
         "service": "Mufasa-Real-Assistant-API",
@@ -69,6 +74,7 @@ def health():
         "storyboard_dir": STORYBOARD_DIR,
         "tts_passthrough": bool(TTS_URL),
         "stt_passthrough": bool(STT_URL),
+        "frontend_entry": "/",
     }
 
 
@@ -93,6 +99,16 @@ def _sb_path(sb_id: str) -> str:
 def _log_qa(record: Dict[str, Any]) -> None:
     ts = int(time.time())
     _write_json(os.path.join(KNOWLEDGE_DIR, f"qa_{ts}.json"), record)
+
+
+def _local_asset(path: str) -> Path:
+    normalized = path.strip("/")
+    target = (BASE_DIR / normalized).resolve()
+    if BASE_DIR not in target.parents and target != BASE_DIR:
+        raise HTTPException(status_code=400, detail="Invalid asset path")
+    if not target.exists() or not target.is_file():
+        raise HTTPException(status_code=404, detail="Asset not found")
+    return target
 
 
 # ─────────────────────────────────────────────────────────────
@@ -160,6 +176,12 @@ async def ask(payload: AskPayload):
     }
     _log_qa(rec)
     return rec
+
+
+@app.post("/api/chat")
+async def api_chat(payload: AskPayload):
+    """Compatibility route used by existing frontend portal.js."""
+    return await ask(payload)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -288,3 +310,9 @@ def storyboard_get(id: str):
 
     story = _read_json(p)
     return {"ok": True, "storyboard": story}
+
+
+@app.get("/{asset_path:path}")
+def serve_static(asset_path: str):
+    """Serve frontend assets and HTML pages from repo root."""
+    return FileResponse(_local_asset(asset_path))

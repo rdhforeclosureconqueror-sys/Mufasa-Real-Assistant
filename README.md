@@ -838,3 +838,30 @@ python main.py --list-apps
 ---
 
 **部署完成的标志：手机能自动执行用户的自然语言指令。**
+
+## Mufasa API + Frontend (Self-Contained Mode)
+
+This repository now supports serving the frontend and backend from a single FastAPI process.
+
+### Run locally
+
+```bash
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Open:
+
+- Frontend: `http://localhost:8000/`
+- API health: `http://localhost:8000/health`
+- API metadata: `http://localhost:8000/api`
+
+### Route smoke test
+
+```bash
+python scripts/test_api_routes.py
+```
+
+For a complete status review, see:
+
+- `docs/repo_deep_dive_report.md`
