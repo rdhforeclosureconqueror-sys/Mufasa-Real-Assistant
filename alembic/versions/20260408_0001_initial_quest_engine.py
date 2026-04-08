@@ -86,6 +86,7 @@ def upgrade() -> None:
         sa.Column("position", sa.Integer(), nullable=False),
         sa.Column("qr_code", sa.String(length=180), nullable=False),
         sa.Column("points", sa.Integer(), nullable=False),
+        sa.UniqueConstraint("quest_id", "position", name="uq_quest_checkpoint_position"),
     )
     op.create_index("ix_quest_checkpoints_quest_id", "quest_checkpoints", ["quest_id"], unique=False)
     op.create_index("ix_quest_checkpoints_qr_code", "quest_checkpoints", ["qr_code"], unique=False)
