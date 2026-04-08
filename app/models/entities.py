@@ -70,6 +70,7 @@ class Quest(Base):
 
 class QuestCheckpoint(Base):
     __tablename__ = "quest_checkpoints"
+    __table_args__ = (UniqueConstraint("quest_id", "position", name="uq_quest_checkpoint_position"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     quest_id: Mapped[int] = mapped_column(ForeignKey("quests.id"), index=True)
@@ -97,7 +98,7 @@ class CheckInEvent(Base):
     checkpoint_id: Mapped[int] = mapped_column(ForeignKey("quest_checkpoints.id"), index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     checkin_type: Mapped[CheckInType] = mapped_column(SQLEnum(CheckInType), default=CheckInType.QR)
-    raw_payload: Mapped[dict] = mapped_column(JSON, default={})
+    raw_payload: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
@@ -137,7 +138,7 @@ class LeaderboardSnapshot(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     quest_id: Mapped[int] = mapped_column(ForeignKey("quests.id"), index=True)
-    data: Mapped[dict] = mapped_column(JSON, default={})
+    data: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
@@ -150,5 +151,5 @@ class AuditEvent(Base):
     action: Mapped[str] = mapped_column(String(120))
     entity_type: Mapped[str] = mapped_column(String(80))
     entity_id: Mapped[str] = mapped_column(String(80))
-    payload: Mapped[dict] = mapped_column(JSON, default={})
+    payload: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

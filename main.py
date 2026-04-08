@@ -5,9 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from app.core.config import get_settings
-from app.db.base import Base
 import app.models  # noqa: F401
-from app.db.session import engine
 from app.routes.legacy.assistant import router as legacy_router
 from app.routes.v1 import auth, checkins, leaderboard, orgs, progress, quests, reports, rewards
 
@@ -23,8 +21,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-Base.metadata.create_all(bind=engine)
 
 app.include_router(auth.router)
 app.include_router(orgs.router)
